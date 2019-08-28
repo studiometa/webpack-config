@@ -1,0 +1,55 @@
+{
+  "name": "@studiometa/webpack-config",
+  "version": "0.0.0",
+  "description": "A basic webpack config",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "npm run lint",
+    "build": "babel --out-dir dist/ src/",
+    "lint": "eslint src/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/studiometa/webpack-config.git"
+  },
+  "keywords": [
+    "webpack",
+    "configuration",
+    "config"
+  ],
+  "author": "Studio Meta <agence@studiometa.fr> (https://www.studiometa.fr)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/studiometa/webpack-config/issues"
+  },
+  "homepage": "https://github.com/studiometa/webpack-config#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-export-default-from": "^7.5.2",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/polyfill": "^7.4.4",
+    "@babel/preset-env": "^7.5.5",
+    "@studiometa/eslint-config": "^1.1.4",
+    "@studiometa/prettier-config": "^1.0.0",
+    "babel-eslint": "^10.0.3",
+    "eslint": "^6.2.2",
+    "prettier": "^1.18.2"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.5.5",
+    "autoprefixer": "^9.6.1",
+    "babel-loader": "^8.0.6",
+    "babel-minify-webpack-plugin": "^0.3.1",
+    "css-loader": "^3.2.0",
+    "cssnano": "^4.1.10",
+    "glob": "^7.1.4",
+    "postcss-loader": "^3.0.0",
+    "resolve-url-loader": "^3.1.0",
+    "sass": "^1.22.10",
+    "sass-loader": "^7.3.1",
+    "style-loader": "^1.0.0",
+    "vue-loader": "^15.7.1",
+    "webpack-merge": "^4.2.2"
+  }
+}

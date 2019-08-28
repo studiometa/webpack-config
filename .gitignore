@@ -1,0 +1,11 @@
+# OS et IDE files
+.DS_Store
+.idea/
+*.sublime-projet
+*.sublime-workspace
+node_modules/
+npm-debug.log
+yarn.lock
+.deploys
+backup/
+*.ini
