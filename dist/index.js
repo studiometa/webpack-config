@@ -21,6 +21,8 @@ var _plugin = _interopRequireDefault(require("vue-loader/lib/plugin"));
 
 var _webpackbar = _interopRequireDefault(require("webpackbar"));
 
+var _cleanTerminalWebpackPlugin = _interopRequireDefault(require("clean-terminal-webpack-plugin"));
+
 var _findEntries = _interopRequireDefault(require("./utils/find-entries"));
 
 var defaultConfig = {
@@ -94,7 +96,7 @@ var defaultConfig = {
   resolve: {
     extensions: ['.vue', '.mjs', '.js', '.json']
   },
-  plugins: [new _webpackbar["default"](), new _plugin["default"]()],
+  plugins: [new _cleanTerminalWebpackPlugin["default"](), new _plugin["default"](), new _webpackbar["default"]()],
   optimization: {
     checkWasmTypes: true,
     concatenateModules: true,
@@ -103,7 +105,7 @@ var defaultConfig = {
     minimizer: [function (compiler) {
       var MinifyPlugin = require('terser-webpack-plugin');
 
-      return new MinifyPlugin({}, {
+      return new MinifyPlugin({
         cache: true,
         parallel: true,
         sourceMap: true
