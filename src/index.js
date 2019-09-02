@@ -94,10 +94,11 @@ export const defaultConfig = {
     minimizer: [
       compiler => {
         const MinifyPlugin = require('terser-webpack-plugin');
-        return new MinifyPlugin(
-          {},
-          { cache: true, parallel: true, sourceMap: true }
-        ).apply(compiler);
+        return new MinifyPlugin({
+          cache: true,
+          parallel: true,
+          sourceMap: true,
+        }).apply(compiler);
       },
     ],
     namedChunks: false,
