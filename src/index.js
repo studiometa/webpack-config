@@ -117,8 +117,8 @@ export const defaultConfig = {
   },
 };
 
-export const mergeConfig = webpackConfig =>
-  webpackMerge(defaultConfig, webpackConfig);
+export const mergeConfig = (...webpackConfigs) =>
+  webpackMerge(defaultConfig, ...webpackConfigs);
 
 export { default as findEntries } from './utils/find-entries';
 
