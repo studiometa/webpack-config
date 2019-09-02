@@ -127,13 +127,9 @@ export const defaultConfig = {
  * @return {Object}                A merged Webpack configuration
  */
 export const mergeConfig = (...webpackConfigs) => {
-  const config = webpackMerge.smartStrategy(
-    {
-      entry: 'replace',
-    },
-    defaultConfig,
-    ...webpackConfigs
-  );
+  const config = webpackMerge.smartStrategy({
+    entry: 'replace',
+  })(defaultConfig, ...webpackConfigs);
 
   // Make sure there are no duplicates in the plugins list
   config.plugins = [...new Set(config.plugins)];
