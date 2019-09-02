@@ -40,7 +40,6 @@
     "@babel/runtime": "^7.5.5",
     "autoprefixer": "^9.6.1",
     "babel-loader": "^8.0.6",
-    "babel-minify-webpack-plugin": "^0.3.1",
     "css-loader": "^3.2.0",
     "cssnano": "^4.1.10",
     "glob": "^7.1.4",
@@ -49,6 +48,7 @@
     "sass": "^1.22.10",
     "sass-loader": "^7.3.1",
     "style-loader": "^1.0.0",
+    "terser-webpack-plugin": "^1.4.1",
     "vue-loader": "^15.7.1",
     "webpack-merge": "^4.2.2",
     "webpackbar": "^4.0.0"

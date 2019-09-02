@@ -93,8 +93,11 @@ export const defaultConfig = {
     minimize: true,
     minimizer: [
       compiler => {
-        const MinifyPlugin = require('babel-minify-webpack-plugin');
-        return new MinifyPlugin({}, { sourceMap: true }).apply(compiler);
+        const MinifyPlugin = require('terser-webpack-plugin');
+        return new MinifyPlugin(
+          {},
+          { cache: true, parallel: true, sourceMap: true }
+        ).apply(compiler);
       },
     ],
     namedChunks: false,
