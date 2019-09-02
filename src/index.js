@@ -1,5 +1,6 @@
 import webpackMerge from 'webpack-merge';
 import VueLoaderPlugin from 'vue-loader/lib/plugin';
+import WebpackBar from 'webpackbar';
 
 export const defaultConfig = {
   mode: 'production',
@@ -84,7 +85,7 @@ export const defaultConfig = {
   resolve: {
     extensions: ['.vue', '.mjs', '.js', '.json'],
   },
-  plugins: [new VueLoaderPlugin()],
+  plugins: [new WebpackBar(), new VueLoaderPlugin()],
   optimization: {
     checkWasmTypes: true,
     concatenateModules: true,
