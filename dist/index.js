@@ -142,9 +142,9 @@ var mergeConfig = function mergeConfig() {
     webpackConfigs[_key] = arguments[_key];
   }
 
-  var config = _webpackMerge["default"].smartStrategy.apply(_webpackMerge["default"], [{
+  var config = _webpackMerge["default"].smartStrategy({
     entry: 'replace'
-  }, defaultConfig].concat(webpackConfigs)); // Make sure there are no duplicates in the plugins list
+  }).apply(void 0, [defaultConfig].concat(webpackConfigs)); // Make sure there are no duplicates in the plugins list
 
 
   config.plugins = (0, _toConsumableArray2["default"])(new Set(config.plugins));
