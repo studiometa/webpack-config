@@ -1,5 +1,6 @@
 import webpackMerge from 'webpack-merge';
 import VueLoaderPlugin from 'vue-loader/lib/plugin';
+import WebpackBar from 'webpackbar';
 
 export const defaultConfig = {
   mode: 'production',
@@ -84,7 +85,7 @@ export const defaultConfig = {
   resolve: {
     extensions: ['.vue', '.mjs', '.js', '.json'],
   },
-  plugins: [new VueLoaderPlugin()],
+  plugins: [new WebpackBar(), new VueLoaderPlugin()],
   optimization: {
     checkWasmTypes: true,
     concatenateModules: true,
@@ -92,8 +93,11 @@ export const defaultConfig = {
     minimize: true,
     minimizer: [
       compiler => {
-        const MinifyPlugin = require('babel-minify-webpack-plugin');
-        return new MinifyPlugin({}, { sourceMap: true }).apply(compiler);
+        const MinifyPlugin = require('terser-webpack-plugin');
+        return new MinifyPlugin(
+          {},
+          { cache: true, parallel: true, sourceMap: true }
+        ).apply(compiler);
       },
     ],
     namedChunks: false,
@@ -117,8 +121,25 @@ export const defaultConfig = {
   },
 };
 
-export const mergeConfig = (...webpackConfigs) =>
-  webpackMerge(defaultConfig, ...webpackConfigs);
+/**
+ * Merge the given configurations with the default one
+ * @param  {Array}  webpackConfigs Arglist of Webpack configurations
+ * @return {Object}                A merged Webpack configuration
+ */
+export const mergeConfig = (...webpackConfigs) => {
+  const config = webpackMerge.smartStrategy(
+    {
+      entry: 'replace',
+    },
+    defaultConfig,
+    ...webpackConfigs
+  );
+
+  // Make sure there are no duplicates in the plugins list
+  config.plugins = [...new Set(config.plugins)];
+
+  return config;
+};
 
 export { default as findEntries } from './utils/find-entries';
 
