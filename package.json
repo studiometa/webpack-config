@@ -41,6 +41,7 @@
     "@babel/runtime": "^7.5.5",
     "autoprefixer": "^9.6.1",
     "babel-loader": "^8.0.6",
+    "clean-terminal-webpack-plugin": "^2.0.5",
     "css-loader": "^3.2.0",
     "cssnano": "^4.1.10",
     "glob": "^7.1.4",

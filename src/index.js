@@ -1,6 +1,7 @@
 import webpackMerge from 'webpack-merge';
 import VueLoaderPlugin from 'vue-loader/lib/plugin';
 import WebpackBar from 'webpackbar';
+import CleanTerminalPlugin from 'clean-terminal-webpack-plugin';
 
 export const defaultConfig = {
   mode: 'production',
@@ -85,7 +86,7 @@ export const defaultConfig = {
   resolve: {
     extensions: ['.vue', '.mjs', '.js', '.json'],
   },
-  plugins: [new WebpackBar(), new VueLoaderPlugin()],
+  plugins: [new CleanTerminalPlugin(), new VueLoaderPlugin(), new WebpackBar()],
   optimization: {
     checkWasmTypes: true,
     concatenateModules: true,
