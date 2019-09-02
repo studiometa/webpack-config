@@ -121,8 +121,25 @@ export const defaultConfig = {
   },
 };
 
-export const mergeConfig = (...webpackConfigs) =>
-  webpackMerge(defaultConfig, ...webpackConfigs);
+/**
+ * Merge the given configurations with the default one
+ * @param  {Array}  webpackConfigs Arglist of Webpack configurations
+ * @return {Object}                A merged Webpack configuration
+ */
+export const mergeConfig = (...webpackConfigs) => {
+  const config = webpackMerge.smartStrategy(
+    {
+      entry: 'replace',
+    },
+    defaultConfig,
+    ...webpackConfigs
+  );
+
+  // Make sure there are no duplicates in the plugins list
+  config.plugins = [...new Set(config.plugins)];
+
+  return config;
+};
 
 export { default as findEntries } from './utils/find-entries';
 

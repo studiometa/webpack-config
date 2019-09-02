@@ -13,9 +13,13 @@ Object.defineProperty(exports, "findEntries", {
 });
 exports["default"] = exports.mergeConfig = exports.defaultConfig = void 0;
 
+var _toConsumableArray2 = _interopRequireDefault(require("@babel/runtime/helpers/toConsumableArray"));
+
 var _webpackMerge = _interopRequireDefault(require("webpack-merge"));
 
 var _plugin = _interopRequireDefault(require("vue-loader/lib/plugin"));
+
+var _webpackbar = _interopRequireDefault(require("webpackbar"));
 
 var _findEntries = _interopRequireDefault(require("./utils/find-entries"));
 
@@ -90,16 +94,18 @@ var defaultConfig = {
   resolve: {
     extensions: ['.vue', '.mjs', '.js', '.json']
   },
-  plugins: [new _plugin["default"]()],
+  plugins: [new _webpackbar["default"](), new _plugin["default"]()],
   optimization: {
     checkWasmTypes: true,
     concatenateModules: true,
     flagIncludedChunks: true,
     minimize: true,
     minimizer: [function (compiler) {
-      var MinifyPlugin = require('babel-minify-webpack-plugin');
+      var MinifyPlugin = require('terser-webpack-plugin');
 
       return new MinifyPlugin({}, {
+        cache: true,
+        parallel: true,
         sourceMap: true
       }).apply(compiler);
     }],
@@ -123,10 +129,26 @@ var defaultConfig = {
     }
   }
 };
+/**
+ * Merge the given configurations with the default one
+ * @param  {Array}  webpackConfigs Arglist of Webpack configurations
+ * @return {Object}                A merged Webpack configuration
+ */
+
 exports.defaultConfig = defaultConfig;
 
-var mergeConfig = function mergeConfig(webpackConfig) {
-  return (0, _webpackMerge["default"])(defaultConfig, webpackConfig);
+var mergeConfig = function mergeConfig() {
+  for (var _len = arguments.length, webpackConfigs = new Array(_len), _key = 0; _key < _len; _key++) {
+    webpackConfigs[_key] = arguments[_key];
+  }
+
+  var config = _webpackMerge["default"].smartStrategy.apply(_webpackMerge["default"], [{
+    entry: 'replace'
+  }, defaultConfig].concat(webpackConfigs)); // Make sure there are no duplicates in the plugins list
+
+
+  config.plugins = (0, _toConsumableArray2["default"])(new Set(config.plugins));
+  return config;
 };
 
 exports.mergeConfig = mergeConfig;
