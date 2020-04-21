@@ -6,6 +6,9 @@
   "bin": {
     "meta": "bin/cli.js"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "test": "npm run lint",
     "lint": "eslint ."
