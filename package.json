@@ -5,9 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "npm run lint",
-    "prepare": "npm run build",
-    "build": "babel --out-dir dist/ src/",
-    "lint": "eslint src/"
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
