@@ -1,5 +1,5 @@
 module.exports = {
-  extends: '@studiometa/eslint-config/prettier-es6',
+  extends: '@studiometa/eslint-config',
   rules: {
     'global-require': 'off',
   },
