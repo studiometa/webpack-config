@@ -181,6 +181,7 @@ const webpackBaseConfig = {
   plugins: [
     new CleanWebpackPlugin(),
     new StylelintPlugin({
+      context: src,
       files: ['**/*.s?(a|c)ss', '**/*.vue'],
       fix: true,
       emitError: true,
