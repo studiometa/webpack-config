@@ -125,6 +125,9 @@ module.exports = () => {
       publicPath: webpackConfig.output.publicPath,
       stats: webpackConfig.stats,
       logLevel: 'silent',
+      writeToDisk(filePath) {
+        return !filePath.includes('hot-update');
+      },
     }),
     webpackHotMiddleware(bundler, { log: false }),
   ];
