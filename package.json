@@ -1,6 +1,6 @@
 {
   "name": "@studiometa/webpack-config",
-  "version": "2.0.0-alpha.4",
+  "version": "2.0.0-alpha.5",
   "description": "A basic webpack config",
   "main": "src/index.js",
   "bin": {
@@ -45,6 +45,7 @@
     "babel-loader": "^8.1.0",
     "browser-sync": "^2.26.7",
     "cac": "^6.5.8",
+    "cache-loader": "^4.1.0",
     "chalk": "^4.0.0",
     "clean-webpack-plugin": "^3.0.0",
     "common-dir": "^3.0.0",
