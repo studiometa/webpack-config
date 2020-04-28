@@ -6,7 +6,7 @@ module.exports = webpackMerge(require('./webpack.base.config'), {
   devtool: 'cheap-eval-source-map',
   devServer: {
     overlay: true,
-    allowedHosts: [process.env.APP_HOST],
+    allowedHosts: [process.env.APP_HOST || process.env.APP_HOSTNAME],
     injectClient: true,
     injectHot: true,
     compress: true,

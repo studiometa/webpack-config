@@ -9,10 +9,12 @@ module.exports = () => {
   process.env.NODE_ENV = 'development';
   const webpackConfig = require('./webpack.dev.config');
 
+  const APP_HOST = process.env.APP_HOST || process.env.APP_HOSTNAME;
+
   // Configure browserSync
   const browserSyncOptions = {
     open: false,
-    proxy: process.env.APP_HOST,
+    proxy: APP_HOST,
     logPrefix: '',
     logFileChanges: false,
     logLevel: 'silent',
@@ -44,7 +46,7 @@ module.exports = () => {
     process.env.APP_SSL_CERT &&
     process.env.APP_SSL_KEY
   ) {
-    browserSyncOptions.proxy = `https://${process.env.APP_HOST}`;
+    browserSyncOptions.proxy = `https://${APP_HOST}`;
     browserSyncOptions.https = {
       cert: path.resolve(process.env.APP_SSL_CERT),
       key: path.resolve(process.env.APP_SSL_KEY),
