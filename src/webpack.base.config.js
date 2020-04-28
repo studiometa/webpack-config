@@ -58,7 +58,7 @@ const webpackBaseConfig = {
     rules: [
       {
         enforce: 'pre',
-        test: /\.(js|vue)$/,
+        test: /\.(m?js|vue)$/,
         exclude: /node_modules/,
         use: [
           {
@@ -70,10 +70,11 @@ const webpackBaseConfig = {
         ],
       },
       {
-        test: /\.js$/,
+        test: /\.m?js$/,
         exclude: /node_modules/,
+        type: 'javascript/auto',
         use: [
-          // 'cache-loader',
+          'cache-loader',
           'babel-loader',
           'webpack-module-hot-accept',
         ],
@@ -81,7 +82,7 @@ const webpackBaseConfig = {
       {
         test: /\.vue$/,
         use: [
-          // 'cache-loader',
+          'cache-loader',
           'vue-loader',
           'webpack-module-hot-accept',
         ],
