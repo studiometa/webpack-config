@@ -29,7 +29,7 @@ const isDev = process.env.NODE_ENV !== 'production';
 const src = commonDir(config.src);
 
 const webpackBaseConfig = {
-  entry: entry((filePath) => {
+  entry: entry(filePath => {
     const extname = path.extname(filePath);
     return filePath.replace(src, '').replace(extname, '');
   }, ...config.src),
@@ -40,7 +40,7 @@ const webpackBaseConfig = {
     publicPath: config.public,
     pathinfo: false,
     filename: '[name].js',
-    chunkFilename: 'chunks/[name].js',
+    chunkFilename: '[name].js',
     sourceMapFilename: '[file].map',
   },
   stats: {
@@ -50,9 +50,9 @@ const webpackBaseConfig = {
     warnings: true,
     errors: true,
     errorDetails: true,
-    maxModules: 0,
-    modules: true,
-    excludeAssets: /hot-update/,
+    performance: true,
+    timings: true,
+    excludeAssets: isDev ? [/hot-update/, /\.map$/, /^manifest\.(js|json)$/] : [/\.map$/],
   },
   module: {
     rules: [
@@ -73,19 +73,11 @@ const webpackBaseConfig = {
         test: /\.m?js$/,
         exclude: /node_modules/,
         type: 'javascript/auto',
-        use: [
-          'cache-loader',
-          'babel-loader',
-          'webpack-module-hot-accept',
-        ],
+        use: ['cache-loader', 'babel-loader', 'webpack-module-hot-accept'],
       },
       {
         test: /\.vue$/,
-        use: [
-          'cache-loader',
-          'vue-loader',
-          'webpack-module-hot-accept',
-        ],
+        use: ['cache-loader', 'vue-loader', 'webpack-module-hot-accept'],
       },
       {
         test: /\.vue\.(sa|sc|c)ss$/,
@@ -205,20 +197,15 @@ const webpackBaseConfig = {
     new WebpackBar(),
     new MiniCssExtractPlugin({
       filename: '[name].css',
-      chunkFilename: 'chunks/[id].css',
+      chunkFilename: '[name].css',
     }),
   ],
   optimization: {
-    checkWasmTypes: true,
-    concatenateModules: true,
-    flagIncludedChunks: true,
-    minimize: true,
-    namedChunks: true,
-    namedModules: true,
-    noEmitOnErrors: true,
-    occurrenceOrder: true,
-    sideEffects: true,
-    usedExports: true,
+    chunkIds: false,
+    mangleWasmImports: true,
+    runtimeChunk: {
+      name: 'manifest',
+    },
     splitChunks: {
       hidePathInfo: true,
       chunks: 'async',
