@@ -27,6 +27,13 @@ module.exports = {
   ],
   dist: './path/to/dist',
   public: '/path/to/dist',
+  webpack(config, isDev) {
+    // Extends the webpack config here.
+  },
+  sassOptions: {
+    // Configure the Sass implementation.
+    // @see https://github.com/webpack-contrib/sass-loader#sassoptions
+  },
 };
 ```
 

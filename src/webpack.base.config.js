@@ -94,7 +94,12 @@ const webpackBaseConfig = {
           'css-loader',
           'postcss-loader',
           'resolve-url-loader',
-          'sass-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              sassOptions: config.sassOptions || {},
+            },
+          },
         ],
       },
       {
@@ -109,7 +114,12 @@ const webpackBaseConfig = {
           'css-loader',
           'postcss-loader',
           'resolve-url-loader',
-          'sass-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              sassOptions: config.sassOptions || {},
+            },
+          },
         ],
       },
       {
