@@ -6,6 +6,7 @@ const webpackHotMiddleware = require('webpack-hot-middleware');
 const FriendlyErrorsWebpackPlugin = require('@nuxtjs/friendly-errors-webpack-plugin');
 
 module.exports = () => {
+  process.env.NODE_ENV = 'development';
   const webpackConfig = require('./webpack.dev.config');
 
   // Configure browserSync

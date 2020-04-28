@@ -1,9 +1,6 @@
 const webpackMerge = require('webpack-merge');
-const baseConfig = require('./webpack.base.config');
 
-process.env.NODE_ENV = 'development';
-
-module.exports = webpackMerge(baseConfig, {
+module.exports = webpackMerge(require('./webpack.base.config'), {
   mode: 'development',
   cache: true,
   devtool: 'cheap-eval-source-map',

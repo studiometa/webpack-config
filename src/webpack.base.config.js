@@ -243,7 +243,7 @@ if (config.analyze) {
 }
 
 if (config.webpack && typeof config.webpack === 'function') {
-  config.webpack(webpackBaseConfig);
+  config.webpack(webpackBaseConfig, isDev);
 }
 
 module.exports = webpackBaseConfig;
