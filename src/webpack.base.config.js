@@ -51,7 +51,6 @@ const webpackBaseConfig = {
     errors: true,
     errorDetails: true,
     performance: true,
-    timings: true,
     excludeAssets: isDev ? [/hot-update/, /\.map$/, /^manifest\.(js|json)$/] : [/\.map$/],
   },
   module: {
