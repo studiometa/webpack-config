@@ -1,17 +1,20 @@
 const webpackMerge = require('webpack-merge');
 
-module.exports = webpackMerge(require('./webpack.base.config'), {
-  mode: 'development',
-  cache: true,
-  devtool: 'cheap-eval-source-map',
-  devServer: {
-    overlay: true,
-    allowedHosts: [process.env.APP_HOST || process.env.APP_HOSTNAME],
-    injectClient: true,
-    injectHot: true,
-    compress: true,
-    open: true,
-    quiet: true,
-  },
-  optimization: { minimize: false },
-});
+module.exports = (config) => {
+  const baseConfig = require('./webpack.base.config')(config);
+  return webpackMerge(baseConfig, {
+    mode: 'development',
+    cache: true,
+    devtool: 'cheap-eval-source-map',
+    devServer: {
+      overlay: true,
+      allowedHosts: [process.env.APP_HOST || process.env.APP_HOSTNAME],
+      injectClient: true,
+      injectHot: true,
+      compress: true,
+      open: true,
+      quiet: true,
+    },
+    optimization: { minimize: false },
+  });
+};

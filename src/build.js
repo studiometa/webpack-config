@@ -1,8 +1,11 @@
 const webpack = require('webpack');
 
-module.exports = () => {
+module.exports = (options = {}) => {
   process.env.NODE_ENV = 'production';
-  const webpackConfig = require('./webpack.prod.config.js');
+
+  const config = require('./utils/get-config.js')(options);
+  const webpackConfig = require('./webpack.prod.config.js')(config);
+
   webpack(webpackConfig, (err, stats) => {
     console.log(
       stats.toString({
