@@ -5,16 +5,15 @@ const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const FriendlyErrorsWebpackPlugin = require('@nuxtjs/friendly-errors-webpack-plugin');
 
-module.exports = () => {
+module.exports = (options = {}) => {
   process.env.NODE_ENV = 'development';
-  const webpackConfig = require('./webpack.dev.config');
 
-  const APP_HOST = process.env.APP_HOST || process.env.APP_HOSTNAME;
+  const config = require('./utils/get-config')(options);
+  const webpackConfig = require('./webpack.dev.config')(config);
 
   // Configure browserSync
   const browserSyncOptions = {
     open: false,
-    proxy: APP_HOST,
     logPrefix: '',
     logFileChanges: false,
     logLevel: 'silent',
