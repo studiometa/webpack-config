@@ -38,6 +38,19 @@ module.exports = (options = {}) => {
     },
   };
 
+  if (config.server) {
+    browserSyncOptions.server = config.server;
+  } else {
+    const APP_HOST = process.env.APP_HOST || process.env.APP_HOSTNAME;
+    browserSyncOptions.proxy = APP_HOST;
+  }
+
+  if (config.watch) {
+    config.watch.forEach((glob) => {
+      browserSync.watch(glob).on('change', browserSync.reload);
+    });
+  }
+
   // Enable `https://` with browserSync
   if (
     process.env.APP_SSL &&
@@ -45,7 +58,9 @@ module.exports = (options = {}) => {
     process.env.APP_SSL_CERT &&
     process.env.APP_SSL_KEY
   ) {
-    browserSyncOptions.proxy = `https://${APP_HOST}`;
+    if (browserSyncOptions.proxy) {
+      browserSyncOptions.proxy = `https://${browserSyncOptions.proxy}`;
+    }
     browserSyncOptions.https = {
       cert: path.resolve(process.env.APP_SSL_CERT),
       key: path.resolve(process.env.APP_SSL_KEY),
@@ -58,8 +73,11 @@ module.exports = (options = {}) => {
     }
 
     const port = browserSync.getOption('port');
-    const proxy = browserSync.getOption('proxy').get('target');
-    return `Application running at \x1b[34m${proxy}:${port}\x1b[0m\n`;
+    const proxy = browserSync.getOption('proxy');
+    const protocol = browserSyncOptions.https ? 'https://' : 'http://';
+    const target = proxy ? proxy.get('target') : `${protocol}localhost`;
+
+    return `Application running at \x1b[34m${target}:${port}\x1b[0m\n`;
   };
 
   const webpackBar = webpackConfig.plugins.find(
@@ -133,5 +151,6 @@ module.exports = (options = {}) => {
     }),
     webpackHotMiddleware(bundler, { log: false }),
   ];
+
   browserSync.init(browserSyncOptions);
 };
