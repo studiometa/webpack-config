@@ -27,13 +27,35 @@ module.exports = {
   ],
   dist: './path/to/dist',
   public: '/path/to/dist',
-  webpack(config, isDev) {
-    // Extends the webpack config here.
-  },
-  sassOptions: {
-    // Configure the Sass implementation.
-    // @see https://github.com/webpack-contrib/sass-loader#sassoptions
-  },
+
+  /**
+   * Analyze the bundle with the WebpackBundleAnalyzer plugin
+   * @optional
+   */
+  analyze: false,
+
+  /**
+   * Extend the Webpack configuration
+   * @optional
+   */
+  webpack(config, isDev) {},
+
+  /**
+   * Configure the `sass-loader` options
+   * @optional
+   * @see https://github.com/webpack-contrib/sass-loader#sassoptions
+   */
+  sassOptions: {},
+
+  // Configure the browserSync server if you do not use a proxy
+  // @see https://browsersync.io/docs/options#option-server
+  server: true,
+  // Globs to watch to trigger full page reload with browserSync
+  // @see https://browsersync.io/docs/api#api-watch
+  watch: [
+    '*.html',
+    '*.php',
+  ],
 };
 ```
 
@@ -56,8 +78,14 @@ node_modules/.bin/meta dev
 
 And build your assets:
 
-```
+```bash
 node_modules/.bin/meta build
+```
+
+You can analyze your bundle(s) with the `--analyze` (or `-a`) argument:s
+
+```bash
+node_modules/.bin/meta build --analyze
 ```
 
 ## Contributing

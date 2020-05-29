@@ -1,0 +1,2 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[1],[function(n,o,e){"use strict";e.r(o);o.default=new function n(o){!function(n,o){if(!(n instanceof o))throw new TypeError("Cannot call a class as a function")}(this,n),this.options=o,window.addEventListener("resize",(function(){document.body.innerHTML+="<br>resize"})),document.body.innerHTML+=" bar"}({foo:"bar"})}],[[0,2]]]);
+//# sourceMappingURL=app.js.map
