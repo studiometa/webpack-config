@@ -11,7 +11,7 @@
   },
   "scripts": {
     "test": "npm run lint",
-    "lint": "eslint ."
+    "lint": "eslint ./src"
   },
   "repository": {
     "type": "git",
