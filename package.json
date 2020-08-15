@@ -29,14 +29,14 @@
   },
   "homepage": "https://github.com/studiometa/webpack-config#readme",
   "devDependencies": {
-    "@studiometa/eslint-config": "^2.0.3",
-    "@studiometa/prettier-config": "^2.0.0",
-    "eslint": "^6.8.0",
-    "prettier": "^2.0.4",
-    "stylelint": "^13.3.3"
+    "@studiometa/eslint-config": "^2.1.2",
+    "@studiometa/prettier-config": "^2.0.1",
+    "eslint": "^7.7.0",
+    "prettier": "^2.0.5",
+    "stylelint": "^13.6.1"
   },
   "peerDependencies": {
-    "eslint": "^6",
+    "eslint": "^6 || ^7",
     "prettier": "^2",
     "stylelint": "^13"
   },
