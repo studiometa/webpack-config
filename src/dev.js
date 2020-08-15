@@ -1,5 +1,4 @@
 const path = require('path');
-const browserSync = require('browser-sync').create();
 const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
@@ -10,89 +9,21 @@ module.exports = (options = {}) => {
 
   const config = require('./utils/get-config')(options);
   const webpackConfig = require('./webpack.dev.config')(config);
-
-  // Configure browserSync
-  const browserSyncOptions = {
-    open: false,
-    logPrefix: '',
-    logFileChanges: false,
-    logLevel: 'silent',
-    notify: {
-      styles: [
-        'z-index: 99999998',
-        'position: fixed',
-        'right: 1em',
-        'bottom: 1em',
-        'display: none',
-        'padding: 0.6em 0.8em 0.7em',
-        'margin: 0',
-        'font-family: JetBrains Mono, Fira Code, monospace',
-        'font-size: 12px',
-        'font-weight: 400',
-        'text-align: center',
-        'color: white',
-        'background-color: #1B2032',
-        'border-radius: 5px',
-        'text-transform: capitalize',
-      ],
-    },
-  };
-
-  if (config.server) {
-    browserSyncOptions.server = config.server;
-  } else {
-    const APP_HOST = process.env.APP_HOST || process.env.APP_HOSTNAME;
-    browserSyncOptions.proxy = APP_HOST;
-  }
-
-  if (config.watch) {
-    config.watch.forEach((glob) => {
-      browserSync.watch(glob).on('change', browserSync.reload);
-    });
-  }
-
-  // Enable `https://` with browserSync
-  if (
-    process.env.APP_SSL &&
-    process.env.APP_SSL === 'true' &&
-    process.env.APP_SSL_CERT &&
-    process.env.APP_SSL_KEY
-  ) {
-    if (browserSyncOptions.proxy) {
-      browserSyncOptions.proxy = `https://${browserSyncOptions.proxy}`;
-    }
-    browserSyncOptions.https = {
-      cert: path.resolve(process.env.APP_SSL_CERT),
-      key: path.resolve(process.env.APP_SSL_KEY),
-    };
-  }
-
-  const getServerInfo = () => {
-    if (!browserSync.active) {
-      return 'Application not running.';
-    }
-
-    const port = browserSync.getOption('port');
-    const proxy = browserSync.getOption('proxy');
-    const protocol = browserSyncOptions.https ? 'https://' : 'http://';
-    const target = proxy ? proxy.get('target') : `${protocol}localhost`;
-
-    return `Application running at \x1b[34m${target}:${port}\x1b[0m\n`;
-  };
+  const server = require('./utils/get-browsersync')(config);
 
   const webpackBar = webpackConfig.plugins.find(
     (plugin) => plugin.constructor.name === 'WebpackBarPlugin'
   );
 
   webpackBar.reporters.push({
-    start: ({ state }) => browserSync.notify(state.message),
-    change: ({ state }) => browserSync.notify(state.message),
-    update: ({ state }) => browserSync.notify(state.message),
-    done: ({ state }) => browserSync.notify(state.message),
-    progress: ({ state }) => browserSync.notify(`${state.message} ${state.progress}%`),
-    allDone: ({ state }) => browserSync.notify(state.message),
-    beforeAllDone: ({ state }) => browserSync.notify(state.message),
-    afterAllDone: ({ state }) => browserSync.notify(state.message),
+    start: ({ state }) => server.instance.notify(state.message),
+    change: ({ state }) => server.instance.notify(state.message),
+    update: ({ state }) => server.instance.notify(state.message),
+    done: ({ state }) => server.instance.notify(state.message),
+    progress: ({ state }) => server.instance.notify(`${state.message} ${state.progress}%`),
+    allDone: ({ state }) => server.instance.notify(state.message),
+    beforeAllDone: ({ state }) => server.instance.notify(state.message),
+    afterAllDone: ({ state }) => server.instance.notify(state.message),
   });
 
   // Use the same error display as Nuxt
@@ -100,7 +31,7 @@ module.exports = (options = {}) => {
     new FriendlyErrorsWebpackPlugin({
       compilationSuccessInfo: {
         get messages() {
-          return [getServerInfo()];
+          return [server.getInfo()];
         },
       },
     })
@@ -137,20 +68,24 @@ module.exports = (options = {}) => {
         return path.join(outputPath, name);
       });
 
-    return browserSync.reload(files);
+    return server.instance.reload(files);
   });
 
-  browserSyncOptions.middleware = [
-    webpackDevMiddleware(bundler, {
-      publicPath: webpackConfig.output.publicPath,
-      stats: webpackConfig.stats,
-      logLevel: 'silent',
-      writeToDisk(filePath) {
-        return !filePath.includes('hot-update');
-      },
-    }),
-    webpackHotMiddleware(bundler, { log: false }),
-  ];
+  const browserSyncConfig = {
+    ...server.config,
+    middleware: [
+      ...(server.config.middleware || []),
+      webpackDevMiddleware(bundler, {
+        publicPath: webpackConfig.output.publicPath,
+        stats: webpackConfig.stats,
+        logLevel: 'silent',
+        writeToDisk(filePath) {
+          return !filePath.includes('hot-update');
+        },
+      }),
+      webpackHotMiddleware(bundler, { log: false }),
+    ],
+  };
 
-  browserSync.init(browserSyncOptions);
+  server.instance.init(browserSyncConfig);
 };
