@@ -3,5 +3,13 @@ module.exports = {
   dist: './dist/',
   public: '/',
   server: true,
-  watch: ['./*.html'],
+  watch: [
+    '*.html',
+    [
+      '*.html',
+      (event, file) => {
+        console.log(`The "${event}" event was emitted for the file "${file}".`);
+      },
+    ],
+  ],
 };
