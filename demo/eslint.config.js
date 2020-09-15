@@ -1,5 +1,4 @@
 module.exports = {
-  env: {
-    browser: true,
-  },
+  root: true,
+  extends: ['@studiometa/eslint-config'],
 };

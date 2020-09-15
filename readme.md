@@ -18,7 +18,7 @@ npm install --save-dev @studiometa/webpack-config
 
 Create a `meta.config.js` file at the root of yout project:
 
-```js
+```ts
 // meta.config.js
 module.exports = {
   src: [
@@ -29,32 +29,59 @@ module.exports = {
   public: '/path/to/dist',
 
   /**
-   * Analyze the bundle with the WebpackBundleAnalyzer plugin
+   * Analyze the bundle with the WebpackBundleAnalyzer plugin.
+   * @type {Boolean}
    * @optional
    */
   analyze: false,
 
   /**
-   * Extend the Webpack configuration
+   * Extend the Webpack configuration.
+   * @type {Function}
    * @optional
    */
   webpack(config, isDev) {},
 
   /**
-   * Configure the `sass-loader` options
+   * Configure the `sass-loader` options.
+   * @type {Objet}
    * @optional
    * @see https://github.com/webpack-contrib/sass-loader#sassoptions
    */
   sassOptions: {},
 
-  // Configure the browserSync server if you do not use a proxy
-  // @see https://browsersync.io/docs/options#option-server
+  /**
+   * Configure the browserSync server if you do not use a proxy by setting
+   * this property to `true` or a BrowserSync server configuration object.
+   * If the property is a function, it will be used to alter the server
+   * configuraton and instance in proxy mode.
+   * @see https://browsersync.io/docs/options#option-server
+   * @type {Boolean|Object|Function}
+   * @optional
+   */
   server: true,
-  // Globs to watch to trigger full page reload with browserSync
-  // @see https://browsersync.io/docs/api#api-watch
+  server(bsConfig, bs) {},
+
+  /**
+   * Watch for file changes in dev mode and:
+   * - reload the browser
+   * - or execute a callback
+   * @see https://browsersync.io/docs/api#api-watch
+   * @type {Array<String|Array>}
+   * @optional
+   */
   watch: [
-    '*.html',
+    // Watch for changes on all PHP files and reload the browser
     '*.php',
+    // Watch for all events on all HTML files and execute the callback
+    [
+      '*.html',
+      (event, file, bs, bsConfig) => {
+        if (event === 'change') {
+          bs.reload();
+        }
+      },
+    ],
   ],
 };
 ```

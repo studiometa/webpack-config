@@ -1,14 +1,21 @@
 {
   "scripts": {
-    "dev": "node ../bin/cli.js dev",
+    "dev": "meta dev",
     "build": "meta build"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.10.1",
+    "@babel/core": "^7.11.6",
+    "@babel/preset-env": "^7.11.5",
+    "@studiometa/eslint-config": "^2.1.2",
     "@studiometa/prettier-config": "^2.0.1",
     "@studiometa/stylelint-config": "^2.0.0",
     "@studiometa/webpack-config": "file:..",
+    "autoprefixer": "^9.8.6",
     "cssnano": "^4.1.10",
-    "tailwindcss": "^1.4.6"
+    "eslint": "^7.9.0",
+    "postcss": "^8.0.3",
+    "prettier": "^2.1.1",
+    "stylelint": "^13.7.1",
+    "tailwindcss": "^1.8.10"
   }
 }
