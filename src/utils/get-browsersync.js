@@ -37,7 +37,19 @@ const getConfig = (metaConfig) => {
 
   if (metaConfig.watch) {
     metaConfig.watch.forEach((glob) => {
-      instance.watch(glob).on('change', instance.reload);
+      if (Array.isArray(glob) && glob.length >= 2) {
+        const [fileGlob, callback] = glob;
+        if (typeof callback !== 'function') {
+          throw new Error(
+            'A watch item should implement the following schema: [glob:string, callback:function]'
+          );
+        }
+        instance.watch(fileGlob, (event, file) => {
+          callback(event, file, instance, browserSyncConfig);
+        });
+      } else {
+        instance.watch(glob).on('change', instance.reload);
+      }
     });
   }
 
