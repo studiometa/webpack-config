@@ -1,6 +1,8 @@
 const path = require('path');
 const instance = require('browser-sync').create();
 
+let WATCH_HANDLERS_BINDED = false;
+
 const getConfig = (metaConfig) => {
   const browserSyncConfig = {
     open: false,
@@ -35,7 +37,8 @@ const getConfig = (metaConfig) => {
     browserSyncConfig.proxy = APP_HOST;
   }
 
-  if (metaConfig.watch) {
+  if (metaConfig.watch && !WATCH_HANDLERS_BINDED) {
+    WATCH_HANDLERS_BINDED = true;
     metaConfig.watch.forEach((glob) => {
       if (Array.isArray(glob) && glob.length >= 2) {
         const [fileGlob, callback] = glob;

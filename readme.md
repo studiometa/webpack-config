@@ -51,12 +51,16 @@ module.exports = {
   sassOptions: {},
 
   /**
-   * Configure the browserSync server if you do not use a proxy.
+   * Configure the browserSync server if you do not use a proxy by setting
+   * this property to `true` or a BrowserSync server configuration object.
+   * If the property is a function, it will be used to alter the server
+   * configuraton and instance in proxy mode.
    * @see https://browsersync.io/docs/options#option-server
-   * @type {Boolean|Object}
+   * @type {Boolean|Object|Function}
    * @optional
    */
   server: true,
+  server(bsConfig, bs) {},
 
   /**
    * Watch for file changes in dev mode and:
