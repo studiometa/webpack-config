@@ -69,7 +69,7 @@ module.exports = (config) => {
           test: /\.vue\.(sa|sc|c)ss$/,
           use: [
             'vue-style-loader',
-            'css-loader',
+            { loader: 'css-loader', options: { url: (url) => !url.startsWith('/') } },
             'postcss-loader',
             'resolve-url-loader',
             {
@@ -89,7 +89,7 @@ module.exports = (config) => {
                 hmr: process.env.NODE_ENV === 'development',
               },
             },
-            'css-loader',
+            { loader: 'css-loader', options: { url: (url) => !url.startsWith('/') } },
             'postcss-loader',
             'resolve-url-loader',
             {
