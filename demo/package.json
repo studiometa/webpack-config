@@ -17,5 +17,8 @@
     "prettier": "^2.1.1",
     "stylelint": "^13.7.1",
     "tailwindcss": "^1.8.10"
+  },
+  "dependencies": {
+    "@studiometa/js-toolkit": "^1.0.0-alpha.13"
   }
 }
