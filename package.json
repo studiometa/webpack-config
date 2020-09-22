@@ -1,6 +1,6 @@
 {
   "name": "@studiometa/webpack-config",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "A basic webpack config",
   "main": "src/index.js",
   "bin": {
@@ -61,6 +61,7 @@
     "sass": "^1.26.10",
     "sass-loader": "^9.0.3",
     "stylelint-webpack-plugin": "^2.1.0",
+    "terser-webpack-plugin": "^4.2.2",
     "url-loader": "^4.1.0",
     "vue-loader": "^15.9.3",
     "vue-template-compiler": "^2.6.12",
