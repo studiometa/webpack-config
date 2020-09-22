@@ -7,6 +7,7 @@ const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const StylelintPlugin = require('stylelint-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const TerserPlugin = require('terser-webpack-plugin');
 const commonDir = require('common-dir');
 
 require('dotenv').config();
@@ -189,6 +190,14 @@ module.exports = (config) => {
     ],
     optimization: {
       chunkIds: false,
+      minimizer: [
+        new TerserPlugin({
+          cache: true,
+          parallel: true,
+          sourceMap: true,
+          extractComments: true,
+        }),
+      ],
       mangleWasmImports: true,
       runtimeChunk: {
         name: 'manifest',
