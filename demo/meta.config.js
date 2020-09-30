@@ -12,4 +12,10 @@ module.exports = {
       },
     ],
   ],
+  webpackDev({ mode, devtool }) {
+    console.log('webpackDev', { mode, devtool });
+  },
+  webpackProd({ mode, devtool }) {
+    console.log('webpackProd', { mode, devtool });
+  },
 };

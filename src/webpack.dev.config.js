@@ -2,7 +2,7 @@ const { merge } = require('webpack-merge');
 
 module.exports = (config) => {
   const baseConfig = require('./webpack.base.config')(config);
-  return merge(baseConfig, {
+  const devConfig = merge(baseConfig, {
     mode: 'development',
     cache: true,
     devtool: 'cheap-eval-source-map',
@@ -17,4 +17,10 @@ module.exports = (config) => {
     },
     optimization: { minimize: false },
   });
+
+  if (config.webpackDev && typeof config.webpackDev === 'function') {
+    config.webpackDev(devConfig);
+  }
+
+  return devConfig;
 };
