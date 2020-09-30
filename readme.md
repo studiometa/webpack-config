@@ -36,11 +36,28 @@ module.exports = {
   analyze: false,
 
   /**
-   * Extend the Webpack configuration.
+   * Extends the Webpack configuration before merging
+   * with the environment specific configurations.
    * @type {Function}
    * @optional
    */
   webpack(config, isDev) {},
+
+  /**
+   * Extends the development Webpack configuration.
+   * @param {WebpackConfig} devConfig The Webpack development config.
+   * @type {Function}
+   * @optional
+   */
+  webpackDev(devConfig) {},
+
+  /**
+   * Extends the production Webpack configuration.
+   * @param {WebpackConfig} devConfig The Webpack production config.
+   * @type {Function}
+   * @optional
+   */
+  webpackProd(prodConfig) {},
 
   /**
    * Configure the `sass-loader` options.
