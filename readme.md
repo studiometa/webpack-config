@@ -100,6 +100,16 @@ module.exports = {
       },
     ],
   ],
+
+  /**
+   * Use presets to apply pre-made configurations.
+   * @type {Array<String|Array<String,Object>>}
+   * @optional
+   */
+  presets: [
+    'twig', // use the `twig` preset
+    ['twig', {}], // use the `twig` preset with custom options
+  ],
 };
 ```
 
