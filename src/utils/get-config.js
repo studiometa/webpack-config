@@ -40,7 +40,7 @@ module.exports = (options) => {
 
       // eslint-disable-next-line import/no-dynamic-require
       const presetHandler = require(presetPath);
-      presetHandler(opts, config);
+      presetHandler(config, opts);
     });
   }
 

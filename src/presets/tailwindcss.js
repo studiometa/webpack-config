@@ -1,6 +1,6 @@
 const merge = require('lodash.merge');
 
-module.exports = (options, config) => {
+module.exports = (config, options = {}) => {
   const opts = merge(
     {
       entry: require.resolve('tailwindcss'),

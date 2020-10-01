@@ -1,7 +1,7 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const merge = require('lodash.merge');
 
-module.exports = (options, config) => {
+module.exports = (config, options = {}) => {
   const opts = merge(
     {
       loaderOptions: { data: {} },
