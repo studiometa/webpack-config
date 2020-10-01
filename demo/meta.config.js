@@ -1,10 +1,5 @@
 module.exports = {
-  src: ['./src/js/**/*.js', './src/css/**/[!_]*.scss'],
-  dist: './dist',
-  public: '/',
-  server: 'dist',
   watch: [
-    'dist/*.html',
     [
       'dist/*.html',
       (event, file) => {
@@ -18,5 +13,5 @@ module.exports = {
   webpackProd({ mode, devtool }) {
     console.log('webpackProd', { mode, devtool });
   },
-  presets: ['twig'],
+  presets: ['twig', 'prototyping'],
 };

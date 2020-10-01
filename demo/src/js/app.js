@@ -6,6 +6,15 @@ import { Base } from '@studiometa/js-toolkit/';
  */
 class App extends Base {
   /**
+   * App configuration.
+   */
+  get config() {
+    return {
+      name: 'App',
+    };
+  }
+
+  /**
    * Mounted hook.
    */
   mounted() {
@@ -28,4 +37,4 @@ class App extends Base {
   }
 }
 
-export default new App(document.body);
+export default new App(document.querySelector('main'));
