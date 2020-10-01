@@ -1,12 +1,12 @@
 module.exports = {
   src: ['./src/js/**/*.js', './src/css/**/[!_]*.scss'],
-  dist: './dist/',
+  dist: './dist',
   public: '/',
-  server: true,
+  server: 'dist',
   watch: [
-    '*.html',
+    'dist/*.html',
     [
-      '*.html',
+      'dist/*.html',
       (event, file) => {
         console.log(`The "${event}" event was emitted for the file "${file}".`);
       },
@@ -18,4 +18,5 @@ module.exports = {
   webpackProd({ mode, devtool }) {
     console.log('webpackProd', { mode, devtool });
   },
+  presets: ['twig'],
 };
