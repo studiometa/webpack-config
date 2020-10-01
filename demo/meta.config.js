@@ -1,5 +1,3 @@
-const path = require('path');
-
 module.exports = {
   src: ['./src/js/**/*.js', './src/css/**/[!_]*.scss'],
   dist: './dist',
@@ -20,8 +18,5 @@ module.exports = {
   webpackProd({ mode, devtool }) {
     console.log('webpackProd', { mode, devtool });
   },
-  presets: [
-    'twig',
-    ['tailwindcss', { entry: path.resolve(__dirname, 'node_modules/tailwindcss/lib/index.js') }],
-  ],
+  presets: ['twig'],
 };

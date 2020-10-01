@@ -28,12 +28,17 @@ module.exports = (options, config) => {
     };
 
     webpackConfig.module.rules.forEach((rule) => {
-      if (!(Array.isArray(rule.use) && rule.use.includes('postcss-loader'))) {
+      if (!Array.isArray(rule.use)) {
         return;
       }
 
-      const postcssIndex = rule.use.findIndex((use) => use === 'postcss-loader');
-      rule.use[postcssIndex] = postcssLoader;
+      const postcssIndex = rule.use.findIndex(
+        (use) => use === 'postcss-loader' || use.loader === 'postcss-loader'
+      );
+
+      if (postcssIndex) {
+        rule.use[postcssIndex] = postcssLoader;
+      }
     });
 
     oldWebpackConfig(webpackConfig, isDev);
