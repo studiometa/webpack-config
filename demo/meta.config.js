@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
   watch: [
     [
@@ -13,5 +15,14 @@ module.exports = {
   webpackProd({ mode, devtool }) {
     console.log('webpackProd', { mode, devtool });
   },
-  presets: ['twig', 'prototyping'],
+  presets: [
+    [
+      'prototyping',
+      {
+        tailwindcss: {
+          path: path.resolve(__dirname, 'node_modules/tailwindcss/lib/index.js'),
+        },
+      },
+    ],
+  ],
 };

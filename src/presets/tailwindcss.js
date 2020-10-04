@@ -3,14 +3,14 @@ const merge = require('lodash.merge');
 module.exports = (config, options = {}) => {
   const opts = merge(
     {
-      entry: require.resolve('tailwindcss'),
+      path: require.resolve('tailwindcss'),
     },
     options
   );
 
   const oldWebpackConfig = typeof config.webpack === 'function' ? config.webpack : () => {};
   config.webpack = (webpackConfig, isDev) => {
-    const tailwind = opts.entry ? opts.entry : require.resolve('tailwindcss');
+    const tailwind = opts.path ? opts.path : require.resolve('tailwindcss');
 
     // Strange bug where wrong resolution trigger the CLI from Tailwind
     // instead of the index file containing the PostCSS plugin.
