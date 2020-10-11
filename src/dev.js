@@ -58,7 +58,9 @@ module.exports = (options = {}) => {
   const bundler = webpack(webpackConfig);
   bundler.hooks.done.tap('BrowserSync', (stats) => {
     const { assets, outputPath } = stats.toJson();
-    console.log(stats.toString({ ...webpackConfig.stats, colors: true }));
+    console.log(
+      stats.toString({ ...webpackConfig.stats, warnings: false, errors: false, colors: true })
+    );
     console.log('');
 
     // Inject only CSS files as other files are handled by the Webpack dev server
