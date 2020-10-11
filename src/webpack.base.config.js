@@ -176,15 +176,14 @@ module.exports = (config) => {
         context: src,
         extensions: ['js', 'vue'],
         fix: true,
-        failOnError: true,
+        failOnError: !isDev,
       }),
       new StylelintPlugin({
         context: src,
         files: ['**/*.s?(a|c)ss', '**/*.vue'],
         fix: true,
-        emitError: true,
-        emitWarning: true,
         allowEmptyInput: true,
+        failOnError: !isDev,
       }),
       new FixStyleOnlyEntriesPlugin({
         silent: true,
