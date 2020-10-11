@@ -187,9 +187,11 @@ module.exports = (config) => {
         allowEmptyInput: true,
         failOnError: !isDev,
       }),
-      new FixStyleOnlyEntriesPlugin({
-        silent: true,
-      }),
+      isDev
+        ? () => {}
+        : new FixStyleOnlyEntriesPlugin({
+            silent: true,
+          }),
       new VueLoaderPlugin(),
       new WebpackBar(),
       new MiniCssExtractPlugin({
