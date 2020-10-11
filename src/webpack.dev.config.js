@@ -5,7 +5,7 @@ module.exports = (config) => {
   const devConfig = merge(baseConfig, {
     mode: 'development',
     cache: true,
-    devtool: 'cheap-eval-source-map',
+    devtool: 'cheap-source-map',
     devServer: {
       overlay: true,
       allowedHosts: [process.env.APP_HOST || process.env.APP_HOSTNAME],
