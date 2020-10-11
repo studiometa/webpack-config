@@ -1,10 +1,19 @@
-import { Base } from '@studiometa/js-toolkit/';
+import Base from '@studiometa/js-toolkit';
 
 /**
  * App class.
  * @license MIT © 2020 Studio Meta
  */
 class App extends Base {
+  /**
+   * App configuration.
+   */
+  get config() {
+    return {
+      name: 'App',
+    };
+  }
+
   /**
    * Mounted hook.
    */
@@ -28,4 +37,4 @@ class App extends Base {
   }
 }
 
-export default new App(document.body);
+export default new App(document.querySelector('main'));

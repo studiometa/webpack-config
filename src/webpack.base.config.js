@@ -71,7 +71,14 @@ module.exports = (config) => {
           use: [
             'vue-style-loader',
             { loader: 'css-loader', options: { url: (url) => !url.startsWith('/') } },
-            'postcss-loader',
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  plugins: isDev ? [] : ['autoprefixer', 'cssnano'],
+                },
+              },
+            },
             'resolve-url-loader',
             {
               loader: 'sass-loader',
@@ -91,7 +98,14 @@ module.exports = (config) => {
               },
             },
             { loader: 'css-loader', options: { url: (url) => !url.startsWith('/') } },
-            'postcss-loader',
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  plugins: isDev ? [] : ['autoprefixer', 'cssnano'],
+                },
+              },
+            },
             'resolve-url-loader',
             {
               loader: 'sass-loader',

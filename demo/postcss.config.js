@@ -1,12 +1,3 @@
-const postcssConfig = {
-  plugins: [require('tailwindcss'), require('autoprefixer')],
+module.exports = {
+  plugins: [require('tailwindcss')],
 };
-
-if (process.env.NODE_ENV === 'production') {
-  postcssConfig.plugins = [
-    ...postcssConfig.plugins,
-    require('cssnano'),
-  ];
-}
-
-module.exports = postcssConfig;

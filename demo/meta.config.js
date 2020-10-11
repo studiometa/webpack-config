@@ -1,12 +1,9 @@
+const path = require('path');
+
 module.exports = {
-  src: ['./src/js/**/*.js', './src/css/**/[!_]*.scss'],
-  dist: './dist/',
-  public: '/',
-  server: true,
   watch: [
-    '*.html',
     [
-      '*.html',
+      'dist/*.html',
       (event, file) => {
         console.log(`The "${event}" event was emitted for the file "${file}".`);
       },
@@ -18,4 +15,14 @@ module.exports = {
   webpackProd({ mode, devtool }) {
     console.log('webpackProd', { mode, devtool });
   },
+  presets: [
+    [
+      'prototyping',
+      {
+        tailwindcss: {
+          path: path.resolve(__dirname, 'node_modules/tailwindcss/lib/index.js'),
+        },
+      },
+    ],
+  ],
 };
