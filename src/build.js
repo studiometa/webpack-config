@@ -7,6 +7,10 @@ module.exports = (options = {}) => {
   const webpackConfig = require('./webpack.prod.config.js')(config);
 
   webpack(webpackConfig, (err, stats) => {
+    if (err) {
+      console.error(err.message);
+      return;
+    }
     console.log(
       stats.toString({
         ...webpackConfig.stats,
