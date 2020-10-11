@@ -50,7 +50,9 @@ module.exports = (config) => {
           test: /\.m?js$/,
           exclude: /node_modules/,
           type: 'javascript/auto',
-          use: ['cache-loader', 'babel-loader', 'webpack-module-hot-accept'],
+          use: isDev
+            ? ['cache-loader', 'webpack-module-hot-accept']
+            : ['cache-loader', 'babel-loader', 'webpack-module-hot-accept'],
         },
         {
           test: /\.vue$/,
