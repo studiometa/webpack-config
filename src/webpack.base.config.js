@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const StylelintPlugin = require('stylelint-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const TerserPlugin = require('terser-webpack-plugin');
 const commonDir = require('common-dir');
@@ -43,19 +44,6 @@ module.exports = (config) => {
     },
     module: {
       rules: [
-        {
-          enforce: 'pre',
-          test: /\.(m?js|vue)$/,
-          exclude: /node_modules/,
-          use: [
-            {
-              loader: 'eslint-loader',
-              options: {
-                fix: true,
-              },
-            },
-          ],
-        },
         {
           test: /\.m?js$/,
           exclude: /node_modules/,
@@ -184,6 +172,12 @@ module.exports = (config) => {
     },
     plugins: [
       new CleanWebpackPlugin(),
+      new ESLintPlugin({
+        context: src,
+        extensions: ['js', 'vue'],
+        fix: true,
+        failOnError: true,
+      }),
       new StylelintPlugin({
         context: src,
         files: ['**/*.s?(a|c)ss', '**/*.vue'],
