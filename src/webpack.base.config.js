@@ -206,7 +206,6 @@ module.exports = (config) => {
       ]),
     ],
     optimization: {
-      chunkIds: false,
       minimizer: [
         new TerserPlugin({
           cache: true,
@@ -215,20 +214,11 @@ module.exports = (config) => {
           extractComments: true,
         }),
       ],
-      mangleWasmImports: true,
       runtimeChunk: {
         name: 'manifest',
       },
       splitChunks: {
-        hidePathInfo: true,
         chunks: 'all',
-        minSize: 100000,
-        maxSize: 0,
-        minChunks: 1,
-        maxAsyncRequests: 5,
-        maxInitialRequests: 3,
-        automaticNameDelimiter: '--',
-        name: false,
         cacheGroups: {
           vendors: {
             test: /[\\/]node_modules[\\/]/,
