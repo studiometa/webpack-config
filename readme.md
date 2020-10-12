@@ -109,7 +109,9 @@ module.exports = {
   presets: [
     'twig', // use the `twig` preset
     ['twig', {}], // use the `twig` preset with custom options
-    'tailwindcss', // use the `tailwindcss` preset
+    'tailwindcss', // use the `tailwindcss` preset,
+    'prototyping', // use the `prototyping` preset
+    'yaml', // use the `yaml` preset
   ],
 };
 ```
