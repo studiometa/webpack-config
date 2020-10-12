@@ -57,7 +57,7 @@ module.exports = (config) => {
         {
           test: /\.vue\.(sa|sc|c)ss$/,
           use: [
-            'vue-style-loader',
+            'style-loader',
             { loader: 'css-loader', options: { url: (url) => !url.startsWith('/') } },
             {
               loader: 'postcss-loader',
