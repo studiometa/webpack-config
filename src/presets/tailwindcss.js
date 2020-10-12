@@ -1,4 +1,5 @@
 const merge = require('lodash.merge');
+const extendWebpackConfig = require('../utils/extend-webpack-config.js');
 
 module.exports = (config, options = {}) => {
   const opts = merge(
@@ -8,8 +9,7 @@ module.exports = (config, options = {}) => {
     options
   );
 
-  const oldWebpackConfig = typeof config.webpack === 'function' ? config.webpack : () => {};
-  config.webpack = (webpackConfig, isDev) => {
+  extendWebpackConfig(config, (webpackConfig, isDev) => {
     const tailwind = opts.path ? opts.path : require.resolve('tailwindcss');
 
     // Strange bug where wrong resolution trigger the CLI from Tailwind
@@ -40,7 +40,5 @@ module.exports = (config, options = {}) => {
         rule.use[postcssIndex] = postcssLoader;
       }
     });
-
-    oldWebpackConfig(webpackConfig, isDev);
-  };
+  });
 };

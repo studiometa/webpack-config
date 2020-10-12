@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Base from '@studiometa/js-toolkit';
 import VueCounter from './Counter';
+import config from './config.yaml';
 
 /**
  * App class.
@@ -13,6 +14,7 @@ class App extends Base {
   get config() {
     return {
       name: 'App',
+      ...config,
     };
   }
 
@@ -20,6 +22,7 @@ class App extends Base {
    * Mounted hook.
    */
   mounted() {
+    this.$log('config', config, this.$options);
     this.content = 'mounted';
     this.vue = new Vue({
       components: {
