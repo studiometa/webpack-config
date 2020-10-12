@@ -16,6 +16,7 @@
     "tailwindcss": "^1.8.10"
   },
   "dependencies": {
-    "@studiometa/js-toolkit": "^1.0.0-beta.0"
+    "@studiometa/js-toolkit": "^1.0.0-beta.0",
+    "vue": "^2.6.12"
   }
 }
