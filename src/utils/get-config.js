@@ -1,3 +1,5 @@
+const path = require('path');
+const fs = require('fs');
 const findUp = require('find-up');
 
 module.exports = (options) => {
@@ -20,6 +22,27 @@ module.exports = (options) => {
   }
 
   config.PATH = configPath;
+
+  if (Array.isArray(config.presets) && config.presets.length) {
+    console.log('Applying presets...');
+
+    config.presets.forEach((preset) => {
+      const name = Array.isArray(preset) ? preset[0] : preset;
+      const opts = Array.isArray(preset) ? preset[1] : {};
+      const presetPath = path.resolve(__dirname, `../presets/${name}.js`);
+
+      if (!fs.existsSync(presetPath)) {
+        console.error(`The "${name}" preset is not available.`);
+        return;
+      }
+
+      console.log(`Using the "${name}" preset.`);
+
+      // eslint-disable-next-line import/no-dynamic-require
+      const presetHandler = require(presetPath);
+      presetHandler(config, opts);
+    });
+  }
 
   return config;
 };

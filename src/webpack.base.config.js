@@ -6,6 +6,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const StylelintPlugin = require('stylelint-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const TerserPlugin = require('terser-webpack-plugin');
 const commonDir = require('common-dir');
@@ -44,19 +45,6 @@ module.exports = (config) => {
     module: {
       rules: [
         {
-          enforce: 'pre',
-          test: /\.(m?js|vue)$/,
-          exclude: /node_modules/,
-          use: [
-            {
-              loader: 'eslint-loader',
-              options: {
-                fix: true,
-              },
-            },
-          ],
-        },
-        {
           test: /\.m?js$/,
           exclude: /node_modules/,
           type: 'javascript/auto',
@@ -71,7 +59,14 @@ module.exports = (config) => {
           use: [
             'vue-style-loader',
             { loader: 'css-loader', options: { url: (url) => !url.startsWith('/') } },
-            'postcss-loader',
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  plugins: isDev ? [] : ['autoprefixer', 'cssnano'],
+                },
+              },
+            },
             'resolve-url-loader',
             {
               loader: 'sass-loader',
@@ -91,7 +86,14 @@ module.exports = (config) => {
               },
             },
             { loader: 'css-loader', options: { url: (url) => !url.startsWith('/') } },
-            'postcss-loader',
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  plugins: isDev ? [] : ['autoprefixer', 'cssnano'],
+                },
+              },
+            },
             'resolve-url-loader',
             {
               loader: 'sass-loader',
@@ -170,13 +172,18 @@ module.exports = (config) => {
     },
     plugins: [
       new CleanWebpackPlugin(),
+      new ESLintPlugin({
+        context: src,
+        extensions: ['js', 'vue'],
+        fix: true,
+        failOnError: !isDev,
+      }),
       new StylelintPlugin({
         context: src,
         files: ['**/*.s?(a|c)ss', '**/*.vue'],
         fix: true,
-        emitError: true,
-        emitWarning: true,
         allowEmptyInput: true,
+        failOnError: !isDev,
       }),
       new FixStyleOnlyEntriesPlugin({
         silent: true,
