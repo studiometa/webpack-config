@@ -81,9 +81,6 @@ module.exports = (config) => {
           use: [
             {
               loader: MiniCssExtractPlugin.loader,
-              options: {
-                hmr: process.env.NODE_ENV === 'development',
-              },
             },
             { loader: 'css-loader', options: { url: (url) => !url.startsWith('/') } },
             {
