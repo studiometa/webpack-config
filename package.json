@@ -60,7 +60,7 @@
     "html-webpack-plugin": "^4.5.0",
     "js-yaml-loader": "^1.2.2",
     "lodash.merge": "^4.6.2",
-    "mini-css-extract-plugin": "^0.10.1",
+    "mini-css-extract-plugin": "^1.0.0",
     "postcss": "^7.0.35",
     "postcss-loader": "^4.0.4",
     "raw-loader": "^4.0.2",
