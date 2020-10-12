@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const merge = require('lodash.merge');
+const extendWebpackConfig = require('../utils/extend-webpack-config.js');
 
 module.exports = (config, options = {}) => {
   const opts = merge(
@@ -10,9 +11,7 @@ module.exports = (config, options = {}) => {
     options
   );
 
-  const oldWebpackConfig = typeof config.webpack === 'function' ? config.webpack : () => {};
-  config.webpack = (webpackConfig, isDev) => {
-    oldWebpackConfig(webpackConfig, isDev);
+  extendWebpackConfig(config, (webpackConfig) => {
     webpackConfig.module.rules.push({
       test: /\.twig$/,
       use: [
@@ -24,5 +23,5 @@ module.exports = (config, options = {}) => {
       ],
     });
     webpackConfig.plugins.push(new HtmlWebpackPlugin(opts.pluginOptions));
-  };
+  });
 };
