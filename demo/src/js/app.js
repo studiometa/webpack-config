@@ -1,4 +1,6 @@
+import Vue from 'vue';
 import Base from '@studiometa/js-toolkit';
+import VueCounter from './Counter';
 
 /**
  * App class.
@@ -19,6 +21,13 @@ class App extends Base {
    */
   mounted() {
     this.content = 'mounted';
+    this.vue = new Vue({
+      components: {
+        VueCounter,
+      },
+      render: (h) => h('VueCounter'),
+    });
+    this.vue.$mount(this.$refs.vue);
   }
 
   /**
@@ -33,7 +42,7 @@ class App extends Base {
    * @param {String} value The content to add.
    */
   set content(value) {
-    this.$el.innerHTML += `<br>${value}`;
+    this.$refs.content.innerHTML += `<br>${value}`;
   }
 }
 
