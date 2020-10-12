@@ -145,6 +145,120 @@ You can analyze your bundle(s) with the `--analyze` (or `-a`) argument:s
 node_modules/.bin/meta build --analyze
 ```
 
+## Presets
+
+Presets can be used to extend the CLI configuration elegantly. The following presets are shipped with the package and can be used without installing any more dependencies:
+
+- [`twig`](#twig)
+- [`tailwindcss`](#tailwindcss)
+- [`prototyping`](#prototyping)
+- [`yaml`](#yaml)
+
+Read their documentation below to find out how to use and configure them.
+
+### `twig`
+
+Add the `twig-html-loader` to the Webpack configuration.
+
+#### Options
+
+- `loaderOptions` (`Object`): [options](https://github.com/radiocity/twig-html-loader#options) for the Twig loader
+- `pluginOptions` (`Object`): [options](https://github.com/jantimon/html-webpack-plugin#options) for the `HtmlWebpackPlugin` plugin
+
+#### Examples
+
+Use it without configuration:
+
+```js
+module.exports = {
+  presets: ['twig'],
+};
+```
+
+Or configure the loader and plugin options:
+
+```js
+module.exports = {
+  presets: [
+    [
+      'twig',
+      {
+        loaderOptions: {},
+        pluginOptions: { template: './src/templates/index.twig' },
+      },
+    ],
+  ],
+};
+```
+
+### `tailwindcss`
+
+Add [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) to the [PostCSS](https://github.com/postcss/postcss) configuration.
+
+#### Options
+
+- `path` (`String`): the absolute path to the Tailwind CSS entry file
+
+#### Examples
+
+Use it without configuration:
+
+```js
+module.exports = {
+  presets: ['tailwindcss'],
+};
+```
+
+If the `meta` CLI fails to resolve the `tailwindcss` package, specify its path:
+
+```js
+const path = require('path');
+
+module.exports = {
+  presets: [
+    [
+      'tailwindcss',
+      {
+        path: path.resolver(__dirname, 'node_modules/tailwindcss/lib/index.js'),
+      }
+    ],
+  ],
+};
+```
+
+### `prototyping`
+
+Add the [`twig`](#twig) and [`tailwindcss`](#tailwindcss) presets as well as default values for the project's structure.
+
+#### Options
+
+- `twig` (`Object`): options for the [`twig` preset](#twig)
+- `tailwindcss` (`Object`): options for the [`tailwindcss` preset](#tailwindcss)
+
+#### Examples
+
+```js
+module.exports = {
+  presets: ['twig'],
+};
+```
+
+### `yaml`
+
+Add support for the import of YAML files with the [js-yaml-loader](https://github.com/wwilsman/js-yaml-loader).
+
+#### Options
+
+- `loaderOptions` (`Object`): [options](https://github.com/wwilsman/js-yaml-loader#loader-options) for the `js-yaml-loader`
+
+#### Example
+
+```js
+module.exports = {
+  presets: ['yaml'],
+};
+```
+
 ## Contributing
 
 This project's branches are managed with [Git Flow](https://github.com/petervanderdoes/gitflow-avh), every feature branch must be merged into develop via a pull request.
