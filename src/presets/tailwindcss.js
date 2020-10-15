@@ -36,7 +36,7 @@ module.exports = (config, options = {}) => {
         (use) => use === 'postcss-loader' || use.loader === 'postcss-loader'
       );
 
-      if (postcssIndex) {
+      if (postcssIndex > -1) {
         rule.use[postcssIndex] = postcssLoader;
       }
     });
