@@ -1,15 +1,8 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const merge = require('lodash.merge');
 const extendWebpackConfig = require('../utils/extend-webpack-config.js');
 
 module.exports = (config, options = {}) => {
-  const opts = merge(
-    {
-      loaderOptions: { data: {} },
-      pluginOptions: { template: './src/templates/index.twig' },
-    },
-    options
-  );
+  const opts = merge({ data: {} }, options);
 
   extendWebpackConfig(config, (webpackConfig) => {
     webpackConfig.module.rules.push({
@@ -18,10 +11,9 @@ module.exports = (config, options = {}) => {
         'raw-loader',
         {
           loader: 'twig-html-loader',
-          options: opts.loaderOptions,
+          options: opts,
         },
       ],
     });
-    webpackConfig.plugins.push(new HtmlWebpackPlugin(opts.pluginOptions));
   });
 };
