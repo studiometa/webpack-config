@@ -162,8 +162,7 @@ Add the `twig-html-loader` to the Webpack configuration.
 
 #### Options
 
-- `loaderOptions` (`Object`): [options](https://github.com/radiocity/twig-html-loader#options) for the Twig loader
-- `pluginOptions` (`Object`): [options](https://github.com/jantimon/html-webpack-plugin#options) for the `HtmlWebpackPlugin` plugin
+The options object is directly passed to the [`twig-html-loader`](https://github.com/radiocity/twig-html-loader#options).
 
 #### Examples
 
@@ -175,7 +174,7 @@ module.exports = {
 };
 ```
 
-Or configure the loader and plugin options:
+Or configure the loader options:
 
 ```js
 module.exports = {
@@ -183,8 +182,7 @@ module.exports = {
     [
       'twig',
       {
-        loaderOptions: {},
-        pluginOptions: { template: './src/templates/index.twig' },
+        debug: true,
       },
     ],
   ],
@@ -234,13 +232,35 @@ Add the [`twig`](#twig) and [`tailwindcss`](#tailwindcss) presets as well as def
 
 - `twig` (`Object`): options for the [`twig` preset](#twig)
 - `tailwindcss` (`Object`): options for the [`tailwindcss` preset](#tailwindcss)
+- `html` (`Object`): options for the [`html-webpack-plugin` plugin](https://github.com/jantimon/html-webpack-plugin#options)
 
 #### Examples
 
+Use it in your `meta.config.js` file:
+
 ```js
 module.exports = {
-  presets: ['twig'],
+  presets: ['prototyping'],
 };
+```
+
+And set up your project with the following folder structure:
+
+```
+meta.config.js
+package.json
+...
+src/
+  css/ --> css files
+    app.scss
+  js/ --> js files
+    app.js
+  templates/
+    components/ --> component files, aliased to `@components`
+    layouts/ --> layout files, aliased to `@layout`
+    foo/ --> random files, aliased to `@foo`
+    pages/
+      index.twig
 ```
 
 ### `yaml`
