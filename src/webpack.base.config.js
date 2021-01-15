@@ -62,11 +62,11 @@ module.exports = (config) => {
           type: 'javascript/auto',
           use: isDev
             ? ['webpack-module-hot-accept']
-            : ['babel-loader', 'webpack-module-hot-accept'],
+            : ['babel-loader'],
         },
         {
           test: /\.vue$/,
-          use: ['vue-loader', 'webpack-module-hot-accept'],
+          use: isDev ? ['vue-loader', 'webpack-module-hot-accept'] : ['vue-loader'],
         },
         {
           test: /\.vue\.(sa|sc|c)ss$/,
