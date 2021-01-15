@@ -1,4 +1,5 @@
 const path = require('path');
+const AngularNamedLazyChunksWebpackPlugin = require('angular-named-lazy-chunks-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const WebpackBar = require('webpackbar');
 const entry = require('webpack-glob-entry');
@@ -169,6 +170,7 @@ module.exports = (config) => {
       ],
     },
     plugins: [
+      new AngularNamedLazyChunksWebpackPlugin(),
       new CleanWebpackPlugin(),
       new ESLintPlugin({
         context: src,

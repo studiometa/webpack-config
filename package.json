@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@nuxtjs/friendly-errors-webpack-plugin": "^2.1.0",
+    "angular-named-lazy-chunks-webpack-plugin": "^2.1.0",
     "autoprefixer": "^9.8.6",
     "babel-loader": "^8.1.0",
     "browser-sync": "^2.26.12",
