@@ -1,6 +1,6 @@
 {
   "name": "@studiometa/webpack-config",
-  "version": "2.5.0",
+  "version": "2.6.0",
   "description": "A basic webpack config",
   "main": "src/index.js",
   "bin": {
@@ -42,6 +42,7 @@
   },
   "dependencies": {
     "@nuxtjs/friendly-errors-webpack-plugin": "^2.1.0",
+    "angular-named-lazy-chunks-webpack-plugin": "^2.1.0",
     "autoprefixer": "^9.8.6",
     "babel-loader": "^8.1.0",
     "browser-sync": "^2.26.12",
@@ -58,6 +59,7 @@
     "file-loader": "^6.1.1",
     "find-up": "^5.0.0",
     "glob": "^7.1.6",
+    "hard-source-webpack-plugin": "^0.13.1",
     "html-webpack-plugin": "^4.5.0",
     "js-yaml-loader": "^1.2.2",
     "lodash.merge": "^4.6.2",

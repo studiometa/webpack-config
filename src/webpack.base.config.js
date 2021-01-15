@@ -1,4 +1,5 @@
 const path = require('path');
+const AngularNamedLazyChunksWebpackPlugin = require('angular-named-lazy-chunks-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const WebpackBar = require('webpackbar');
 const entry = require('webpack-glob-entry');
@@ -9,6 +10,7 @@ const StylelintPlugin = require('stylelint-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const TerserPlugin = require('terser-webpack-plugin');
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const commonDir = require('common-dir');
 
 require('dotenv').config();
@@ -168,6 +170,7 @@ module.exports = (config) => {
       ],
     },
     plugins: [
+      new AngularNamedLazyChunksWebpackPlugin(),
       new CleanWebpackPlugin(),
       new ESLintPlugin({
         context: src,
@@ -191,6 +194,12 @@ module.exports = (config) => {
         filename: '[name].css',
         chunkFilename: '[name].css',
       }),
+      new HardSourceWebpackPlugin(),
+      new HardSourceWebpackPlugin.ExcludeModulePlugin([
+        {
+          test: /mini-css-extract-plugin[\\/]dist[\\/]loader/,
+        },
+      ]),
     ],
     optimization: {
       chunkIds: false,
