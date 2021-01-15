@@ -61,12 +61,12 @@ module.exports = (config) => {
           exclude: /node_modules/,
           type: 'javascript/auto',
           use: isDev
-            ? ['cache-loader', 'webpack-module-hot-accept']
-            : ['cache-loader', 'babel-loader', 'webpack-module-hot-accept'],
+            ? ['webpack-module-hot-accept']
+            : ['babel-loader', 'webpack-module-hot-accept'],
         },
         {
           test: /\.vue$/,
-          use: ['cache-loader', 'vue-loader', 'webpack-module-hot-accept'],
+          use: ['vue-loader', 'webpack-module-hot-accept'],
         },
         {
           test: /\.vue\.(sa|sc|c)ss$/,
