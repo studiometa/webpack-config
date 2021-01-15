@@ -9,6 +9,7 @@ const StylelintPlugin = require('stylelint-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const TerserPlugin = require('terser-webpack-plugin');
+const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const commonDir = require('common-dir');
 
 require('dotenv').config();
@@ -191,6 +192,12 @@ module.exports = (config) => {
         filename: '[name].css',
         chunkFilename: '[name].css',
       }),
+      new HardSourceWebpackPlugin(),
+      new HardSourceWebpackPlugin.ExcludeModulePlugin([
+        {
+          test: /mini-css-extract-plugin[\\/]dist[\\/]loader/,
+        },
+      ]),
     ],
     optimization: {
       chunkIds: false,
