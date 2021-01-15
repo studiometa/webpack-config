@@ -15,37 +15,38 @@ module.exports = (options = {}) => {
     (plugin) => plugin.constructor.name === 'WebpackBarPlugin'
   );
 
-  webpackBar.reporters.push({
-    start: ({ state }) => server.instance.notify(state.message),
-    change: ({ state }) => server.instance.notify(state.message),
-    update: ({ state }) => server.instance.notify(state.message),
-    done: ({ state }) => server.instance.notify(state.message),
-    progress: ({ state }) => server.instance.notify(`${state.message} ${state.progress}%`),
-    allDone: ({ state }) => server.instance.notify(state.message),
-    beforeAllDone: ({ state }) => server.instance.notify(state.message),
-    afterAllDone: ({ state }) => server.instance.notify(state.message),
-  });
+  webpackBar.reporters = [
+    {
+      start: ({ state }) => server.instance.notify(state.message),
+      change: ({ state }) => server.instance.notify(state.message),
+      update: ({ state }) => server.instance.notify(state.message),
+      done: ({ state }) => server.instance.notify(state.message),
+      progress: ({ state }) => server.instance.notify(`${state.message} ${state.progress}%`),
+      allDone: ({ state }) => server.instance.notify(state.message),
+      beforeAllDone: ({ state }) => server.instance.notify(state.message),
+      afterAllDone: ({ state }) => server.instance.notify(state.message),
+    },
+  ];
 
   // Use the same error display as Nuxt
-  webpackConfig.plugins.push(
+  webpackConfig.plugins = [
+    ...webpackConfig.plugins,
     new FriendlyErrorsWebpackPlugin({
+      clearConsole: true,
       compilationSuccessInfo: {
         get messages() {
           return [server.getInfo()];
         },
       },
-    })
-  );
-
-  // Enable HMR
-  webpackConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+    }),
+    new webpack.HotModuleReplacementPlugin(),
+  ];
 
   // Add the dev server and hot middleware dependencies to the JS entries
   webpackConfig.entry = Object.entries(webpackConfig.entry).reduce((entry, [name, value]) => {
     if (value.endsWith('.js')) {
       entry[name] = [
-        'webpack/hot/dev-server',
-        'webpack-hot-middleware/client',
+        'webpack-hot-middleware/client?reload=true',
         ...(Array.isArray(value) ? value : [value]),
       ];
     } else {
@@ -58,10 +59,6 @@ module.exports = (options = {}) => {
   const bundler = webpack(webpackConfig);
   bundler.hooks.done.tap('BrowserSync', (stats) => {
     const { assets, outputPath } = stats.toJson();
-    console.log(
-      stats.toString({ ...webpackConfig.stats, warnings: false, errors: false, colors: true })
-    );
-    console.log('');
 
     // Inject only CSS files as other files are handled by the Webpack dev server
     const files = assets
@@ -73,14 +70,27 @@ module.exports = (options = {}) => {
     return server.instance.reload(files);
   });
 
+  bundler.hooks.afterDone.tap('@studiometa/webpack-config', (stats) => {
+    if (stats.hasErrors()) {
+      return;
+    }
+    console.log(
+      stats.toString({
+        all: false,
+        assets: true,
+        colors: true,
+        excludeAssets: [/^css\/.+\.js$/, /\.map$/, /hot-update/, /^manifest\.(js|json)$/],
+      })
+    );
+    console.log('');
+  });
+
   const browserSyncConfig = {
     ...server.config,
     middleware: [
       ...(server.config.middleware || []),
       webpackDevMiddleware(bundler, {
         publicPath: webpackConfig.output.publicPath,
-        stats: webpackConfig.stats,
-        logLevel: 'silent',
         writeToDisk(filePath) {
           return !filePath.includes('hot-update');
         },

@@ -4,7 +4,6 @@ module.exports = (config) => {
   const baseConfig = require('./webpack.base.config')(config);
   const devConfig = merge(baseConfig, {
     mode: 'development',
-    cache: true,
     devtool: 'cheap-source-map',
     devServer: {
       overlay: true,
@@ -14,8 +13,14 @@ module.exports = (config) => {
       compress: true,
       open: true,
       quiet: true,
+      noInfo: true,
+      stats: 'none',
     },
+    stats: false,
     optimization: { minimize: false },
+    infrastructureLogging: {
+      level: 'none',
+    },
   });
 
   if (config.webpackDev && typeof config.webpackDev === 'function') {

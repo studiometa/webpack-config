@@ -5,7 +5,6 @@ module.exports = (config) => {
 
   const prodConfig = merge(baseConfig, {
     mode: 'production',
-    cache: false,
   });
 
   if (config.webpackProd && typeof config.webpackProd === 'function') {
