@@ -1,12 +1,12 @@
-#!/usr/bin/env node
-const cac = require('cac');
-const chalk = require('chalk');
+#!/usr/bin/env node --experimental-json-modules --experimental-import-meta-resolve
+import cac from 'cac';
+import chalk from 'chalk';
+import pkg from '../package.json';
+import build from '../src/build.js';
+import dev from '../src/dev.js';
 
-const { version, bin } = require('../package.json');
-
+const { version, bin } = pkg;
 const cli = cac(Object.keys(bin).pop());
-const build = require('../src/build.js');
-const dev = require('../src/dev.js');
 
 cli
   .command('build', 'Build assets.')

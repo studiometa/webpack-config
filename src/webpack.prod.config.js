@@ -1,9 +1,10 @@
-const { merge } = require('webpack-merge');
+import webpackMerge from 'webpack-merge';
+import getWebpackConfig from './webpack.base.config.js'
 
-module.exports = (config) => {
-  const baseConfig = require('./webpack.base.config')(config);
+export default async (config) => {
+  const baseConfig = await getWebpackConfig(config);
 
-  const prodConfig = merge(baseConfig, {
+  const prodConfig = webpackMerge.merge(baseConfig, {
     mode: 'production',
     cache: false,
   });

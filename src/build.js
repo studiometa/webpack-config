@@ -1,10 +1,12 @@
-const webpack = require('webpack');
+import webpack from 'webpack';
+import getConfig from './utils/get-config.js';
+import getWebpackConfig from './webpack.prod.config.js';
 
-module.exports = (options = {}) => {
+export default async (options = {}) => {
   process.env.NODE_ENV = 'production';
 
-  const config = require('./utils/get-config.js')(options);
-  const webpackConfig = require('./webpack.prod.config.js')(config);
+  const config = await getConfig(options);
+  const webpackConfig = getWebpackConfig(config);
 
   webpack(webpackConfig, (err, stats) => {
     if (err) {

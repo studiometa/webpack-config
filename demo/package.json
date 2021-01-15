@@ -3,6 +3,10 @@
     "dev": "meta dev",
     "build": "meta build"
   },
+  "type": "module",
+  "engines": {
+    "node": ">=12"
+  },
   "devDependencies": {
     "@babel/core": "^7.11.6",
     "@babel/preset-env": "^7.11.5",

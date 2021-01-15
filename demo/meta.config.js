@@ -1,6 +1,6 @@
-const path = require('path');
+import path from 'path';
 
-module.exports = {
+export default {
   watch: [
     [
       'dist/*.html',
@@ -20,7 +20,7 @@ module.exports = {
       'prototyping',
       {
         tailwindcss: {
-          path: path.resolve(__dirname, 'node_modules/tailwindcss/lib/index.js'),
+          path: path.resolve(import.meta.url, 'node_modules/tailwindcss/lib/index.js'),
         },
       },
     ],

@@ -1,12 +1,12 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const glob = require('glob');
-const path = require('path');
-const merge = require('lodash.merge');
-const twigPreset = require('./twig');
-const tailwindcssPreset = require('./tailwindcss');
-const extendWebpackConfig = require('../utils/extend-webpack-config.js');
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import glob from 'glob';
+import path from 'path';
+import merge from 'lodash.merge';
+import twigPreset from './twig.js';
+import tailwindcssPreset from './tailwindcss.js';
+import extendWebpackConfig from '../utils/extend-webpack-config.js';
 
-module.exports = (config, options) => {
+export default async (config, options) => {
   const opts = merge(
     {
       tailwindcss: {},
@@ -51,8 +51,8 @@ module.exports = (config, options) => {
       })
   );
 
-  twigPreset(config, opts.twig);
-  tailwindcssPreset(config, opts.tailwindcss);
+  await twigPreset(config, opts.twig);
+  await tailwindcssPreset(config, opts.tailwindcss);
 
   config.src = ['./src/css/**/[!_]*.scss', './src/js/app.js', ...(config.src || [])];
   config.dist = config.dist || './dist';
@@ -60,7 +60,7 @@ module.exports = (config, options) => {
   config.server = config.server || 'dist';
   config.watch = ['./dist/**/*.html', ...(config.watch || [])];
 
-  extendWebpackConfig(config, (webpackConfig) => {
+  extendWebpackConfig(config, async (webpackConfig) => {
     webpackConfig.plugins = [...webpackConfig.plugins, ...plugins];
   });
 };

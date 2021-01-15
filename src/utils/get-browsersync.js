@@ -1,5 +1,7 @@
-const path = require('path');
-const instance = require('browser-sync').create();
+import path from 'path';
+import bs from 'browser-sync';
+
+const instance = bs.create();
 
 let WATCH_HANDLERS_BINDED = false;
 
@@ -79,7 +81,7 @@ const getConfig = (metaConfig) => {
   return browserSyncConfig;
 };
 
-module.exports = (metaConfig) => ({
+export default (metaConfig) => ({
   instance,
   get config() {
     return getConfig(metaConfig);

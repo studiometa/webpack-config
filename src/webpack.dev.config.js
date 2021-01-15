@@ -1,8 +1,9 @@
-const { merge } = require('webpack-merge');
+import webpackMerge from 'webpack-merge';
+import getWebpackConfig from './webpack.base.config.js';
 
-module.exports = (config) => {
-  const baseConfig = require('./webpack.base.config')(config);
-  const devConfig = merge(baseConfig, {
+export default async (config) => {
+  const baseConfig = await getWebpackConfig(config);
+  const devConfig = webpackMerge.merge(baseConfig, {
     mode: 'development',
     cache: true,
     devtool: 'cheap-eval-source-map',

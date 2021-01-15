@@ -1,8 +1,8 @@
-const path = require('path');
-const fs = require('fs');
-const findUp = require('find-up');
+import path from 'path';
+import fs from 'fs';
+import findUp from 'find-up';
 
-module.exports = (options) => {
+export default async (options) => {
   const configPath = findUp.sync('meta.config.js');
 
   if (!configPath) {
@@ -14,8 +14,7 @@ module.exports = (options) => {
     );
   }
 
-  // eslint-disable-next-line import/no-dynamic-require
-  const config = require(configPath);
+  const { default: config } = await import(configPath);
 
   if (options.analyze) {
     config.analyze = true;
@@ -26,22 +25,21 @@ module.exports = (options) => {
   if (Array.isArray(config.presets) && config.presets.length) {
     console.log('Applying presets...');
 
-    config.presets.forEach((preset) => {
+    await Promise.all(config.presets.map(async (preset) => {
       const name = Array.isArray(preset) ? preset[0] : preset;
       const opts = Array.isArray(preset) ? preset[1] : {};
-      const presetPath = path.resolve(__dirname, `../presets/${name}.js`);
+      const presetPathInfo = new URL(`../presets/${name}.js`, import.meta.url);
 
-      if (!fs.existsSync(presetPath)) {
+      if (!fs.existsSync(presetPathInfo.pathname)) {
         console.error(`The "${name}" preset is not available.`);
         return;
       }
 
       console.log(`Using the "${name}" preset.`);
 
-      // eslint-disable-next-line import/no-dynamic-require
-      const presetHandler = require(presetPath);
-      presetHandler(config, opts);
-    });
+      const { default: presetHandler } = await import(presetPathInfo.pathname);
+      await presetHandler(config, opts);
+    }));
   }
 
   return config;

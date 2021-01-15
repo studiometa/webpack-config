@@ -1,21 +1,25 @@
-const path = require('path');
-const AngularNamedLazyChunksWebpackPlugin = require('angular-named-lazy-chunks-webpack-plugin');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const WebpackBar = require('webpackbar');
-const entry = require('webpack-glob-entry');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const StylelintPlugin = require('stylelint-webpack-plugin');
-const ESLintPlugin = require('eslint-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const TerserPlugin = require('terser-webpack-plugin');
-const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
-const commonDir = require('common-dir');
+import path from 'path';
+import AngularNamedLazyChunksWebpackPlugin from 'angular-named-lazy-chunks-webpack-plugin';
+import VueLoaderPlugin from 'vue-loader/lib/plugin.js';
+import WebpackBar from 'webpackbar';
+import entry from 'webpack-glob-entry';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import FixStyleOnlyEntriesPlugin from 'webpack-fix-style-only-entries';
+import CleanWebpackPluginImport from 'clean-webpack-plugin';
+import StylelintPlugin from 'stylelint-webpack-plugin';
+import ESLintPlugin from 'eslint-webpack-plugin';
+import BundleAnalyzerPluginImport from 'webpack-bundle-analyzer';
+import TerserPlugin from 'terser-webpack-plugin';
+import HardSourceWebpackPlugin from 'hard-source-webpack-plugin';
+import commonDir from 'common-dir';
+import dotenv from 'dotenv';
 
-require('dotenv').config();
+const {CleanWebpackPlugin} = CleanWebpackPluginImport;
+const { BundleAnalyzerPlugin} = BundleAnalyzerPluginImport;
 
-module.exports = (config) => {
+dotenv.config();
+
+export default async (config) => {
   const isDev = process.env.NODE_ENV !== 'production';
   const src = commonDir(config.src);
 
@@ -246,7 +250,8 @@ module.exports = (config) => {
   }
 
   if (config.webpack && typeof config.webpack === 'function') {
-    config.webpack(webpackBaseConfig, isDev);
+    await config.webpack(webpackBaseConfig, isDev);
   }
+
   return webpackBaseConfig;
 };

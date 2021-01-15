@@ -3,11 +3,11 @@
  * @param {Object}   config The meta config object.
  * @param {Function} fn     The function to apply.
  */
-module.exports = (config, fn) => {
+export default async (config, fn) => {
   const oldWebpackConfig = typeof config.webpack === 'function' ? config.webpack : () => {};
 
-  config.webpack = (webpackConfig, isDev) => {
-    fn(webpackConfig, isDev);
-    oldWebpackConfig(webpackConfig, isDev);
+  config.webpack = async (webpackConfig, isDev) => {
+    await fn(webpackConfig, isDev);
+    await oldWebpackConfig(webpackConfig, isDev);
   };
 };
