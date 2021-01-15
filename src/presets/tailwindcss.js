@@ -1,16 +1,22 @@
 const merge = require('lodash.merge');
+const path = require('path');
+const findUp = require('find-up');
 const extendWebpackConfig = require('../utils/extend-webpack-config.js');
 
 module.exports = (config, options = {}) => {
+  const configPath = path.dirname(findUp.sync('meta.config.js'));
+
   const opts = merge(
     {
-      path: require.resolve('tailwindcss'),
+      path: require.resolve('tailwindcss', { paths: [configPath] }),
     },
     options
   );
 
   extendWebpackConfig(config, (webpackConfig, isDev) => {
-    const tailwind = opts.path ? opts.path : require.resolve('tailwindcss');
+    const tailwind = opts.path
+      ? opts.path
+      : require.resolve('tailwindcss', { paths: [configPath] });
 
     // Strange bug where wrong resolution trigger the CLI from Tailwind
     // instead of the index file containing the PostCSS plugin.
