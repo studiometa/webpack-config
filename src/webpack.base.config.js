@@ -77,7 +77,7 @@ module.exports = (config) => {
               loader: 'postcss-loader',
               options: {
                 postcssOptions: {
-                  plugins: isDev ? [] : ['autoprefixer', 'cssnano'],
+                  plugins: isDev ? ['autoprefixer'] : ['autoprefixer', 'cssnano'],
                 },
               },
             },
@@ -101,7 +101,7 @@ module.exports = (config) => {
               loader: 'postcss-loader',
               options: {
                 postcssOptions: {
-                  plugins: isDev ? [] : ['autoprefixer', 'cssnano'],
+                  plugins: isDev ? ['autoprefixer'] : ['autoprefixer', 'cssnano'],
                 },
               },
             },
