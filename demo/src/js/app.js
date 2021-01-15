@@ -14,6 +14,7 @@ class App extends Base {
   get config() {
     return {
       name: 'App',
+      log: true,
       ...config,
       components: {
         Component: () => import('./components/Component'),
