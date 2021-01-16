@@ -1,1 +1,0 @@
-{"version":3,"sources":["webpack:///./Component.css"],"names":[],"mappings":"AAAA,KACE,cAGF,KACE,W","file":"823.css","sourcesContent":[".foo {\n  display: block;\n}\n\nbody {\n  opacity: 0.1;\n}\n"],"sourceRoot":""}

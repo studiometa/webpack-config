@@ -35,7 +35,7 @@ module.exports = (config) => {
       publicPath: config.public,
       pathinfo: false,
       filename: '[name].js',
-      chunkFilename: '[name].js',
+      chunkFilename: isDev ? '[name].js' : '[name].[contenthash].js',
       sourceMapFilename: '[file].map',
     },
     cache: {
@@ -60,9 +60,7 @@ module.exports = (config) => {
           test: /\.m?js$/,
           exclude: /node_modules/,
           type: 'javascript/auto',
-          use: isDev
-            ? ['webpack-module-hot-accept']
-            : ['babel-loader'],
+          use: isDev ? ['webpack-module-hot-accept'] : ['babel-loader'],
         },
         {
           test: /\.vue$/,
@@ -200,7 +198,7 @@ module.exports = (config) => {
       new WebpackBar(),
       new MiniCssExtractPlugin({
         filename: '[name].css',
-        chunkFilename: '[name].css',
+        chunkFilename: isDev ? '[name].css' : '[name].[contenthash].css',
       }),
     ],
     optimization: {
