@@ -1,17 +1,21 @@
 const path = require('path');
-const AngularNamedLazyChunksWebpackPlugin = require('angular-named-lazy-chunks-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const WebpackBar = require('webpackbar');
 const entry = require('webpack-glob-entry');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const FixStyleOnlyEntriesPlugin = require('webpack-fix-style-only-entries');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const StylelintPlugin = require('stylelint-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const TerserPlugin = require('terser-webpack-plugin');
-const HardSourceWebpackPlugin = require('hard-source-webpack-plugin');
 const commonDir = require('common-dir');
+
+// Fix a bug where the webpack bar is stuck at 99%.
+// eslint-disable-next-line no-underscore-dangle
+const { updateProgress } = WebpackBar.prototype;
+WebpackBar.prototype.updateProgress = function updateProgressOverride(percent = 0, ...args) {
+  updateProgress.call(this, percent >= 0.99 ? 1 : percent, ...args);
+};
 
 require('dotenv').config();
 
@@ -31,8 +35,12 @@ module.exports = (config) => {
       publicPath: config.public,
       pathinfo: false,
       filename: '[name].js',
-      chunkFilename: '[name].js',
+      chunkFilename: isDev ? '[name].js' : '[name].[contenthash].js',
       sourceMapFilename: '[file].map',
+    },
+    cache: {
+      type: 'filesystem',
+      name: isDev ? 'dev' : 'prod',
     },
     stats: {
       all: false,
@@ -42,7 +50,9 @@ module.exports = (config) => {
       errors: true,
       errorDetails: true,
       performance: true,
-      excludeAssets: isDev ? [/hot-update/, /\.map$/, /^manifest\.(js|json)$/] : [/\.map$/],
+      excludeAssets: isDev
+        ? [/^css\/.+\.js$/, /\.map$/, /hot-update/, /^manifest\.(js|json)$/]
+        : [/^css\/.+\.js$/, /\.map$/],
     },
     module: {
       rules: [
@@ -50,11 +60,11 @@ module.exports = (config) => {
           test: /\.m?js$/,
           exclude: /node_modules/,
           type: 'javascript/auto',
-          use: ['cache-loader', 'babel-loader', 'webpack-module-hot-accept'],
+          use: isDev ? ['webpack-module-hot-accept'] : ['babel-loader'],
         },
         {
           test: /\.vue$/,
-          use: ['cache-loader', 'vue-loader', 'webpack-module-hot-accept'],
+          use: isDev ? ['vue-loader', 'webpack-module-hot-accept'] : ['vue-loader'],
         },
         {
           test: /\.vue\.(sa|sc|c)ss$/,
@@ -65,7 +75,7 @@ module.exports = (config) => {
               loader: 'postcss-loader',
               options: {
                 postcssOptions: {
-                  plugins: isDev ? [] : ['autoprefixer', 'cssnano'],
+                  plugins: isDev ? ['autoprefixer'] : ['autoprefixer', 'cssnano'],
                 },
               },
             },
@@ -89,7 +99,7 @@ module.exports = (config) => {
               loader: 'postcss-loader',
               options: {
                 postcssOptions: {
-                  plugins: isDev ? [] : ['autoprefixer', 'cssnano'],
+                  plugins: isDev ? ['autoprefixer'] : ['autoprefixer', 'cssnano'],
                 },
               },
             },
@@ -170,7 +180,6 @@ module.exports = (config) => {
       ],
     },
     plugins: [
-      new AngularNamedLazyChunksWebpackPlugin(),
       new CleanWebpackPlugin(),
       new ESLintPlugin({
         context: src,
@@ -185,46 +194,25 @@ module.exports = (config) => {
         allowEmptyInput: true,
         failOnError: !isDev,
       }),
-      new FixStyleOnlyEntriesPlugin({
-        silent: true,
-      }),
       new VueLoaderPlugin(),
       new WebpackBar(),
       new MiniCssExtractPlugin({
         filename: '[name].css',
-        chunkFilename: '[name].css',
+        chunkFilename: isDev ? '[name].css' : '[name].[contenthash].css',
       }),
-      new HardSourceWebpackPlugin(),
-      new HardSourceWebpackPlugin.ExcludeModulePlugin([
-        {
-          test: /mini-css-extract-plugin[\\/]dist[\\/]loader/,
-        },
-      ]),
     ],
     optimization: {
-      chunkIds: false,
       minimizer: [
         new TerserPlugin({
-          cache: true,
           parallel: true,
-          sourceMap: true,
           extractComments: true,
         }),
       ],
-      mangleWasmImports: true,
       runtimeChunk: {
         name: 'manifest',
       },
       splitChunks: {
-        hidePathInfo: true,
         chunks: 'all',
-        minSize: 100000,
-        maxSize: 0,
-        minChunks: 1,
-        maxAsyncRequests: 5,
-        maxInitialRequests: 3,
-        automaticNameDelimiter: '--',
-        name: false,
         cacheGroups: {
           vendors: {
             test: /[\\/]node_modules[\\/]/,
