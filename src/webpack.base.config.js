@@ -60,7 +60,16 @@ module.exports = (config) => {
           test: /\.m?js$/,
           exclude: /node_modules/,
           type: 'javascript/auto',
-          use: isDev ? ['webpack-module-hot-accept'] : ['babel-loader'],
+          get use() {
+            const babel = {
+              loader: 'babel-loader',
+              options: {
+                cacheDirectory: true,
+              },
+            };
+
+            return isDev ? ['webpack-module-hot-accept', babel] : [babel];
+          },
         },
         {
           test: /\.vue$/,
