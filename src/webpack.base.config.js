@@ -8,6 +8,7 @@ const StylelintPlugin = require('stylelint-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const TerserPlugin = require('terser-webpack-plugin');
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const commonDir = require('common-dir');
 
 // Fix a bug where the webpack bar is stuck at 99%.
@@ -51,8 +52,8 @@ module.exports = (config) => {
       errorDetails: true,
       performance: true,
       excludeAssets: isDev
-        ? [/^css\/.+\.js$/, /\.map$/, /hot-update/, /^manifest\.(js|json)$/]
-        : [/^css\/.+\.js$/, /\.map$/],
+        ? [/\.map$/, /hot-update/, /^manifest\.(js|json)$/]
+        : [/\.map$/],
     },
     module: {
       rules: [
@@ -205,6 +206,7 @@ module.exports = (config) => {
       }),
       new VueLoaderPlugin(),
       new WebpackBar(),
+      new RemoveEmptyScriptsPlugin(),
       new MiniCssExtractPlugin({
         filename: '[name].css',
         chunkFilename: isDev ? '[name].css' : '[name].[contenthash].css',

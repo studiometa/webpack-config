@@ -79,7 +79,7 @@ module.exports = (options = {}) => {
         all: false,
         assets: true,
         colors: true,
-        excludeAssets: [/^css\/.+\.js$/, /\.map$/, /hot-update/, /^manifest\.(js|json)$/],
+        excludeAssets: [/\.map$/, /hot-update/, /^manifest\.(js|json)$/],
       })
     );
     console.log('');
