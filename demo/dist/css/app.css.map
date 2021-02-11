@@ -1,1 +1,0 @@
-{"version":3,"sources":["webpack:///./app.scss"],"names":[],"mappings":"AAAA,66EAEA,+8BAEA,KACE,gBACA,YACA,WACA,sB","file":"css/app.css","sourcesContent":["@tailwind base;\n@tailwind components;\n@tailwind utilities;\n\nbody {\n  min-height: 80vh;\n  padding: 2em;\n  color: #fff;\n  background-color: #00f;\n}\n"],"sourceRoot":""}

@@ -1,4 +1,0 @@
-/**
- * App class.
- * @license MIT © 2020 Studio Meta
- */
