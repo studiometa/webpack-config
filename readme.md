@@ -191,7 +191,7 @@ module.exports = {
 
 ### `tailwindcss`
 
-Add [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) to the [PostCSS](https://github.com/postcss/postcss) configuration.
+Add [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) to the [PostCSS](https://github.com/postcss/postcss) configuration and enable a preview of your Tailwind configuration in dev mode with [`tailwind-config-viewer`](https://github.com/rogden/tailwind-config-viewer).
 
 #### Options
 
@@ -222,6 +222,16 @@ module.exports = {
     ],
   ],
 };
+```
+
+The default route for the Tailwind config viewer is `/_tailwind/`. It is customisable with the `configViewerPath` options:
+
+```js
+module.exports = {
+  presets: [
+    ['tailwindcss', { configViewerPath: '/__custom_tailwind_viewer_path' }],
+  ],
+}
 ```
 
 ### `prototyping`
