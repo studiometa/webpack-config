@@ -1,7 +1,11 @@
 const merge = require('lodash.merge');
 const path = require('path');
 const findUp = require('find-up');
+const chalk = require('chalk');
+const createServer = require('tailwind-config-viewer/server');
 const extendWebpackConfig = require('../utils/extend-webpack-config.js');
+const extendBrowserSyncConfig = require('../utils/extend-browsersync-config.js');
+const { withTrailingSlash, withoutTrailingSlash, withLeadingSlash } = require('../utils');
 
 module.exports = (config, options = {}) => {
   const configPath = path.dirname(findUp.sync('meta.config.js'));
@@ -9,9 +13,33 @@ module.exports = (config, options = {}) => {
   const opts = merge(
     {
       path: require.resolve('tailwindcss', { paths: [configPath] }),
+      configViewerPath: '/_tailwind',
     },
     options
   );
+
+  if (process.env.NODE_ENV === 'development') {
+    extendBrowserSyncConfig(config, (bsConfig) => {
+      const tailwindConfigViewerServer = createServer({
+        // eslint-disable-next-line import/no-dynamic-require
+        tailwindConfigProvider: () => require(findUp.sync('tailwind.config.js')),
+      }).asMiddleware();
+
+      bsConfig.middleware = bsConfig.middleware || [];
+      bsConfig.middleware.push({
+        route: withLeadingSlash(withoutTrailingSlash(opts.configViewerPath)),
+        handle: tailwindConfigViewerServer,
+      });
+
+      bsConfig.infos = bsConfig.infos || [];
+      bsConfig.infos.push(
+        (url) =>
+          `Tailwind Viewer runnning at ${chalk.blue(
+            withTrailingSlash(url + opts.configViewerPath)
+          )}`
+      );
+    });
+  }
 
   extendWebpackConfig(config, (webpackConfig, isDev) => {
     const tailwind = opts.path
