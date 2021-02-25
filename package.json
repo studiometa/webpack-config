@@ -43,7 +43,7 @@
   "dependencies": {
     "@npmcli/move-file": "^1.1.0",
     "@nuxtjs/friendly-errors-webpack-plugin": "^2.1.0",
-    "autoprefixer": "^10.2.3",
+    "autoprefixer": "^10.2.4",
     "babel-loader": "^8.2.2",
     "browser-sync": "^2.26.14",
     "cac": "^6.7.1",
