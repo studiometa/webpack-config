@@ -15,7 +15,20 @@ module.exports = (options = {}) => {
     (plugin) => plugin.constructor.name === 'WebpackBarPlugin'
   );
 
+  let webpackBarHasRunOnce = false;
+  const [fancyReporter] = webpackBar.reporters;
   webpackBar.reporters = [
+    {
+      progress: (...args) => {
+        if (webpackBarHasRunOnce) {
+          return;
+        }
+        fancyReporter.progress(...args);
+      },
+      done: () => {
+        webpackBarHasRunOnce = true;
+      },
+    },
     {
       start: ({ state }) => server.instance.notify(state.message),
       change: ({ state }) => server.instance.notify(state.message),
