@@ -3,7 +3,7 @@ const fs = require('fs');
 const findUp = require('find-up');
 
 module.exports = (options) => {
-  const configPath = findUp.sync('meta.config.js');
+  const configPath = findUp.sync(['meta.config.js', 'meta.config.cjs']);
 
   if (!configPath) {
     throw new Error(

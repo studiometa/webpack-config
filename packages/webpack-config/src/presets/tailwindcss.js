@@ -1,5 +1,4 @@
 const merge = require('lodash.merge');
-const path = require('path');
 const findUp = require('find-up');
 const chalk = require('chalk');
 const createServer = require('tailwind-config-viewer/server');
@@ -8,7 +7,7 @@ const extendBrowserSyncConfig = require('../utils/extend-browsersync-config.js')
 const { withTrailingSlash, withoutTrailingSlash, withLeadingSlash } = require('../utils');
 
 module.exports = (config, options = {}) => {
-  const configPath = path.dirname(findUp.sync('meta.config.js'));
+  const configPath = config.PATH;
 
   const opts = merge(
     {
