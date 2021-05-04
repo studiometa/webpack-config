@@ -51,9 +51,7 @@ module.exports = (config) => {
       errors: true,
       errorDetails: true,
       performance: true,
-      excludeAssets: isDev
-        ? [/\.map$/, /hot-update/, /^manifest\.(js|json)$/]
-        : [/\.map$/],
+      excludeAssets: isDev ? [/\.map$/, /hot-update/, /^manifest\.(js|json)$/] : [/\.map$/],
     },
     module: {
       rules: [
