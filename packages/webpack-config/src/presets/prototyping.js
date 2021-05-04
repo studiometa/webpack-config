@@ -21,7 +21,7 @@ module.exports = (config, options) => {
 
   opts.twig.namespaces = glob.sync('./src/templates/*/').reduce((acc, file) => {
     const name = path.basename(file);
-    acc[name] = file;
+    acc[name] = path.resolve(file);
     return acc;
   }, opts.twig.namespaces || {});
 
@@ -46,7 +46,7 @@ module.exports = (config, options) => {
     (file) =>
       new HtmlWebpackPlugin({
         ...opts.html,
-        template: file,
+        template: path.resolve(file),
         filename: file.replace('./src/templates/pages/', '').replace(/\.twig$/, '.html'),
       })
   );

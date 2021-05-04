@@ -15,15 +15,5 @@ module.exports = {
   webpackProd({ mode, devtool }) {
     console.log('webpackProd', { mode, devtool });
   },
-  presets: [
-    [
-      'prototyping',
-      {
-        tailwindcss: {
-          path: path.resolve(__dirname, 'node_modules/tailwindcss/lib/index.js'),
-        },
-      },
-    ],
-    'yaml',
-  ],
+  presets: ['prototyping', 'yaml'],
 };

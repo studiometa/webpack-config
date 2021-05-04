@@ -11,16 +11,17 @@ class App extends Base {
   /**
    * App configuration.
    */
-  get config() {
-    return {
-      name: 'App',
-      log: true,
-      ...config,
-      components: {
-        Component: () => import('./components/Component'),
-      },
-    };
-  }
+  static config = {
+    name: 'App',
+    log: true,
+    refs: ['content', 'vue'],
+    ...config,
+    components: {
+      Component: () => import('./components/Component'),
+    },
+  };
+
+  vue;
 
   /**
    * Mounted hook.
@@ -53,4 +54,4 @@ class App extends Base {
   }
 }
 
-export default new App(document.querySelector('main'));
+export default new App(document.querySelector('main')).$mount();

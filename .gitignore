@@ -9,4 +9,4 @@ yarn.lock
 .deploys
 backup/
 *.ini
-demo/dist/
+/packages/demo/dist/
