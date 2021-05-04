@@ -124,53 +124,37 @@ module.exports = (config) => {
         },
         {
           test: /\.(png|jpe?g|gif|webp)$/i,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                esModule: false,
-                limit: 1000,
-                name: 'img/[name].[ext]',
-              },
-            },
-          ],
+          type: 'asset',
+          generator: {
+            filename: isDev ? 'img/[name][ext]' : 'img/[name].[contenthash][ext]',
+          },
         },
         {
           test: /\.svg$/i,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                esModule: false,
-                limit: 10,
-                name: 'svg/[name].[ext]',
-              },
-            },
-          ],
+          issuer: /.*(?<!\.vue)$/,
+          type: 'asset',
+          generator: {
+            filename: isDev ? 'svg/[name][ext]' : 'svg/[name].[contenthash][ext]',
+          },
+        },
+        {
+          test: /\.svg$/i,
+          issuer: /\.vue$/,
+          use: ['vue-svg-loader'],
         },
         {
           test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i,
-          use: [
-            {
-              loader: 'url-loader',
-              options: {
-                limit: 1000,
-                name: 'fonts/[name].[ext]',
-              },
-            },
-          ],
+          type: 'asset/resource',
+          generator: {
+            filename: isDev ? 'fonts/[name][ext]' : 'fonts/[name].[contenthash][ext]',
+          },
         },
         {
           test: /\.(webm|mp4|ogv)$/i,
-          use: [
-            {
-              loader: 'file-loader',
-              options: {
-                limit: 1000,
-                name: 'videos/[name].[ext]',
-              },
-            },
-          ],
+          type: 'asset/resource',
+          generator: {
+            filename: isDev ? 'videos/[name][ext]' : 'videos/[name].[contenthash][ext]',
+          },
         },
       ],
     },
