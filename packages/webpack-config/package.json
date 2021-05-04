@@ -58,7 +58,6 @@
     "dotenv": "^8.2.0",
     "eslint-import-resolver-webpack": "^0.13.0",
     "eslint-webpack-plugin": "^2.5.2",
-    "fastest-validator": "^1.10.0",
     "find-up": "^5.0.0",
     "glob": "^7.1.6",
     "html-webpack-plugin": "^5.3.1",
