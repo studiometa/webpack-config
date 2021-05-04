@@ -3,7 +3,6 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const WebpackBar = require('webpackbar');
 const entry = require('webpack-glob-entry');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const StylelintPlugin = require('stylelint-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
@@ -38,6 +37,7 @@ module.exports = (config) => {
       filename: '[name].js',
       chunkFilename: isDev ? '[name].js' : '[name].[contenthash].js',
       sourceMapFilename: '[file].map',
+      clean: true,
     },
     cache: {
       type: 'filesystem',
@@ -190,7 +190,6 @@ module.exports = (config) => {
       ],
     },
     plugins: [
-      new CleanWebpackPlugin(),
       new ESLintPlugin({
         context: src,
         extensions: ['js', 'vue'],

@@ -52,7 +52,6 @@
     "browser-sync": "^2.26.14",
     "cac": "^6.7.2",
     "chalk": "^4.1.0",
-    "clean-webpack-plugin": "*",
     "common-dir": "^3.0.0",
     "css-loader": "^5.0.2",
     "cssnano": "^4.1.10",
