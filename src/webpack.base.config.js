@@ -66,6 +66,8 @@ module.exports = (config) => {
               loader: 'babel-loader',
               options: {
                 cacheDirectory: true,
+                rootMode: 'upward-optional',
+                presets: ['@babel/preset-env'],
               },
             };
 
