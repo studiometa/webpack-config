@@ -9,6 +9,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const TerserPlugin = require('terser-webpack-plugin');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const commonDir = require('common-dir');
+const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
 
 // Fix a bug where the webpack bar is stuck at 99%.
 // eslint-disable-next-line no-underscore-dangle
@@ -206,6 +207,7 @@ module.exports = (config) => {
         filename: '[name].css',
         chunkFilename: isDev ? '[name].css' : '[name].[contenthash].css',
       }),
+      new WebpackManifestPlugin(),
     ],
     optimization: {
       minimizer: [
