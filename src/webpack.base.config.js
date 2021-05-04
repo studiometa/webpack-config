@@ -179,6 +179,7 @@ module.exports = (config) => {
         extensions: ['js', 'vue'],
         fix: true,
         failOnError: !isDev,
+        baseConfig: { extends: '@studiometa/eslint-config' },
       }),
       new StylelintPlugin({
         context: src,
@@ -186,6 +187,7 @@ module.exports = (config) => {
         fix: true,
         allowEmptyInput: true,
         failOnError: !isDev,
+        configOverride: { extends: '@studiometa/stylelint-config/prettier' },
       }),
       new VueLoaderPlugin(),
       new WebpackBar(),
