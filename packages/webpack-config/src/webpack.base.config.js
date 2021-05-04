@@ -131,16 +131,21 @@ module.exports = (config) => {
         },
         {
           test: /\.svg$/i,
-          issuer: /.*(?<!\.vue)$/,
+          issuer: /\.(vue|mjs|cjs|ts|js)$/i,
+          resourceQuery(input) {
+            return input.includes('as-vue-component');
+          },
+          use: ['vue-svg-loader'],
+        },
+        {
+          test: /\.svg$/i,
+          resourceQuery(input = '') {
+            return !input.includes('as-vue-component');
+          },
           type: 'asset',
           generator: {
             filename: isDev ? 'svg/[name][ext]' : 'svg/[name].[contenthash][ext]',
           },
-        },
-        {
-          test: /\.svg$/i,
-          issuer: /\.vue$/,
-          use: ['vue-svg-loader'],
         },
         {
           test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/i,
@@ -179,7 +184,10 @@ module.exports = (config) => {
         extensions: ['js', 'vue'],
         fix: true,
         failOnError: !isDev,
-        baseConfig: { extends: '@studiometa/eslint-config' },
+        baseConfig: {
+          extends: '@studiometa/eslint-config',
+          settings: { 'import/resolver': 'webpack' },
+        },
       }),
       new StylelintPlugin({
         context: src,

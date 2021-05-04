@@ -8,7 +8,7 @@ export default class Component extends Base {
    */
   static config = {
     name: 'Component',
-    component: {
+    components: {
       ComponentFoo: () => import('../foo/Component'),
     },
   };
