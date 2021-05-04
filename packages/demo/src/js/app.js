@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Base from '@studiometa/js-toolkit';
-import VueCounter from './Counter';
+import VueCounter from './Counter.vue';
 import config from './config.yaml';
 
 /**
