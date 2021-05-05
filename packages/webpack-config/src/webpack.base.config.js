@@ -2,6 +2,7 @@ const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const WebpackBar = require('webpackbar');
 const entry = require('webpack-glob-entry');
+const { DefinePlugin } = require('webpack');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const StylelintPlugin = require('stylelint-webpack-plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
@@ -189,6 +190,9 @@ module.exports = (config) => {
         failOnError: !isDev,
         baseConfig: {
           extends: '@studiometa/eslint-config',
+          globals: {
+            __DEV__: false,
+          },
           settings: { 'import/resolver': 'webpack' },
         },
       }),
@@ -208,6 +212,9 @@ module.exports = (config) => {
         chunkFilename: isDev ? '[name].css' : '[name].[contenthash].css',
       }),
       new WebpackManifestPlugin(),
+      new DefinePlugin({
+        __DEV__: JSON.stringify(isDev),
+      }),
     ],
     optimization: {
       minimizer: [
