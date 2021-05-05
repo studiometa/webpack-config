@@ -60,7 +60,19 @@ module.exports = (config, options) => {
   config.server = config.server || 'dist';
   config.watch = ['./dist/**/*.html', ...(config.watch || [])];
 
-  extendWebpackConfig(config, (webpackConfig) => {
+  extendWebpackConfig(config, (webpackConfig, isDev) => {
     webpackConfig.plugins = [...webpackConfig.plugins, ...plugins];
+    if (!isDev) {
+      webpackConfig.output.filename = '[name].[contenthash].js';
+
+      const MiniCssExtractPlugin = webpackConfig.plugins.find(
+        (plugin) => plugin.constructor.name === 'MiniCssExtractPlugin'
+      );
+      if (MiniCssExtractPlugin) {
+        MiniCssExtractPlugin.options = Object.assign(MiniCssExtractPlugin.options, {
+          filename: '[name].[contenthash].css',
+        });
+      }
+    }
   });
 };
