@@ -10,7 +10,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const TerserPlugin = require('terser-webpack-plugin');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const commonDir = require('common-dir');
-const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+const WebpackAssetsManifest = require('webpack-assets-manifest');
 const { config: dotenvConfig } = require('dotenv');
 
 // Fix a bug where the webpack bar is stuck at 99%.
@@ -196,9 +196,13 @@ module.exports = (config) => {
         filename: '[name].css',
         chunkFilename: isDev ? '[name].css' : '[name].[contenthash].css',
       }),
-      new WebpackManifestPlugin(),
       new DefinePlugin({
         __DEV__: JSON.stringify(isDev),
+      }),
+      new WebpackAssetsManifest({
+        writeToDisk: true,
+        entrypoints: true,
+        entrypointsUseAssets: true,
       }),
     ],
     optimization: {
