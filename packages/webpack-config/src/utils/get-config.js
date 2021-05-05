@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const findUp = require('find-up');
 
-module.exports = (options) => {
+module.exports = (options = { analyze: false }) => {
   const configPath = findUp.sync(['meta.config.js', 'meta.config.cjs']);
 
   if (!configPath) {

@@ -86,6 +86,14 @@ export interface MetaConfig {
   presets?: Array<Presets | [Presets, any]>;
 }
 
+/**
+ * Generate a configuration object for the meta CLI.
+ */
 declare function createConfig(config: MetaConfig): MetaConfig;
 
-export { createConfig };
+/**
+ * Get the generated Webpack configuration.
+ */
+declare function getWebpackConfig(): WebpackConfig;
+
+export { createConfig, getWebpackConfig };
