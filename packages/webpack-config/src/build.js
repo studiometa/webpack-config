@@ -1,10 +1,12 @@
 const webpack = require('webpack');
+const getMetaConfig = require('./utils/get-config.js');
+const getWebpackConfig = require('./webpack.prod.config.js');
 
 module.exports = (options = {}) => {
   process.env.NODE_ENV = 'production';
 
-  const config = require('./utils/get-config.js')(options);
-  const webpackConfig = require('./webpack.prod.config.js')(config);
+  const config = getMetaConfig(options);
+  const webpackConfig = getWebpackConfig(config);
 
   webpack(webpackConfig, (err, stats) => {
     if (err) {

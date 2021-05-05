@@ -11,6 +11,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const commonDir = require('common-dir');
 const { WebpackManifestPlugin } = require('webpack-manifest-plugin');
+const { config: dotenvConfig } = require('dotenv');
 
 // Fix a bug where the webpack bar is stuck at 99%.
 // eslint-disable-next-line no-underscore-dangle
@@ -19,7 +20,7 @@ WebpackBar.prototype.updateProgress = function updateProgressOverride(percent = 
   updateProgress.call(this, percent >= 0.99 ? 1 : percent, ...args);
 };
 
-require('dotenv').config();
+dotenvConfig();
 
 module.exports = (config) => {
   const isDev = process.env.NODE_ENV !== 'production';

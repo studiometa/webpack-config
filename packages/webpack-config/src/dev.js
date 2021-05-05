@@ -3,13 +3,16 @@ const webpack = require('webpack');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const FriendlyErrorsWebpackPlugin = require('@soda/friendly-errors-webpack-plugin');
+const getMetaConfig = require('./utils/get-config');
+const getWebpackConfig = require('./webpack.dev.config');
+const getServer = require('./utils/get-browsersync');
 
 module.exports = (options = {}) => {
   process.env.NODE_ENV = 'development';
 
-  const config = require('./utils/get-config')(options);
-  const webpackConfig = require('./webpack.dev.config')(config);
-  const server = require('./utils/get-browsersync')(config);
+  const config = getMetaConfig(options);
+  const webpackConfig = getWebpackConfig(config);
+  const server = getServer(config);
 
   const webpackBar = webpackConfig.plugins.find(
     (plugin) => plugin.constructor.name === 'WebpackBarPlugin'
