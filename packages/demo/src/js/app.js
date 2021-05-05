@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Base from '@studiometa/js-toolkit';
-import VueCounter from './Counter.vue';
+import VueComponent from './VueComponent.vue';
 import config from './config.yaml';
 
 /**
@@ -23,12 +23,22 @@ class App extends Base {
 
   vue;
 
+  VueComponent;
+
   /**
    * Mounted hook.
    */
   mounted() {
     this.$log('config', config, this.$options);
     this.content = 'mounted';
+    this.VueComponent = VueComponent;
+  }
+
+  /**
+   * Load the Vue app on click.
+   */
+  async onClick() {
+    const { default: VueCounter } = await import(/* webpackPreload: true */ './Counter.vue');
     this.vue = new Vue({
       components: {
         VueCounter,

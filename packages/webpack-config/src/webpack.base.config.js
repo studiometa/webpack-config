@@ -89,31 +89,7 @@ module.exports = (config) => {
           use: isDev ? ['vue-loader', 'webpack-module-hot-accept'] : ['vue-loader'],
         },
         {
-          test: /\.vue\.(sa|sc|c)ss$/,
-          use: [
-            'style-loader',
-            { loader: 'css-loader', options: { url: (url) => !url.startsWith('/') } },
-            {
-              loader: 'postcss-loader',
-              options: {
-                postcssOptions: {
-                  plugins: isDev
-                    ? ['postcss-preset-env']
-                    : ['postcss-preset-env', 'autoprefixer', 'cssnano'],
-                },
-              },
-            },
-            'resolve-url-loader',
-            {
-              loader: 'sass-loader',
-              options: {
-                sassOptions: config.sassOptions || {},
-              },
-            },
-          ],
-        },
-        {
-          test: /(?<!\.vue)\.(sa|sc|c)ss$/,
+          test: /\.(sa|sc|c)ss$/,
           use: [
             {
               loader: MiniCssExtractPlugin.loader,
@@ -242,6 +218,12 @@ module.exports = (config) => {
             test: /[\\/]node_modules[\\/]/,
             name: 'vendors',
             chunks: 'initial',
+          },
+          styles: {
+            name: 'styles',
+            type: 'css/mini-extract',
+            chunks: 'initial',
+            enforce: true,
           },
         },
       },
