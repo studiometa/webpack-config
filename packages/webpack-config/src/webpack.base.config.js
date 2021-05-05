@@ -136,7 +136,6 @@ module.exports = (config) => {
         },
         {
           test: /\.svg$/i,
-          issuer: /\.(vue|mjs|cjs|ts|js)$/i,
           resourceQuery(input) {
             return input.includes('as-vue-component');
           },
