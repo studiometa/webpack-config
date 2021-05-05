@@ -45,6 +45,7 @@
     "stylelint": "^13.13.1"
   },
   "dependencies": {
+    "@babel/plugin-transform-runtime": "^7.13.15",
     "@babel/preset-env": "^7.12.17",
     "@npmcli/move-file": "^1.1.2",
     "@soda/friendly-errors-webpack-plugin": "^1.8.0",
@@ -55,6 +56,7 @@
     "cac": "^6.7.2",
     "chalk": "^4.1.0",
     "common-dir": "^3.0.0",
+    "core-js": "^3.11.2",
     "css-loader": "^5.0.2",
     "cssnano": "^5.0.2",
     "dotenv": "^8.2.0",

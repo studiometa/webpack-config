@@ -68,7 +68,16 @@ module.exports = (config) => {
               options: {
                 cacheDirectory: true,
                 rootMode: 'upward-optional',
-                presets: ['@babel/preset-env'],
+                presets: [
+                  [
+                    '@babel/preset-env',
+                    {
+                      useBuiltIns: 'usage',
+                      corejs: '3.11',
+                    },
+                  ],
+                ],
+                plugins: ['@babel/plugin-transform-runtime'],
               },
             };
 
