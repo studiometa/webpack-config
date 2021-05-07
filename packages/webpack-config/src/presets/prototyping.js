@@ -59,6 +59,7 @@ module.exports = (config, options) => {
   config.public = config.public || '/';
   config.server = config.server || 'dist';
   config.watch = ['./dist/**/*.html', ...(config.watch || [])];
+  config.mergeCSS = true;
 
   extendWebpackConfig(config, (webpackConfig, isDev) => {
     webpackConfig.plugins = [...webpackConfig.plugins, ...plugins];
