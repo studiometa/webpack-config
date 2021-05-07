@@ -89,30 +89,6 @@ module.exports = (config) => {
           use: isDev ? ['vue-loader', 'webpack-module-hot-accept'] : ['vue-loader'],
         },
         {
-          test: /\.(sa|sc|c)ss$/,
-          use: [
-            {
-              loader: MiniCssExtractPlugin.loader,
-            },
-            { loader: 'css-loader', options: { url: (url) => !url.startsWith('/') } },
-            {
-              loader: 'postcss-loader',
-              options: {
-                postcssOptions: {
-                  plugins: isDev ? ['autoprefixer'] : ['autoprefixer', 'cssnano'],
-                },
-              },
-            },
-            'resolve-url-loader',
-            {
-              loader: 'sass-loader',
-              options: {
-                sassOptions: config.sassOptions || {},
-              },
-            },
-          ],
-        },
-        {
           test: /\.(png|jpe?g|gif|webp)$/i,
           type: 'asset',
           generator: {
@@ -223,16 +199,73 @@ module.exports = (config) => {
             name: 'vendors',
             chunks: 'initial',
           },
-          styles: {
-            name: 'styles',
-            type: 'css/mini-extract',
-            chunks: 'initial',
-            enforce: true,
-          },
         },
       },
     },
   };
+
+  const defaultCssRule = {
+    test: /\.(sa|sc|c)ss$/,
+    use: [
+      {
+        loader: MiniCssExtractPlugin.loader,
+      },
+      { loader: 'css-loader', options: { url: (url) => !url.startsWith('/') } },
+      {
+        loader: 'postcss-loader',
+        options: {
+          postcssOptions: {
+            plugins: isDev ? ['autoprefixer'] : ['autoprefixer', 'cssnano'],
+          },
+        },
+      },
+      'resolve-url-loader',
+      {
+        loader: 'sass-loader',
+        options: {
+          sassOptions: config.sassOptions || {},
+        },
+      },
+    ],
+  };
+
+  if (config.mergeCSS) {
+    webpackBaseConfig.module.rules.push(defaultCssRule);
+    webpackBaseConfig.optimization.splitChunks.cacheGroups.styles = {
+      name: 'styles',
+      type: 'css/mini-extract',
+      chunks: 'initial',
+      enforce: true,
+    };
+  } else {
+    defaultCssRule.test = /(?<!\.vue)\.(sa|sc|c)ss$/;
+    const vueCssRule = {
+      test: /\.vue\.(sa|sc|c)ss$/,
+      use: [
+        'style-loader',
+        { loader: 'css-loader', options: { url: (url) => !url.startsWith('/') } },
+        {
+          loader: 'postcss-loader',
+          options: {
+            postcssOptions: {
+              plugins: isDev
+                ? ['postcss-preset-env']
+                : ['postcss-preset-env', 'autoprefixer', 'cssnano'],
+            },
+          },
+        },
+        'resolve-url-loader',
+        {
+          loader: 'sass-loader',
+          options: {
+            sassOptions: config.sassOptions || {},
+          },
+        },
+      ],
+    };
+    webpackBaseConfig.module.rules.push(defaultCssRule);
+    webpackBaseConfig.module.rules.push(vueCssRule);
+  }
 
   if (config.analyze) {
     webpackBaseConfig.plugins.push(

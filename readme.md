@@ -36,6 +36,13 @@ module.exports = {
   analyze: false,
 
   /**
+   * Merge all initial CSS chunks into one file.
+   * @type {Boolean}
+   * @optional
+   */
+  mergeCSS: false,
+
+  /**
    * Extends the Webpack configuration before merging
    * with the environment specific configurations.
    * @type {Function}

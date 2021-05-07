@@ -8,13 +8,26 @@ import {
 export type Presets = 'prototyping' | 'tailwindcss' | 'twig' | 'yaml';
 
 export interface MetaConfig {
+  /**
+   * A list of glob for files to consider as entries.
+   */
   src?: string[];
+  /**
+   * The path to the dist folder.
+   */
   dist?: string;
+  /**
+   * The absolute public path of the generated dist folder.
+   */
   public?: string;
   /**
    * Analyze the bundle with the WebpackBundleAnalyzer plugin.
    */
   analyze?: boolean;
+  /**
+   * Do we merge all initial CSS chunks?
+   */
+  mergeCSS?: boolean;
   /**
    * Extends the Webpack configuration before merging
    * with the environment specific configurations.
