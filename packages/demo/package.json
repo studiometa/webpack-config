@@ -10,9 +10,9 @@
     "@studiometa/prettier-config": "^2.0.1",
     "@studiometa/stylelint-config": "^2.0.0",
     "@studiometa/webpack-config": "file:../webpack-config",
-    "eslint": "^7.17.0",
-    "prettier": "^2.2.1",
-    "stylelint": "^13.8.0",
+    "eslint": "^7.26.0",
+    "prettier": "^2.3.0",
+    "stylelint": "^13.13.1",
     "tailwindcss": "^2.1.2"
   },
   "dependencies": {

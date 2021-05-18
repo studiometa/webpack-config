@@ -228,6 +228,7 @@ module.exports = (config) => {
         loader: 'sass-loader',
         options: {
           sassOptions: config.sassOptions || {},
+          sourceMap: true,
         },
       },
     ],
@@ -269,6 +270,7 @@ module.exports = (config) => {
           loader: 'sass-loader',
           options: {
             sassOptions: config.sassOptions || {},
+            sourceMap: true,
           },
         },
       ],
