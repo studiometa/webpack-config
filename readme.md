@@ -37,7 +37,14 @@ module.exports = {
 
   /**
    * Merge all initial CSS chunks into one file.
-   * @type {Boolean}
+   * Use a RegExp or a function to exclude some files:
+   * ```js
+   * mergeCSS: /^(?!.*css\/do-not-merge\.scss).*$/,
+   * mergeCSS(module, chunk) {
+   *   return module.constructor.name === 'CssModule';
+   * },
+   * ```
+   * @type {Boolean|RegExp|Function}
    * @optional
    */
   mergeCSS: false,

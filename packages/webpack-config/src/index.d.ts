@@ -1,4 +1,4 @@
-import { Configuration as WebpackConfig } from 'webpack';
+import { Configuration as WebpackConfig, ChunkGraph, Module, ModuleGraph } from 'webpack';
 import {
   ServerOptions,
   Options as BrowsersyncOptions,
@@ -6,6 +6,11 @@ import {
 } from '@types/browser-sync';
 
 export type Presets = 'prototyping' | 'tailwindcss' | 'twig' | 'yaml';
+
+interface CacheGroupsContext {
+  moduleGraph: ModuleGraph;
+  chunkGraph: ChunkGraph;
+}
 
 export interface MetaConfig {
   /**
@@ -25,9 +30,15 @@ export interface MetaConfig {
    */
   analyze?: boolean;
   /**
-   * Do we merge all initial CSS chunks?
+   * Do we merge all initial CSS chunks? Use a RegExp or a function to exclude some files.
+   *
+   * @exampe Exclude files matching the `css/do-not-merge.scss` pattern:
+   *
+   * ```js
+   * mergeCSS: /^(?!.*css\/do-not-merge\.scss).*$/,
+   * ```
    */
-  mergeCSS?: boolean;
+  mergeCSS?: boolean | RegExp | ((module: Module, chunk: CacheGroupsContext) => boolean);
   /**
    * Extends the Webpack configuration before merging
    * with the environment specific configurations.

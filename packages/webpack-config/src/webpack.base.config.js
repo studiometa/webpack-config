@@ -231,12 +231,18 @@ module.exports = (config) => {
 
   if (config.mergeCSS) {
     webpackBaseConfig.module.rules.push(defaultCssRule);
-    webpackBaseConfig.optimization.splitChunks.cacheGroups.styles = {
+    const stylesCacheGroup = {
       name: 'styles',
       type: 'css/mini-extract',
       chunks: 'initial',
       enforce: true,
     };
+
+    if (typeof config.mergeCSS === 'function' || config.mergeCSS.constructor.name === 'RegExp') {
+      stylesCacheGroup.test = config.mergeCSS;
+    }
+
+    webpackBaseConfig.optimization.splitChunks.cacheGroups.styles = stylesCacheGroup;
   } else {
     defaultCssRule.test = /(?<!\.vue)\.(sa|sc|c)ss$/;
     const vueCssRule = {
