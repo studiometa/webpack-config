@@ -58,6 +58,7 @@
     "common-dir": "^3.0.0",
     "core-js": "^3.11.2",
     "css-loader": "^5.0.2",
+    "css-minimizer-webpack-plugin": "^3.0.0",
     "cssnano": "^5.0.2",
     "dotenv": "^8.2.0",
     "eslint-import-resolver-webpack": "^0.13.0",

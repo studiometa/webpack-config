@@ -12,6 +12,7 @@ const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const commonDir = require('common-dir');
 const WebpackAssetsManifest = require('webpack-assets-manifest');
 const { config: dotenvConfig } = require('dotenv');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 
 // Fix a bug where the webpack bar is stuck at 99%.
 // eslint-disable-next-line no-underscore-dangle
@@ -187,6 +188,7 @@ module.exports = (config) => {
           parallel: true,
           extractComments: true,
         }),
+        new CssMinimizerPlugin(),
       ],
       runtimeChunk: {
         name: 'manifest',
@@ -215,7 +217,7 @@ module.exports = (config) => {
         loader: 'postcss-loader',
         options: {
           postcssOptions: {
-            plugins: isDev ? ['autoprefixer'] : ['autoprefixer', 'cssnano'],
+            plugins: ['autoprefixer'],
           },
         },
       },
