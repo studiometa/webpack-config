@@ -50,6 +50,8 @@ module.exports = (config) => {
     stats: {
       all: false,
       assets: true,
+      cachedAssets: true,
+      assetsSort: 'name',
       colors: true,
       warnings: true,
       errors: true,
