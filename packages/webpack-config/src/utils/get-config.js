@@ -1,7 +1,7 @@
 import fs from 'fs';
 import { findUp } from 'find-up';
 
-export default async (options) => {
+export default async (options = { analyze: false, modern: undefined, legacy: undefined }) => {
   const configPath = await findUp(['meta.config.js', 'meta.config.mjs']);
 
   if (!configPath) {
@@ -17,6 +17,21 @@ export default async (options) => {
 
   if (options.analyze) {
     config.analyze = true;
+  }
+
+  config.modern = options.modern === true ? true : config.modern ?? false;
+  config.legacy = options.legacy === false ? false : config.legacy ?? true;
+
+  if (!config.modern && !config.legacy) {
+    throw new Error('Can not disable both legacy and modern bundles.');
+  }
+
+  if (config.modern && config.legacy) {
+    console.log('Building modern and legacy bundles.');
+  } else if (config.modern && !config.legacy) {
+    console.log('Building modern bundle.');
+  } else {
+    console.log('Building legacy bundle.');
   }
 
   config.PATH = configPath;
