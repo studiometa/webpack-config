@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const findUp = require('find-up');
 
-module.exports = (options = { analyze: false }) => {
+module.exports = (options = { analyze: false, modern: undefined, legacy: undefined }) => {
   const configPath = findUp.sync(['meta.config.js', 'meta.config.cjs']);
 
   if (!configPath) {
@@ -19,6 +19,21 @@ module.exports = (options = { analyze: false }) => {
 
   if (options.analyze) {
     config.analyze = true;
+  }
+
+  config.modern = options.modern === true ? true : config.modern ?? false;
+  config.legacy = options.legacy === false ? false : config.legacy ?? true;
+
+  if (!config.modern && !config.legacy) {
+    throw new Error('Can not disable both legacy and modern bundles.');
+  }
+
+  if (config.modern && config.legacy) {
+    console.log('Building modern and legacy bundles.');
+  } else if (config.modern && !config.legacy) {
+    console.log('Building modern bundle.');
+  } else {
+    console.log('Building legacy bundle.');
   }
 
   config.PATH = configPath;
