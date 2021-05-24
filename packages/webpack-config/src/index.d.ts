@@ -118,6 +118,6 @@ declare function createConfig(config: MetaConfig): MetaConfig;
 /**
  * Get the generated Webpack configuration.
  */
-declare function getWebpackConfig(): WebpackConfig;
+declare function getWebpackConfig(options: { mode?: 'production'|'development' }): WebpackConfig;
 
 export { createConfig, getWebpackConfig };

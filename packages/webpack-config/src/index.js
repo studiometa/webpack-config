@@ -1,5 +1,6 @@
 import getMetaConfig from './utils/get-config.js';
 import getWebpackProdConfig from './webpack.prod.config.js';
+import getWebpackDevConfig from './webpack.dev.config.js';
 
 /**
  * Create a configuration.
@@ -14,9 +15,12 @@ export function createConfig(config) {
 /**
  * Get the generated Webpack configuration.
  *
+ * @param {Object} options
+ * @param {'production'|'development'} [options.mode]
+ *
  * @return {import('webpack').Configuration}
  */
-export function getWebpackConfig() {
+export function getWebpackConfig({ mode } = { mode: process.env.NODE_ENV }) {
   const config = getMetaConfig();
-  return getWebpackProdConfig(config);
+  return mode === 'production' ? getWebpackProdConfig(config) : getWebpackDevConfig(config);
 }
