@@ -1,5 +1,6 @@
 {
   "name": "@studiometa/webpack-config-demo",
+  "version": "2.9.1",
   "private": true,
   "scripts": {
     "dev": "meta dev",
@@ -17,6 +18,6 @@
   },
   "dependencies": {
     "@studiometa/js-toolkit": "^1.1.1",
-    "vue": "^2.6.12"
+    "vue": "^2.6.14"
   }
 }
