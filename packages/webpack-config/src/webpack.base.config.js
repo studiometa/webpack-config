@@ -259,9 +259,7 @@ module.exports = (config) => {
           loader: 'postcss-loader',
           options: {
             postcssOptions: {
-              plugins: isDev
-                ? ['postcss-preset-env']
-                : ['postcss-preset-env', 'autoprefixer', 'cssnano'],
+              plugins: isDev ? ['postcss-preset-env'] : ['postcss-preset-env', 'autoprefixer'],
             },
           },
         },
