@@ -1,6 +1,6 @@
 {
   "name": "@studiometa/webpack-config-demo",
-  "version": "2.9.2",
+  "version": "2.9.3",
   "private": true,
   "scripts": {
     "dev": "meta dev",
