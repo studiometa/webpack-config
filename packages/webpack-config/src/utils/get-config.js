@@ -44,5 +44,10 @@ module.exports = (options = { analyze: false }) => {
     });
   }
 
+  config.sassOptions = {
+    quietDeps: true,
+    ...(config.sassOptions || {}),
+  };
+
   return config;
 };
