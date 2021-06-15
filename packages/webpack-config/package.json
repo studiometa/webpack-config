@@ -1,6 +1,6 @@
 {
   "name": "@studiometa/webpack-config",
-  "version": "2.9.2",
+  "version": "2.9.3",
   "description": "A basic webpack config",
   "main": "src/index.js",
   "types": "src/index.d.ts",
