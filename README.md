@@ -126,6 +126,7 @@ module.exports = {
     'tailwindcss', // use the `tailwindcss` preset,
     'prototyping', // use the `prototyping` preset
     'yaml', // use the `yaml` preset
+    'hashed-filenames', // use the `hashed-filenames` preset
   ],
 };
 ```
@@ -167,6 +168,7 @@ Presets can be used to extend the CLI configuration elegantly. The following pre
 - [`tailwindcss`](#tailwindcss)
 - [`prototyping`](#prototyping)
 - [`yaml`](#yaml)
+- [`hashed-filenames`](#hashed-filenames)
 
 Read their documentation below to find out how to use and configure them.
 
@@ -300,6 +302,18 @@ Add support for the import of YAML files with the [js-yaml-loader](https://githu
 ```js
 module.exports = {
   presets: ['yaml'],
+};
+```
+
+### `hashed-filenames`
+
+Add a content hash to the compiled filenames in production.
+
+#### Example
+
+```js
+module.exports = {
+  presets: ['hashed-filenames'],
 };
 ```
 
