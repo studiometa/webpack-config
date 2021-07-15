@@ -4,7 +4,8 @@ const path = require('path');
 const merge = require('lodash.merge');
 const twigPreset = require('./twig');
 const tailwindcssPreset = require('./tailwindcss');
-const extendWebpackConfig = require('../utils/extend-webpack-config.js');
+const hashedFilenamesPreset = require('./hashed-filenames');
+const extendWebpackConfig = require('../utils/extend-webpack-config');
 
 module.exports = (config, options) => {
   const opts = merge(
@@ -53,6 +54,7 @@ module.exports = (config, options) => {
 
   twigPreset(config, opts.twig);
   tailwindcssPreset(config, opts.tailwindcss);
+  hashedFilenamesPreset(config);
 
   config.src = ['./src/css/**/[!_]*.scss', './src/js/app.js', ...(config.src || [])];
   config.dist = config.dist || './dist';
@@ -61,19 +63,7 @@ module.exports = (config, options) => {
   config.watch = ['./dist/**/*.html', ...(config.watch || [])];
   config.mergeCSS = true;
 
-  extendWebpackConfig(config, (webpackConfig, isDev) => {
+  extendWebpackConfig(config, (webpackConfig) => {
     webpackConfig.plugins = [...webpackConfig.plugins, ...plugins];
-    if (!isDev) {
-      webpackConfig.output.filename = '[name].[contenthash].js';
-
-      const MiniCssExtractPlugin = webpackConfig.plugins.find(
-        (plugin) => plugin.constructor.name === 'MiniCssExtractPlugin'
-      );
-      if (MiniCssExtractPlugin) {
-        MiniCssExtractPlugin.options = Object.assign(MiniCssExtractPlugin.options, {
-          filename: '[name].[contenthash].css',
-        });
-      }
-    }
   });
 };
