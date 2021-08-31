@@ -1,12 +1,15 @@
-const merge = require('lodash.merge');
-const findUp = require('find-up');
-const chalk = require('chalk');
-const createServer = require('tailwind-config-viewer/server');
-const extendWebpackConfig = require('../utils/extend-webpack-config.js');
-const extendBrowserSyncConfig = require('../utils/extend-browsersync-config.js');
-const { withTrailingSlash, withoutTrailingSlash, withLeadingSlash } = require('../utils');
+import merge from 'lodash.merge';
+import findUp from 'find-up';
+import chalk from 'chalk';
+import createServer from 'tailwind-config-viewer/server/index.js';
+import { createRequire } from 'module';
+import extendWebpackConfig from '../utils/extend-webpack-config.js';
+import extendBrowserSyncConfig from '../utils/extend-browsersync-config.js';
+import { withTrailingSlash, withoutTrailingSlash, withLeadingSlash } from '../utils/index.js';
 
-module.exports = (config, options = {}) => {
+const require = createRequire(import.meta.url);
+
+export default async (config, options = {}) => {
   const configPath = config.PATH;
 
   const opts = merge(
@@ -18,7 +21,7 @@ module.exports = (config, options = {}) => {
   );
 
   if (process.env.NODE_ENV === 'development') {
-    extendBrowserSyncConfig(config, (bsConfig) => {
+    await extendBrowserSyncConfig(config, async (bsConfig) => {
       const tailwindConfigViewerServer = createServer({
         // eslint-disable-next-line import/no-dynamic-require
         tailwindConfigProvider: () => require(findUp.sync('tailwind.config.js')),
@@ -40,7 +43,7 @@ module.exports = (config, options = {}) => {
     });
   }
 
-  extendWebpackConfig(config, (webpackConfig, isDev) => {
+  await extendWebpackConfig(config, async (webpackConfig, isDev) => {
     const tailwind = opts.path
       ? opts.path
       : require.resolve('tailwindcss', { paths: [configPath] });
@@ -75,3 +78,4 @@ module.exports = (config, options = {}) => {
     });
   });
 };
+

@@ -1,12 +1,14 @@
 #!/usr/bin/env node
-const cac = require('cac');
-const chalk = require('chalk');
+import cac from 'cac';
+import chalk from 'chalk';
+import { createRequire } from "module";
+import build from '../src/build.js';
+import dev from '../src/dev.js';
 
-const { version, bin } = require('../package.json');
+const require = createRequire(import.meta.url);
+const { version, name } = require('../package.json');
 
-const cli = cac(Object.keys(bin).pop());
-const build = require('../src/build.js');
-const dev = require('../src/dev.js');
+const cli = cac('meta');
 
 cli
   .command('build', 'Build assets.')
@@ -35,7 +37,7 @@ cli
   });
 
 cli.help();
-cli.version(version);
+cli.version(`${name}@${version}`);
 cli.parse();
 
 if (!cli.matchedCommandName && Object.keys(cli.options).length <= 1) {

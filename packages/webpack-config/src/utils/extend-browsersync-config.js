@@ -3,7 +3,7 @@
  * @param {Object}   config The meta config object.
  * @param {Function} fn     The function to apply.
  */
-module.exports = (config, fn) => {
+export default (config, fn) => {
   const oldServerConfig =
     typeof config.server === 'function' ? config.server : () => config.server || {};
 

@@ -1,29 +1,25 @@
-const path = require('path');
-const VueLoaderPlugin = require('vue-loader/lib/plugin');
-const WebpackBar = require('webpackbar');
-const entry = require('webpack-glob-entry');
-const { DefinePlugin } = require('webpack');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const StylelintPlugin = require('stylelint-webpack-plugin');
-const ESLintPlugin = require('eslint-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const TerserPlugin = require('terser-webpack-plugin');
-const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
-const commonDir = require('common-dir');
-const WebpackAssetsManifest = require('webpack-assets-manifest');
-const { config: dotenvConfig } = require('dotenv');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+import path from 'path';
+import VueLoaderPlugin from 'vue-loader/lib/plugin.js';
+import WebpackBar from 'webpackbar';
+import entry from 'webpack-glob-entry';
+import RemoveEmptyScriptsPlugin from 'webpack-remove-empty-scripts';
+import webpack from 'webpack';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import StylelintPlugin from 'stylelint-webpack-plugin';
+import ESLintPlugin from 'eslint-webpack-plugin';
+import BundleAnalyzerPluginImport from 'webpack-bundle-analyzer';
+import TerserPlugin from 'terser-webpack-plugin';
+import commonDir from 'common-dir';
+import dotenv from 'dotenv';
+import WebpackAssetsManifest from 'webpack-assets-manifest';
+import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 
-// Fix a bug where the webpack bar is stuck at 99%.
-// eslint-disable-next-line no-underscore-dangle
-const { updateProgress } = WebpackBar.prototype;
-WebpackBar.prototype.updateProgress = function updateProgressOverride(percent = 0, ...args) {
-  updateProgress.call(this, percent >= 0.99 ? 1 : percent, ...args);
-};
+const { DefinePlugin } = webpack;
+const { BundleAnalyzerPlugin} = BundleAnalyzerPluginImport;
 
-dotenvConfig();
+dotenv.config();
 
-module.exports = (config) => {
+export default async (config) => {
   const isDev = process.env.NODE_ENV !== 'production';
   const src = commonDir(config.src);
 
@@ -135,14 +131,14 @@ module.exports = (config) => {
       extensions: ['.vue', '.mjs', '.js', '.json'],
       modules: [
         'node_modules',
-        path.join(__dirname, '..', 'node_modules'),
+        path.dirname(import.meta.url),
         path.join(path.dirname(config.PATH), 'node_modules'),
       ],
     },
     resolveLoader: {
       modules: [
         'node_modules',
-        path.join(__dirname, '..', 'node_modules'),
+        path.dirname(import.meta.url),
         path.join(path.dirname(config.PATH), 'node_modules'),
       ],
     },
@@ -287,7 +283,8 @@ module.exports = (config) => {
   }
 
   if (config.webpack && typeof config.webpack === 'function') {
-    config.webpack(webpackBaseConfig, isDev);
+    await config.webpack(webpackBaseConfig, isDev);
   }
+
   return webpackBaseConfig;
 };
