@@ -24,21 +24,23 @@ export default async (options) => {
   if (Array.isArray(config.presets) && config.presets.length) {
     console.log('Applying presets...');
 
-    await Promise.all(config.presets.map(async (preset) => {
-      const name = Array.isArray(preset) ? preset[0] : preset;
-      const opts = Array.isArray(preset) ? preset[1] : {};
-      const presetPathInfo = new URL(`../presets/${name}.js`, import.meta.url);
+    await Promise.all(
+      config.presets.map(async (preset) => {
+        const name = Array.isArray(preset) ? preset[0] : preset;
+        const opts = Array.isArray(preset) ? preset[1] : {};
+        const presetPathInfo = new URL(`../presets/${name}.js`, import.meta.url);
 
-      if (!fs.existsSync(presetPathInfo.pathname)) {
-        console.error(`The "${name}" preset is not available.`);
-        return;
-      }
+        if (!fs.existsSync(presetPathInfo.pathname)) {
+          console.error(`The "${name}" preset is not available.`);
+          return;
+        }
 
-      console.log(`Using the "${name}" preset.`);
+        console.log(`Using the "${name}" preset.`);
 
-      const { default: presetHandler } = await import(presetPathInfo.pathname);
-      await presetHandler(config, opts);
-    }));
+        const { default: presetHandler } = await import(presetPathInfo.pathname);
+        await presetHandler(config, opts);
+      })
+    );
   }
 
   return config;

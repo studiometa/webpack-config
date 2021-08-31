@@ -1,5 +1,5 @@
 import webpackMerge from 'webpack-merge';
-import getWebpackConfig from './webpack.base.config.js'
+import getWebpackConfig from './webpack.base.config.js';
 
 export default async (config) => {
   const baseConfig = await getWebpackConfig(config);

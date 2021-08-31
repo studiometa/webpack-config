@@ -1,5 +1,5 @@
 import merge from 'lodash.merge';
-import findUp from 'find-up';
+import { findUpSync } from 'find-up';
 import chalk from 'chalk';
 import createServer from 'tailwind-config-viewer/server/index.js';
 import { createRequire } from 'module';
@@ -23,8 +23,9 @@ export default async (config, options = {}) => {
   if (process.env.NODE_ENV === 'development') {
     await extendBrowserSyncConfig(config, async (bsConfig) => {
       const tailwindConfigViewerServer = createServer({
-        // eslint-disable-next-line import/no-dynamic-require
-        tailwindConfigProvider: () => require(findUp.sync('tailwind.config.js')),
+        tailwindConfigProvider: () =>
+          // eslint-disable-next-line import/no-dynamic-require
+          require(findUpSync(['tailwind.config.js', 'tailwind.config.cjs'])),
       }).asMiddleware();
 
       bsConfig.middleware = bsConfig.middleware || [];
@@ -78,4 +79,3 @@ export default async (config, options = {}) => {
     });
   });
 };
-

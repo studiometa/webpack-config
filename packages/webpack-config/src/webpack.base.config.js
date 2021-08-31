@@ -15,7 +15,7 @@ import WebpackAssetsManifest from 'webpack-assets-manifest';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 
 const { DefinePlugin } = webpack;
-const { BundleAnalyzerPlugin} = BundleAnalyzerPluginImport;
+const { BundleAnalyzerPlugin } = BundleAnalyzerPluginImport;
 
 dotenv.config();
 

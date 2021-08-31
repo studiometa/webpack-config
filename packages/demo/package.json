@@ -2,7 +2,7 @@
   "name": "@studiometa/webpack-config-demo",
   "version": "2.9.3",
   "private": true,
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "dev": "node ../webpack-config/bin/cli.js dev",
     "build": "node ../webpack-config/bin/cli.js build"
