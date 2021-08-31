@@ -51,7 +51,7 @@ export default async (options = {}) => {
       clearConsole: true,
       compilationSuccessInfo: {
         get messages() {
-          return server.getInfo();
+          return [server.getInfo()];
         },
       },
     }),
