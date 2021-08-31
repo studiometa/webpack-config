@@ -54,7 +54,7 @@ export default async (config, options) => {
   await twigPreset(config, opts.twig);
   await tailwindcssPreset(config, opts.tailwindcss);
 
-  config.src = ['./src/css/**/[!_]*.scss', './src/js/app.js', ...(config.src || [])];
+  config.src = ['./src/js/app.js', './src/css/**/[!_]*.scss', ...(config.src || [])];
   config.dist = config.dist || './dist';
   config.public = config.public || '/';
   config.server = config.server || 'dist';

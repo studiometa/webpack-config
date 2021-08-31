@@ -6,7 +6,7 @@ export default async (options = {}) => {
   process.env.NODE_ENV = 'production';
 
   const config = await getConfig(options);
-  const webpackConfig = getWebpackConfig(config);
+  const webpackConfig = await getWebpackConfig(config);
 
   webpack(webpackConfig, (err, stats) => {
     if (err) {

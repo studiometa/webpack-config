@@ -1,9 +1,8 @@
-import path from 'path';
 import fs from 'fs';
-import findUp from 'find-up';
+import { findUp } from 'find-up';
 
 export default async (options) => {
-  const configPath = await findUp('meta.config.js');
+  const configPath = await findUp(['meta.config.js', 'meta.config.mjs']);
 
   if (!configPath) {
     throw new Error(

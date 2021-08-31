@@ -131,14 +131,14 @@ export default async (config) => {
       extensions: ['.vue', '.mjs', '.js', '.json'],
       modules: [
         'node_modules',
-        path.dirname(import.meta.url),
+        path.join(new URL(path.dirname(import.meta.url)).pathname, '..', 'node_modules'),
         path.join(path.dirname(config.PATH), 'node_modules'),
       ],
     },
     resolveLoader: {
       modules: [
         'node_modules',
-        path.dirname(import.meta.url),
+        path.join(new URL(path.dirname(import.meta.url)).pathname, '..', 'node_modules'),
         path.join(path.dirname(config.PATH), 'node_modules'),
       ],
     },
@@ -210,7 +210,7 @@ export default async (config) => {
       {
         loader: MiniCssExtractPlugin.loader,
       },
-      { loader: 'css-loader', options: { url: (url) => !url.startsWith('/') } },
+      { loader: 'css-loader', options: { url: { filter: (url) => !url.startsWith('/') } } },
       {
         loader: 'postcss-loader',
         options: {
