@@ -2,6 +2,7 @@ module.exports = {
   extends: '@studiometa/eslint-config',
   rules: {
     'global-require': 'off',
+    'import/extensions': ['error', 'always', { ignorePackages: false }],
   },
   overrides: [
     {

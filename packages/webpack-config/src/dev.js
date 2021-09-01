@@ -1,17 +1,17 @@
-const path = require('path');
-const webpack = require('webpack');
-const webpackDevMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require('webpack-hot-middleware');
-const FriendlyErrorsWebpackPlugin = require('@soda/friendly-errors-webpack-plugin');
-const getMetaConfig = require('./utils/get-config');
-const getWebpackConfig = require('./webpack.dev.config');
-const getServer = require('./utils/get-browsersync');
+import path from 'path';
+import webpack from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
+import FriendlyErrorsWebpackPlugin from '@soda/friendly-errors-webpack-plugin';
+import getConfig from './utils/get-config.js';
+import getWebpackConfig from './webpack.dev.config.js';
+import getServer from './utils/get-browsersync.js';
 
-module.exports = (options = {}) => {
+export default async (options = {}) => {
   process.env.NODE_ENV = 'development';
 
-  const config = getMetaConfig(options);
-  const webpackConfig = getWebpackConfig(config);
+  const config = await getConfig(options);
+  const webpackConfig = await getWebpackConfig(config);
   const server = getServer(config);
 
   const webpackBar = webpackConfig.plugins.find(
@@ -51,7 +51,7 @@ module.exports = (options = {}) => {
       clearConsole: true,
       compilationSuccessInfo: {
         get messages() {
-          return server.getInfo();
+          return [server.getInfo()];
         },
       },
     }),

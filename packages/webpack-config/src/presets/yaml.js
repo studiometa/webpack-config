@@ -1,7 +1,7 @@
-const merge = require('lodash.merge');
-const extendWebpackConfig = require('../utils/extend-webpack-config.js');
+import merge from 'lodash.merge';
+import extendWebpackConfig from '../utils/extend-webpack-config.js';
 
-module.exports = (config, options = {}) => {
+export default async (config, options = {}) => {
   const opts = merge(
     {
       loaderOptions: {},
@@ -9,7 +9,7 @@ module.exports = (config, options = {}) => {
     options
   );
 
-  extendWebpackConfig(config, (webpackConfig) => {
+  await extendWebpackConfig(config, async (webpackConfig) => {
     webpackConfig.module.rules.push({
       test: /\.ya?ml$/,
       use: [

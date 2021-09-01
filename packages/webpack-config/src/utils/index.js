@@ -3,7 +3,7 @@
  * @param {string = ''} input The string to test.
  * @return {boolean}
  */
-function hasTrailingSlash(input = '') {
+export function hasTrailingSlash(input = '') {
   return input.endsWith('/');
 }
 
@@ -12,7 +12,7 @@ function hasTrailingSlash(input = '') {
  * @param {string = ''} input The string to test.
  * @return {string} The string without trailing slash.
  */
-function withoutTrailingSlash(input = '') {
+export function withoutTrailingSlash(input = '') {
   return (hasTrailingSlash(input) ? input.slice(0, -1) : input) || '/';
 }
 
@@ -21,7 +21,7 @@ function withoutTrailingSlash(input = '') {
  * @param  {string = ''} input The string to test.
  * @return {string} The string with a trailing slash.
  */
-function withTrailingSlash(input = '') {
+export function withTrailingSlash(input = '') {
   return input.endsWith('/') ? input : `${input}/`;
 }
 
@@ -30,7 +30,7 @@ function withTrailingSlash(input = '') {
  * @param {string = ''} input The string to test.
  * @return {boolean}
  */
-function hasLeadingSlash(input = '') {
+export function hasLeadingSlash(input = '') {
   return input.startsWith('/');
 }
 
@@ -39,7 +39,7 @@ function hasLeadingSlash(input = '') {
  * @param {string = ''} input The string to test.
  * @return {string} The string without leading slash.
  */
-function withoutLeadingSlash(input = '') {
+export function withoutLeadingSlash(input = '') {
   return (hasLeadingSlash(input) ? input.substr(1) : input) || '/';
 }
 
@@ -48,15 +48,6 @@ function withoutLeadingSlash(input = '') {
  * @param {string = ''} input The string to test.
  * @param {string} The string with a leading slash.
  */
-function withLeadingSlash(input = '') {
+export function withLeadingSlash(input = '') {
   return hasLeadingSlash(input) ? input : `/${input}`;
 }
-
-module.exports = {
-  hasTrailingSlash,
-  withoutTrailingSlash,
-  withTrailingSlash,
-  hasLeadingSlash,
-  withoutLeadingSlash,
-  withLeadingSlash,
-};
