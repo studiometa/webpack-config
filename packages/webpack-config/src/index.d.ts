@@ -91,7 +91,7 @@ export interface MetaConfig {
    *
    * @link https://browsersync.io/docs/api#api-watch
    */
-  watch: Array<
+  watch?: Array<
     | string
     | [
         string,
