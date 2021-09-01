@@ -96,7 +96,7 @@ export default async (config) => {
                 presets: [
                   [
                     '@babel/preset-env',
-                    process.env.BABEL_ENV === 'modern'
+                    isModern
                       ? {
                           targets: { esmodules: true },
                         }
