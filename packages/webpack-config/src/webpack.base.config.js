@@ -37,7 +37,10 @@ export default async (config, options = {}) => {
         config.dist,
         config.modern && config.legacy && isLegacy ? '__legacy__' : ''
       ),
-      publicPath: config.public,
+      publicPath: path.join(
+        config.public,
+        config.modern && config.legacy && isLegacy ? '__legacy__' : ''
+      ),
       pathinfo: false,
       filename: `[name].js`,
       chunkFilename: isDev ? '[name].js' : '[name].[contenthash].js',
