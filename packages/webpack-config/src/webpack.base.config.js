@@ -19,10 +19,9 @@ const { BundleAnalyzerPlugin } = BundleAnalyzerPluginImport;
 
 dotenv.config();
 
-export default async (config) => {
+export default async (config, options = {}) => {
   const isDev = process.env.NODE_ENV !== 'production';
-  const isModern = isDev || config.modern;
-  const isLegacy = config.legacy;
+  const { isModern, isLegacy } = { isModern: false, isLegacy: false, ...options };
   const src = commonDir(config.src);
 
   const webpackBaseConfig = {
@@ -31,16 +30,16 @@ export default async (config) => {
       return filePath.replace(src, '').replace(extname, '');
     }, ...config.src),
     devtool: 'source-map',
-    target: ['web', 'es5'],
+    target: ['web', isModern ? 'es6' : 'es5'],
     output: {
       path: path.resolve(
         path.dirname(config.PATH),
         config.dist,
-        config.modern && config.legacy ? process.env.BABEL_ENV : ''
+        config.modern && config.legacy && isLegacy ? '__legacy__' : ''
       ),
       publicPath: config.public,
       pathinfo: false,
-      filename: `[name]${config.modern && config.legacy ? `.${process.env.BABEL_ENV}` : ''}.js`,
+      filename: `[name].js`,
       chunkFilename: isDev ? '[name].js' : '[name].[contenthash].js',
       sourceMapFilename: '[file].map',
       clean: true,

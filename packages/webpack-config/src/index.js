@@ -17,10 +17,16 @@ export function createConfig(config) {
  *
  * @param {Object} options
  * @param {'production'|'development'} [options.mode]
+ * @param {'modern'|'legacy'} [options.target]
  *
  * @return {import('webpack').Configuration}
  */
-export function getWebpackConfig({ mode } = { mode: process.env.NODE_ENV }) {
+export function getWebpackConfig(
+  { mode, target } = { mode: process.env.NODE_ENV, target: 'legacy' }
+) {
   const config = getMetaConfig();
-  return mode === 'production' ? getWebpackProdConfig(config) : getWebpackDevConfig(config);
+  const options = { isModern: target === 'modern', isLegacy: target === 'legacy' };
+  return mode === 'production'
+    ? getWebpackProdConfig(config, options)
+    : getWebpackDevConfig(config, options);
 }
