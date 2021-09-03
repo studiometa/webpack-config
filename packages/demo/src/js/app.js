@@ -17,7 +17,7 @@ class App extends Base {
     refs: ['content', 'vue'],
     ...config,
     components: {
-      Component: () => import('./components/Component'),
+      Component: () => import('./components/Component.js'),
     },
   };
 

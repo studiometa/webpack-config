@@ -9,7 +9,7 @@ export default class Component extends Base {
   static config = {
     name: 'Component',
     components: {
-      ComponentFoo: () => import('../foo/Component'),
+      ComponentFoo: () => import('../foo/Component.js'),
     },
   };
 }
