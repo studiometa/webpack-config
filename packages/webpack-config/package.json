@@ -1,6 +1,6 @@
 {
   "name": "@studiometa/webpack-config",
-  "version": "2.9.3",
+  "version": "3.0.0",
   "description": "A basic webpack config",
   "type": "module",
   "main": "src/index.js",
@@ -30,7 +30,7 @@
     "url": "https://github.com/studiometa/webpack-config/issues"
   },
   "engines": {
-    "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+    "node": "^14.13.1 || >=16.0.0"
   },
   "homepage": "https://github.com/studiometa/webpack-config#readme",
   "devDependencies": {
