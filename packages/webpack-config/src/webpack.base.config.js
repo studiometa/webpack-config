@@ -29,7 +29,7 @@ export default async (config) => {
       return filePath.replace(src, '').replace(extname, '');
     }, ...config.src),
     devtool: 'source-map',
-    target: 'web',
+    target: ['web', 'es5'],
     output: {
       path: path.resolve(path.dirname(config.PATH), config.dist),
       publicPath: config.public,
