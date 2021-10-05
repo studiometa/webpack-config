@@ -250,7 +250,7 @@ export default async (config) => {
       test: /\.vue\.(sa|sc|c)ss$/,
       use: [
         'style-loader',
-        { loader: 'css-loader', options: { url: (url) => !url.startsWith('/') } },
+        { loader: 'css-loader', options: { url: { filter: (url) => !url.startsWith('/') } } },
         {
           loader: 'postcss-loader',
           options: {
