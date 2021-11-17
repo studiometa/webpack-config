@@ -19,8 +19,9 @@ const { BundleAnalyzerPlugin } = BundleAnalyzerPluginImport;
 
 dotenv.config();
 
-export default async (config) => {
+export default async (config, options = {}) => {
   const isDev = process.env.NODE_ENV !== 'production';
+  const { isModern, isLegacy } = { isModern: false, isLegacy: false, ...options };
   const src = commonDir(config.src);
 
   const webpackBaseConfig = {
@@ -29,19 +30,45 @@ export default async (config) => {
       return filePath.replace(src, '').replace(extname, '');
     }, ...config.src),
     devtool: 'source-map',
-    target: ['web', 'es5'],
+    target: ['web', isModern ? 'es6' : 'es5'],
     output: {
-      path: path.resolve(path.dirname(config.PATH), config.dist),
-      publicPath: config.public,
+      path: path.resolve(
+        path.dirname(config.PATH),
+        config.dist,
+        config.modern && config.legacy && isLegacy ? '__legacy__' : ''
+      ),
+      publicPath: path.join(
+        config.public,
+        config.modern && config.legacy && isLegacy ? '__legacy__' : ''
+      ),
       pathinfo: false,
-      filename: '[name].js',
+      filename: `[name].js`,
       chunkFilename: isDev ? '[name].js' : '[name].[contenthash].js',
       sourceMapFilename: '[file].map',
       clean: true,
+      uniqueName: process.env.BABEL_ENV,
+      module: isModern,
+      environment: {
+        // The environment supports arrow functions ('() => { ... }').
+        arrowFunction: isModern,
+        // The environment supports const and let for variable declarations.
+        const: isModern,
+        // The environment supports destructuring ('{ a, b } = obj').
+        destructuring: isModern,
+        // The environment supports an async import() function to import EcmaScript modules.
+        dynamicImport: isModern,
+        // The environment supports 'for of' iteration ('for (const x of array) { ... }').
+        forOf: isModern,
+        // The environment supports ECMAScript Module syntax to import ECMAScript modules (import ... from '...').
+        module: isModern,
+      },
+    },
+    experiments: {
+      outputModule: isModern,
     },
     cache: {
       type: 'filesystem',
-      name: isDev ? 'dev' : 'prod',
+      name: `${process.env.NODE_ENV}-${process.env.BABEL_ENV ?? 'default'}`,
     },
     stats: {
       all: false,
@@ -67,20 +94,31 @@ export default async (config) => {
               options: {
                 cacheDirectory: true,
                 rootMode: 'upward-optional',
+                plugins: ['@babel/plugin-transform-runtime'],
                 presets: [
                   [
                     '@babel/preset-env',
-                    {
-                      useBuiltIns: 'usage',
-                      corejs: '3.11',
-                    },
+                    isModern
+                      ? {
+                          targets: { esmodules: true },
+                        }
+                      : {
+                          useBuiltIns: 'usage',
+                          corejs: '3.11',
+                        },
                   ],
                 ],
-                plugins: ['@babel/plugin-transform-runtime'],
               },
             };
 
-            return isDev ? ['webpack-module-hot-accept', babel] : [babel];
+            const esbuild = {
+              loader: 'esbuild-loader',
+              options: {
+                target: 'es2017',
+              },
+            };
+
+            return isDev ? ['webpack-module-hot-accept', esbuild] : [babel];
           },
         },
         {
@@ -185,6 +223,9 @@ export default async (config) => {
         new TerserPlugin({
           parallel: true,
           extractComments: true,
+          terserOptions: {
+            module: isModern,
+          },
         }),
         new CssMinimizerPlugin(),
       ],
@@ -283,7 +324,7 @@ export default async (config) => {
   }
 
   if (config.webpack && typeof config.webpack === 'function') {
-    await config.webpack(webpackBaseConfig, isDev);
+    await config.webpack(webpackBaseConfig, isDev, { isModern, isLegacy });
   }
 
   return webpackBaseConfig;

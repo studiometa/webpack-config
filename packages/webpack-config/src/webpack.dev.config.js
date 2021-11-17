@@ -1,8 +1,8 @@
 import webpackMerge from 'webpack-merge';
 import getWebpackConfig from './webpack.base.config.js';
 
-export default async (config) => {
-  const baseConfig = await getWebpackConfig(config);
+export default async (config, options) => {
+  const baseConfig = await getWebpackConfig(config, options);
   const devConfig = webpackMerge.merge(baseConfig, {
     mode: 'development',
     devtool: 'cheap-source-map',

@@ -60,6 +60,7 @@ export default async (config, options) => {
   config.server = config.server || 'dist';
   config.watch = ['./dist/**/*.html', ...(config.watch || [])];
   config.mergeCSS = true;
+  config.target = ['modern'];
 
   await extendWebpackConfig(config, async (webpackConfig, isDev) => {
     webpackConfig.plugins = [...webpackConfig.plugins, ...plugins];
