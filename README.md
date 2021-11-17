@@ -29,6 +29,16 @@ module.exports = {
   public: '/path/to/dist',
 
   /**
+   * Define which target to use when creating the bundle.
+   * An array of targets will create a bundle for each target.
+   * Defaults to `legacy`.
+   *
+   * @type {'modern'|'legacy'|Array<'modern'|'legacy'>}
+   * @optional
+   */
+  target: ['modern', 'legacy'],
+
+  /**
    * Analyze the bundle with the WebpackBundleAnalyzer plugin.
    * @type {Boolean}
    * @optional
