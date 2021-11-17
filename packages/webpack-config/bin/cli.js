@@ -13,9 +13,9 @@ const cli = cac('meta');
 cli
   .command('build', 'Build assets.')
   .option('-a, --analyze', 'Analyze bundle(s).')
-  .option('--modern', 'Build a modern bundle along the legacy one.')
-  .option('--no-legacy', 'Disable the legacy bundle.')
-  .action((options = { analyze: false, modern: false }) => {
+  .option('-t, --target <target>', 'Define targets to bundle for: `legacy` or `modern` or both.')
+  .action(({ analyze = false, target = [] } = {}) => {
+    const options = { analyze, target: Array.isArray(target) ? target : [target] };
     build(options);
   });
 
