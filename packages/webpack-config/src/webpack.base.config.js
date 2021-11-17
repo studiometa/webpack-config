@@ -111,7 +111,14 @@ export default async (config, options = {}) => {
               },
             };
 
-            return isDev ? ['webpack-module-hot-accept', babel] : [babel];
+            const esbuild = {
+              loader: 'esbuild-loader',
+              options: {
+                target: 'es2017',
+              },
+            };
+
+            return isDev ? ['webpack-module-hot-accept', esbuild] : [babel];
           },
         },
         {
