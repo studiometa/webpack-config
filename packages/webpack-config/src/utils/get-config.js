@@ -44,7 +44,7 @@ export default async (options = { analyze: false, target: [] }) => {
   }
 
   // Read from command line args first, then meta.config.js, then set default
-  if (options.target.length) {
+  if (Array.isArray(options.target) && options.target.length) {
     config.modern = options.target.includes('modern');
     config.legacy = options.target.includes('legacy');
   } else if (config.target) {
@@ -57,16 +57,18 @@ export default async (options = { analyze: false, target: [] }) => {
     config.legacy = true;
   }
 
-  if (!config.modern && !config.legacy) {
-    throw new Error('Can not disable both legacy and modern bundles.');
-  }
+  if (process.env.NODE_ENV === 'production') {
+    if (!config.modern && !config.legacy) {
+      throw new Error('Can not disable both legacy and modern bundles.');
+    }
 
-  if (config.modern && config.legacy) {
-    console.log('Building modern and legacy bundles.');
-  } else if (config.modern && !config.legacy) {
-    console.log('Building modern bundle.');
-  } else {
-    console.log('Building legacy bundle.');
+    if (config.modern && config.legacy) {
+      console.log('Building modern and legacy bundles.');
+    } else if (config.modern && !config.legacy) {
+      console.log('Building modern bundle.');
+    } else {
+      console.log('Building legacy bundle.');
+    }
   }
 
   return config;
