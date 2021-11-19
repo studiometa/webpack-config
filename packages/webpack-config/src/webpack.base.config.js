@@ -65,6 +65,7 @@ export default async (config, options = {}) => {
     },
     experiments: {
       outputModule: isModern,
+      backCompat: false,
     },
     cache: {
       type: 'filesystem',
