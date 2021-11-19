@@ -86,7 +86,6 @@ export default async (config, options = {}) => {
       rules: [
         {
           test: /\.m?js$/,
-          exclude: /node_modules/,
           type: 'javascript/auto',
           get use() {
             const babel = {
@@ -114,11 +113,16 @@ export default async (config, options = {}) => {
             const esbuild = {
               loader: 'esbuild-loader',
               options: {
-                target: 'es2017',
+                target: 'es2020',
+                format: 'esm',
               },
             };
 
-            return isDev ? ['webpack-module-hot-accept', esbuild] : [babel];
+            if (!isDev && !isModern) {
+              esbuild.options.target = 'es2015';
+            }
+
+            return isDev ? ['webpack-module-hot-accept', esbuild] : [babel, esbuild];
           },
         },
         {
