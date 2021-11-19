@@ -1,4 +1,4 @@
-import Base from '@studiometa/js-toolkit';
+import { Base } from '@studiometa/js-toolkit';
 import './Component.css';
 
 // eslint-disable-next-line require-jsdoc
