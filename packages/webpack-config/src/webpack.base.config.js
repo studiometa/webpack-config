@@ -196,7 +196,6 @@ export default async (config, options = {}) => {
           globals: {
             __DEV__: false,
           },
-          settings: { 'import/resolver': 'webpack' },
         },
       }),
       new StylelintPlugin({

@@ -1,6 +1,6 @@
-import { createApp as createVueApp } from 'vue';
 import { Base, createApp } from '@studiometa/js-toolkit';
 import { Cursor } from '@studiometa/ui';
+import { createApp as createVueApp } from 'vue';
 import VueComponent from './VueComponent.vue';
 import config from './config.yaml';
 
