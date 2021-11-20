@@ -113,29 +113,10 @@ export default async (config, options = {}) => {
             const esbuild = {
               loader: 'esbuild-loader',
               options: {
-                target: 'es2020',
+                target: isDev ? 'es2020' : 'es2015',
                 format: 'esm',
               },
             };
-
-            if (!isDev && !isModern) {
-              esbuild.options.target = 'es2015';
-            }
-
-            if (!isDev && isModern) {
-              esbuild.options.target = [
-                'chrome61',
-                'edge16',
-                'firefox60',
-                'node13.2',
-                'opera48',
-                'safari10.1',
-                'ios10.3',
-                'samsung8.2',
-                'android61',
-                'electron2.0',
-              ];
-            }
 
             // eslint-disable-next-line no-nested-ternary
             return isDev
