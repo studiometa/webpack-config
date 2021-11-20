@@ -47,24 +47,24 @@ export default async (config, options = {}) => {
       sourceMapFilename: '[file].map',
       clean: true,
       uniqueName: process.env.BABEL_ENV,
-      module: isModern,
+      module: isModern || isDev,
       environment: {
         // The environment supports arrow functions ('() => { ... }').
-        arrowFunction: isModern,
+        arrowFunction: isModern || isDev,
         // The environment supports const and let for variable declarations.
-        const: isModern,
+        const: isModern || isDev,
         // The environment supports destructuring ('{ a, b } = obj').
-        destructuring: isModern,
+        destructuring: isModern || isDev,
         // The environment supports an async import() function to import EcmaScript modules.
-        dynamicImport: isModern,
+        dynamicImport: isModern || isDev,
         // The environment supports 'for of' iteration ('for (const x of array) { ... }').
-        forOf: isModern,
+        forOf: isModern || isDev,
         // The environment supports ECMAScript Module syntax to import ECMAScript modules (import ... from '...').
-        module: isModern,
+        module: isModern || isDev,
       },
     },
     experiments: {
-      outputModule: isModern,
+      outputModule: isModern || isDev,
       backCompat: false,
       futureDefaults: true,
     },
