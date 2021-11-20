@@ -88,6 +88,7 @@ export default async (config, options = {}) => {
       rules: [
         {
           test: /\.m?js$/,
+          exclude: [/node_modules[\\/]core-js/],
           type: 'javascript/auto',
           get use() {
             const babel = {
@@ -104,6 +105,7 @@ export default async (config, options = {}) => {
                           targets: { esmodules: true },
                         }
                       : {
+                          targets: '> 0.2%, last 4 versions, not dead',
                           useBuiltIns: 'usage',
                           corejs: '3.11',
                         },
@@ -124,7 +126,12 @@ export default async (config, options = {}) => {
               esbuild.options.target = 'es2015';
             }
 
-            return isDev ? ['webpack-module-hot-accept', esbuild] : [babel, esbuild];
+            // eslint-disable-next-line no-nested-ternary
+            return isDev
+              ? ['webpack-module-hot-accept', esbuild]
+              : isModern
+              ? [esbuild]
+              : [babel, esbuild];
           },
         },
         {
