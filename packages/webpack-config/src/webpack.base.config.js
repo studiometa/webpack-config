@@ -19,8 +19,9 @@ const { BundleAnalyzerPlugin } = BundleAnalyzerPluginImport;
 
 dotenv.config();
 
-export default async (config) => {
+export default async (config, options = {}) => {
   const isDev = process.env.NODE_ENV !== 'production';
+  const { isModern, isLegacy } = { isModern: false, isLegacy: false, ...options };
   const src = commonDir(config.src);
 
   const webpackBaseConfig = {
@@ -29,19 +30,47 @@ export default async (config) => {
       return filePath.replace(src, '').replace(extname, '');
     }, ...config.src),
     devtool: 'source-map',
-    target: ['web', 'es5'],
+    target: ['web', isModern ? 'es6' : 'es5'],
     output: {
-      path: path.resolve(path.dirname(config.PATH), config.dist),
-      publicPath: config.public,
+      path: path.resolve(
+        path.dirname(config.PATH),
+        config.dist,
+        config.modern && config.legacy && isLegacy ? '__legacy__' : ''
+      ),
+      publicPath: path.join(
+        config.public,
+        config.modern && config.legacy && isLegacy ? '__legacy__' : ''
+      ),
       pathinfo: false,
-      filename: '[name].js',
+      filename: `[name].js`,
       chunkFilename: isDev ? '[name].js' : '[name].[contenthash].js',
       sourceMapFilename: '[file].map',
       clean: true,
+      uniqueName: process.env.BABEL_ENV,
+      module: isModern || isDev,
+      environment: {
+        // The environment supports arrow functions ('() => { ... }').
+        arrowFunction: isModern || isDev,
+        // The environment supports const and let for variable declarations.
+        const: isModern || isDev,
+        // The environment supports destructuring ('{ a, b } = obj').
+        destructuring: isModern || isDev,
+        // The environment supports an async import() function to import EcmaScript modules.
+        dynamicImport: isModern || isDev,
+        // The environment supports 'for of' iteration ('for (const x of array) { ... }').
+        forOf: isModern || isDev,
+        // The environment supports ECMAScript Module syntax to import ECMAScript modules (import ... from '...').
+        module: isModern || isDev,
+      },
+    },
+    experiments: {
+      outputModule: isModern || isDev,
+      backCompat: false,
+      futureDefaults: true,
     },
     cache: {
       type: 'filesystem',
-      name: isDev ? 'dev' : 'prod',
+      name: `${process.env.NODE_ENV}-${process.env.BABEL_ENV ?? 'default'}`,
     },
     stats: {
       all: false,
@@ -59,7 +88,7 @@ export default async (config) => {
       rules: [
         {
           test: /\.m?js$/,
-          exclude: /node_modules/,
+          exclude: [/node_modules[\\/]core-js/],
           type: 'javascript/auto',
           get use() {
             const babel = {
@@ -67,20 +96,34 @@ export default async (config) => {
               options: {
                 cacheDirectory: true,
                 rootMode: 'upward-optional',
+                plugins: ['@babel/plugin-transform-runtime'],
                 presets: [
                   [
                     '@babel/preset-env',
                     {
+                      targets: '> 0.2%, last 4 versions, not dead',
                       useBuiltIns: 'usage',
                       corejs: '3.11',
                     },
                   ],
                 ],
-                plugins: ['@babel/plugin-transform-runtime'],
               },
             };
 
-            return isDev ? ['webpack-module-hot-accept', babel] : [babel];
+            const esbuild = {
+              loader: 'esbuild-loader',
+              options: {
+                target: isDev ? 'es2020' : 'es2015',
+                format: 'esm',
+              },
+            };
+
+            // eslint-disable-next-line no-nested-ternary
+            return isDev
+              ? ['webpack-module-hot-accept', esbuild]
+              : isModern
+              ? [esbuild]
+              : [babel, esbuild];
           },
         },
         {
@@ -153,7 +196,6 @@ export default async (config) => {
           globals: {
             __DEV__: false,
           },
-          settings: { 'import/resolver': 'webpack' },
         },
       }),
       new StylelintPlugin({
@@ -185,6 +227,9 @@ export default async (config) => {
         new TerserPlugin({
           parallel: true,
           extractComments: true,
+          terserOptions: {
+            module: isModern,
+          },
         }),
         new CssMinimizerPlugin(),
       ],
@@ -283,7 +328,7 @@ export default async (config) => {
   }
 
   if (config.webpack && typeof config.webpack === 'function') {
-    await config.webpack(webpackBaseConfig, isDev);
+    await config.webpack(webpackBaseConfig, isDev, { isModern, isLegacy });
   }
 
   return webpackBaseConfig;

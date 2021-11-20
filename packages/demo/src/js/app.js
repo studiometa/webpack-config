@@ -1,5 +1,6 @@
-import Vue from 'vue';
-import Base from '@studiometa/js-toolkit';
+import { Base, createApp } from '@studiometa/js-toolkit';
+import { Cursor } from '@studiometa/ui';
+import { createApp as createVueApp } from 'vue';
 import VueComponent from './VueComponent.vue';
 import config from './config.yaml';
 
@@ -17,6 +18,7 @@ class App extends Base {
     refs: ['content', 'vue'],
     ...config,
     components: {
+      Cursor,
       Component: () => import('./components/Component.js'),
     },
   };
@@ -39,7 +41,7 @@ class App extends Base {
    */
   async onClick() {
     const { default: VueCounter } = await import(/* webpackPreload: true */ './Counter.vue');
-    this.vue = new Vue({
+    this.vue = createVueApp({
       components: {
         VueCounter,
       },
@@ -64,4 +66,4 @@ class App extends Base {
   }
 }
 
-export default new App(document.querySelector('main')).$mount();
+export default createApp(App, document.querySelector('main'));

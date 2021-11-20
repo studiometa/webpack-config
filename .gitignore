@@ -10,3 +10,5 @@ yarn.lock
 backup/
 *.ini
 /packages/demo/dist/
+/packages/demo-basic/dist/
+/packages/*/package-lock.json

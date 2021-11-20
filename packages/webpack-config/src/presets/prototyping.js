@@ -54,12 +54,13 @@ export default async (config, options) => {
   await twigPreset(config, opts.twig);
   await tailwindcssPreset(config, opts.tailwindcss);
 
-  config.src = ['./src/js/app.js', './src/css/**/[!_]*.scss', ...(config.src || [])];
-  config.dist = config.dist || './dist';
-  config.public = config.public || '/';
-  config.server = config.server || 'dist';
-  config.watch = ['./dist/**/*.html', ...(config.watch || [])];
-  config.mergeCSS = true;
+  config.src = ['./src/js/app.js', './src/css/**/[!_]*.scss', ...(config.src ?? [])];
+  config.dist = config.dist ?? './dist';
+  config.public = config.public ?? '/';
+  config.server = config.server ?? 'dist';
+  config.watch = ['./dist/**/*.html', ...(config.watch ?? [])];
+  config.mergeCSS = config.mergeCSS ?? true;
+  config.target = config.target ?? ['modern'];
 
   await extendWebpackConfig(config, async (webpackConfig, isDev) => {
     webpackConfig.plugins = [...webpackConfig.plugins, ...plugins];

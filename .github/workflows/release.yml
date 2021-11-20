@@ -17,7 +17,15 @@ jobs:
           registry-url: https://registry.npmjs.org/
 
       - run: npm i
-      - run: cd packages/webpack-config && npm publish
+
+      - run: |
+          cd packages/webpack-config
+          VERSION=${GITHUB_REF/refs\/tags\//}
+          TAG='latest'
+          if [[ $VERSION =~ 'alpha' || $VERSION =~ 'beta' ]]; then
+            TAG='next'
+          fi
+          npm publish --tag $TAG
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
