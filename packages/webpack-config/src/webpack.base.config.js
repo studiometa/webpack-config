@@ -100,15 +100,11 @@ export default async (config, options = {}) => {
                 presets: [
                   [
                     '@babel/preset-env',
-                    isModern
-                      ? {
-                          targets: { esmodules: true },
-                        }
-                      : {
-                          targets: '> 0.2%, last 4 versions, not dead',
-                          useBuiltIns: 'usage',
-                          corejs: '3.11',
-                        },
+                    {
+                      targets: '> 0.2%, last 4 versions, not dead',
+                      useBuiltIns: 'usage',
+                      corejs: '3.11',
+                    },
                   ],
                 ],
               },
@@ -124,6 +120,21 @@ export default async (config, options = {}) => {
 
             if (!isDev && !isModern) {
               esbuild.options.target = 'es2015';
+            }
+
+            if (!isDev && isModern) {
+              esbuild.options.target = [
+                'chrome61',
+                'edge16',
+                'firefox60',
+                'node13.2',
+                'opera48',
+                'safari10.1',
+                'ios10.3',
+                'samsung8.2',
+                'android61',
+                'electron2.0',
+              ];
             }
 
             // eslint-disable-next-line no-nested-ternary
