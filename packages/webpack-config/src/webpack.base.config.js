@@ -47,24 +47,26 @@ export default async (config, options = {}) => {
       sourceMapFilename: '[file].map',
       clean: true,
       uniqueName: process.env.BABEL_ENV,
-      module: isModern,
+      module: isModern || isDev,
       environment: {
         // The environment supports arrow functions ('() => { ... }').
-        arrowFunction: isModern,
+        arrowFunction: isModern || isDev,
         // The environment supports const and let for variable declarations.
-        const: isModern,
+        const: isModern || isDev,
         // The environment supports destructuring ('{ a, b } = obj').
-        destructuring: isModern,
+        destructuring: isModern || isDev,
         // The environment supports an async import() function to import EcmaScript modules.
-        dynamicImport: isModern,
+        dynamicImport: isModern || isDev,
         // The environment supports 'for of' iteration ('for (const x of array) { ... }').
-        forOf: isModern,
+        forOf: isModern || isDev,
         // The environment supports ECMAScript Module syntax to import ECMAScript modules (import ... from '...').
-        module: isModern,
+        module: isModern || isDev,
       },
     },
     experiments: {
-      outputModule: isModern,
+      outputModule: isModern || isDev,
+      backCompat: false,
+      futureDefaults: true,
     },
     cache: {
       type: 'filesystem',
@@ -86,7 +88,7 @@ export default async (config, options = {}) => {
       rules: [
         {
           test: /\.m?js$/,
-          exclude: /node_modules/,
+          exclude: [/node_modules[\\/]core-js/],
           type: 'javascript/auto',
           get use() {
             const babel = {
@@ -98,14 +100,11 @@ export default async (config, options = {}) => {
                 presets: [
                   [
                     '@babel/preset-env',
-                    isModern
-                      ? {
-                          targets: { esmodules: true },
-                        }
-                      : {
-                          useBuiltIns: 'usage',
-                          corejs: '3.11',
-                        },
+                    {
+                      targets: '> 0.2%, last 4 versions, not dead',
+                      useBuiltIns: 'usage',
+                      corejs: '3.11',
+                    },
                   ],
                 ],
               },
@@ -114,11 +113,17 @@ export default async (config, options = {}) => {
             const esbuild = {
               loader: 'esbuild-loader',
               options: {
-                target: 'es2017',
+                target: isDev ? 'es2020' : 'es2015',
+                format: 'esm',
               },
             };
 
-            return isDev ? ['webpack-module-hot-accept', esbuild] : [babel];
+            // eslint-disable-next-line no-nested-ternary
+            return isDev
+              ? ['webpack-module-hot-accept', esbuild]
+              : isModern
+              ? [esbuild]
+              : [babel, esbuild];
           },
         },
         {
@@ -191,7 +196,6 @@ export default async (config, options = {}) => {
           globals: {
             __DEV__: false,
           },
-          settings: { 'import/resolver': 'webpack' },
         },
       }),
       new StylelintPlugin({
