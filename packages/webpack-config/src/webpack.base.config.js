@@ -88,7 +88,7 @@ export default async (config, options = {}) => {
       rules: [
         {
           test: /\.m?js$/,
-          exclude: [/node_modules[\\/]core-js/],
+          exclude: [/node_modules[\\/](core-js|mini-css-extract-plugin)/],
           type: 'javascript/auto',
           get use() {
             const babel = {
