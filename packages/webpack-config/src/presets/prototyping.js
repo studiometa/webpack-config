@@ -5,6 +5,7 @@ import merge from 'lodash.merge';
 import twigPreset from './twig.js';
 import tailwindcssPreset from './tailwindcss.js';
 import extendWebpackConfig from '../utils/extend-webpack-config.js';
+import Html from '../utils/Html.js';
 
 export default async (config, options) => {
   const opts = merge(
@@ -21,13 +22,77 @@ export default async (config, options) => {
 
   opts.twig.namespaces = glob.sync('./src/templates/*/').reduce((acc, file) => {
     const name = path.basename(file);
-    acc[name] = file;
+    acc[name] = path.resolve(file);
     return acc;
   }, opts.twig.namespaces || {});
 
   const extendTwig = typeof opts.twig.extend === 'function' ? opts.twig.extend : () => {};
+  opts.twig.functions = {
+    ...(opts?.twig?.functions || {}),
+    // eslint-disable-next-line camelcase
+    html_styles(styles) {
+      return Html.renderStyleAttribute(styles);
+    },
+    // eslint-disable-next-line camelcase
+    html_attributes(attributes) {
+      return Html.renderAttributes(attributes);
+    },
+    // eslint-disable-next-line camelcase
+    html_classes(classes) {
+      return Html.renderClass(classes);
+    },
+  };
+
   opts.twig.extend = (Twig) => {
     extendTwig(Twig);
+
+    Twig.exports.extendTag({
+      type: 'end_html_element',
+      regex: /^end_html_element/,
+      next: [],
+      open: false,
+    });
+
+    Twig.exports.extendTag({
+      type: 'html_element',
+      regex: /^html_element\s+(.+?)(?:\s|$)(?:with\s+([\S\s]+?))?$/,
+      next: ['end_html_element'],
+      open: true,
+      compile(token) {
+        const { match } = token;
+        const expression = match[1].trim();
+        const withContext = match[2];
+
+        delete token.match;
+
+        token.stack = Twig.expression.compile.call(this, {
+          type: Twig.expression.type.expression,
+          value: expression,
+        }).stack;
+
+        if (withContext !== undefined) {
+          token.withStack = Twig.expression.compile.call(this, {
+            type: Twig.expression.type.expression,
+            value: withContext.trim(),
+          }).stack;
+        }
+
+        return token;
+      },
+      parse(token, context, chain) {
+        const tag = Twig.expression.parse.call(this, token.stack, context);
+        const attributes = token.withStack
+          ? Twig.expression.parse.call(this, token.withStack, context)
+          : undefined;
+        const content = this.parse(token.output, context);
+        const output = Html.renderTag(tag, attributes, content);
+
+        return {
+          chain,
+          output,
+        };
+      },
+    });
 
     // Add debug comments
     Twig.Templates.registerParser('twig', (params) => {
@@ -46,7 +111,7 @@ export default async (config, options) => {
     (file) =>
       new HtmlWebpackPlugin({
         ...opts.html,
-        template: file,
+        template: path.resolve(file),
         filename: file.replace('./src/templates/pages/', '').replace(/\.twig$/, '.html'),
       })
   );
