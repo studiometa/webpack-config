@@ -4,7 +4,7 @@
  * @copyright Studio Meta
  * @license https://github.com/studiometa/twig-toolkit/blob/master/LICENSE
  */
-import toKebab from 'kebab-case';
+import { paramCase } from 'param-case';
 
 /**
  * @typdef {string | Record<string, boolean> | Record<number, Classes>} Classes
@@ -78,7 +78,7 @@ export default class Html {
       if (key === '_keys' || (typeof value === 'boolean' && !value) || value === '') {
         continue;
       }
-      renderedStyles.push(`${toKebab(key)}: ${value};`);
+      renderedStyles.push(`${paramCase(key)}: ${value};`);
     }
     return renderedStyles.join(' ');
   }
@@ -101,7 +101,7 @@ export default class Html {
         continue;
       }
 
-      key = toKebab(key);
+      key = paramCase(key);
       if (typeof value === 'boolean') {
         if (value) {
           renderedAttributes.push(key);
