@@ -99,10 +99,22 @@ export default async (config, options) => {
     // Add debug comments
     Twig.Templates.registerParser('twig', (params) => {
       if (params.id) {
+        const namespace = Object.entries(params.options.namespaces).find(([key, value]) =>
+          params.id.startsWith(value)
+        );
+        let tpl = params.id;
+
+        if (namespace) {
+          const [namespaceName, namespacePath] = namespace;
+          tpl = tpl.replace(namespacePath, `@${namespaceName}/`);
+        } else {
+          tpl = path.relative(process.cwd(), tpl);
+        }
+
         params.data = `
-          <!-- BEGIN ${params.id} -->
+          <!-- BEGIN ${tpl} -->
           ${params.data}
-          <!-- END ${params.id} -->
+          <!-- END ${tpl} -->
         `;
       }
       return new Twig.Template(params);
