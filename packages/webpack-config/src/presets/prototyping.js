@@ -1,4 +1,5 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import FileManagerPlugin from 'filemanager-webpack-plugin';
 import glob from 'glob';
 import path from 'path';
 import merge from 'lodash.merge';
@@ -8,6 +9,7 @@ import extendWebpackConfig from '../utils/extend-webpack-config.js';
 import Html from '../utils/Html.js';
 
 export default async (config, options) => {
+  const isDev = process.env.NODE_ENV !== 'production';
   const opts = merge(
     {
       tailwindcss: {},
@@ -116,13 +118,26 @@ export default async (config, options) => {
       })
   );
 
+  if (!isDev) {
+    plugins.push(
+      // Static assets
+      new FileManagerPlugin({
+        events: {
+          onEnd: {
+            copy: [{ source: './static/', destination: './dist/' }],
+          },
+        },
+      })
+    );
+  }
+
   await twigPreset(config, opts.twig);
   await tailwindcssPreset(config, opts.tailwindcss);
 
   config.src = ['./src/js/app.js', './src/css/**/[!_]*.scss', ...(config.src ?? [])];
   config.dist = config.dist ?? './dist';
   config.public = config.public ?? '/';
-  config.server = config.server ?? 'dist';
+  config.server = config.server ?? ['dist', 'static'];
   config.watch = ['./dist/**/*.html', ...(config.watch ?? [])];
   config.mergeCSS = config.mergeCSS ?? true;
   config.target = config.target ?? ['modern'];
