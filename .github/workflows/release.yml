@@ -34,25 +34,18 @@ jobs:
       - name: Prepare the changelog from the tag message
         id: prepare_changelog
         run: |
-          # Parse version
-          VERSION=${GITHUB_REF/refs\/tags\//}
-          echo "Setting release version to $VERSION"
-          echo "release_version=$VERSION" >> $GITHUB_ENV
-
-          echo "$GITHUB_REF"
-          echo "$GITHUB_REF_NAME"
+          echo "Setting release version to $GITHUB_REF_NAME"
 
           PRERELEASE=false
           # Check release type
-          if [[ $VERSION =~ 'alpha' || $VERSION =~ 'beta' ]]; then
+          if [[ $GITHUB_REF_NAME =~ 'alpha' || $GITHUB_REF_NAME =~ 'beta' ]]; then
             echo "This is a prerelease."
             PRERELEASE=true
           fi
           echo "is_prerelease=$PRERELEASE" >> $GITHUB_ENV
 
-          git show $GITHUB_REF
-
-          CHANGELOG=$(git show $GITHUB_REF | tail -n+7)
+          echo "Preparing changelog..."
+          CHANGELOG=$(git show $GITHUB_REF --no-patch --format='' | tail -n+6)
 
           # Set markdown titles
           CHANGELOG=${CHANGELOG/Added/## Added}
@@ -65,13 +58,16 @@ jobs:
           # Remove PGP signature
           CHANGELOG="${CHANGELOG%-----BEGIN*}"
 
+          echo "-----------------------------------------"
           echo "$CHANGELOG"
 
           # Change linebreaks and other special characters
-          CHANGELOG="${CHANGELOG//'%'/'%25'}"
-          CHANGELOG="${CHANGELOG//$'\n'/'%0A'}"
-          CHANGELOG="${CHANGELOG//$'\r'/'%0D'}"
+          CHANGELOG="${CHANGELOG//'%'/%25}"
+          CHANGELOG="${CHANGELOG//$'\n'/%0A}"
+          CHANGELOG="${CHANGELOG//$'\r'/%0D}"
 
+          echo "-----------------------------------------"
+          echo "Changelog prepared:"
           echo $CHANGELOG
 
           echo 'changelog<<EOF' >> $GITHUB_ENV
@@ -86,7 +82,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: v${{ env.release_version }}
+          release_name: v${{ github.ref_name }}
           body: ${{ env.changelog }}
           draft: false
           prerelease: ${{ env.is_prerelease }}
