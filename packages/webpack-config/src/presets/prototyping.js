@@ -1,4 +1,5 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import FileManagerPlugin from 'filemanager-webpack-plugin';
 import glob from 'glob';
 import path from 'path';
 import merge from 'lodash.merge';
@@ -8,6 +9,7 @@ import extendWebpackConfig from '../utils/extend-webpack-config.js';
 import Html from '../utils/Html.js';
 
 export default async (config, options) => {
+  const isDev = process.env.NODE_ENV !== 'production';
   const opts = merge(
     {
       tailwindcss: {},
@@ -55,7 +57,7 @@ export default async (config, options) => {
 
     Twig.exports.extendTag({
       type: 'html_element',
-      regex: /^html_element\s+(.+?)(?:\s|$)(?:with\s+([\S\s]+?))?$/,
+      regex: /^html_element\s+(.+?)(?:\s+|$)(?:with\s+([\S\s]+?))?$/,
       next: ['end_html_element'],
       open: true,
       compile(token) {
@@ -97,10 +99,22 @@ export default async (config, options) => {
     // Add debug comments
     Twig.Templates.registerParser('twig', (params) => {
       if (params.id) {
+        const namespace = Object.entries(params.options.namespaces).find(([key, value]) =>
+          params.id.startsWith(value)
+        );
+        let tpl = params.id;
+
+        if (namespace) {
+          const [namespaceName, namespacePath] = namespace;
+          tpl = tpl.replace(namespacePath, `@${namespaceName}/`);
+        } else {
+          tpl = path.relative(process.cwd(), tpl);
+        }
+
         params.data = `
-          <!-- BEGIN ${params.id} -->
+          <!-- BEGIN ${tpl} -->
           ${params.data}
-          <!-- END ${params.id} -->
+          <!-- END ${tpl} -->
         `;
       }
       return new Twig.Template(params);
@@ -116,18 +130,31 @@ export default async (config, options) => {
       })
   );
 
+  if (!isDev) {
+    plugins.push(
+      // Public assets
+      new FileManagerPlugin({
+        events: {
+          onEnd: {
+            copy: [{ source: './public/', destination: './dist/' }],
+          },
+        },
+      })
+    );
+  }
+
   await twigPreset(config, opts.twig);
   await tailwindcssPreset(config, opts.tailwindcss);
 
   config.src = ['./src/js/app.js', './src/css/**/[!_]*.scss', ...(config.src ?? [])];
   config.dist = config.dist ?? './dist';
   config.public = config.public ?? '/';
-  config.server = config.server ?? 'dist';
+  config.server = config.server ?? ['dist', 'public'];
   config.watch = ['./dist/**/*.html', ...(config.watch ?? [])];
   config.mergeCSS = config.mergeCSS ?? true;
   config.target = config.target ?? ['modern'];
 
-  await extendWebpackConfig(config, async (webpackConfig, isDev) => {
+  await extendWebpackConfig(config, async (webpackConfig) => {
     webpackConfig.plugins = [...webpackConfig.plugins, ...plugins];
     if (!isDev) {
       webpackConfig.output.filename = '[name].[contenthash].js';
