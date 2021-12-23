@@ -132,11 +132,11 @@ export default async (config, options) => {
 
   if (!isDev) {
     plugins.push(
-      // Static assets
+      // Public assets
       new FileManagerPlugin({
         events: {
           onEnd: {
-            copy: [{ source: './static/', destination: './dist/' }],
+            copy: [{ source: './public/', destination: './dist/' }],
           },
         },
       })
@@ -149,12 +149,12 @@ export default async (config, options) => {
   config.src = ['./src/js/app.js', './src/css/**/[!_]*.scss', ...(config.src ?? [])];
   config.dist = config.dist ?? './dist';
   config.public = config.public ?? '/';
-  config.server = config.server ?? ['dist', 'static'];
+  config.server = config.server ?? ['dist', 'public'];
   config.watch = ['./dist/**/*.html', ...(config.watch ?? [])];
   config.mergeCSS = config.mergeCSS ?? true;
   config.target = config.target ?? ['modern'];
 
-  await extendWebpackConfig(config, async (webpackConfig, isDev) => {
+  await extendWebpackConfig(config, async (webpackConfig) => {
     webpackConfig.plugins = [...webpackConfig.plugins, ...plugins];
     if (!isDev) {
       webpackConfig.output.filename = '[name].[contenthash].js';
