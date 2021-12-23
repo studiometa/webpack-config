@@ -57,7 +57,7 @@ export default async (config, options) => {
 
     Twig.exports.extendTag({
       type: 'html_element',
-      regex: /^html_element\s+(.+?)(?:\s|$)(?:with\s+([\S\s]+?))?$/,
+      regex: /^html_element\s+(.+?)(?:\s+|$)(?:with\s+([\S\s]+?))?$/,
       next: ['end_html_element'],
       open: true,
       compile(token) {
