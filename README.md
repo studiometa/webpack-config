@@ -283,6 +283,7 @@ And set up your project with the following folder structure:
 ```
 meta.config.js
 package.json
+public/ --> public assets, served from `/`
 ...
 src/
   css/ --> css files
