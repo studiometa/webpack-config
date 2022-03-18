@@ -1,5 +1,5 @@
 import { Base } from '@studiometa/js-toolkit';
-import './Component.css';
+import './Component.scss';
 
 // eslint-disable-next-line require-jsdoc
 export default class Component extends Base {

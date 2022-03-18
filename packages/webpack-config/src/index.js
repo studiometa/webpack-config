@@ -13,6 +13,16 @@ export function createConfig(config) {
 }
 
 /**
+ * Define the configuration.
+ * @template {MetaConfig} T
+ * @param   {T} config
+ * @returns {T}
+ */
+export function defineConfig(config) {
+  return config;
+}
+
+/**
  * Get the generated Webpack configuration.
  *
  * @param {Object} options

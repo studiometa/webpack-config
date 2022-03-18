@@ -1,5 +1,6 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import FileManagerPlugin from 'filemanager-webpack-plugin';
+import fs from 'fs';
 import glob from 'glob';
 import path from 'path';
 import merge from 'lodash.merge';
@@ -130,7 +131,7 @@ export default async (config, options) => {
       })
   );
 
-  if (!isDev) {
+  if (!isDev && fs.existsSync(path.resolve('./public'))) {
     plugins.push(
       // Public assets
       new FileManagerPlugin({
