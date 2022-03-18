@@ -1,6 +1,6 @@
-import { createConfig } from '@studiometa/webpack-config';
+import { defineConfig } from '@studiometa/webpack-config';
 
-export default createConfig({
+export default defineConfig({
   presets: ['prototyping', 'yaml'],
   // Exclude the `test.scss` file from the merge
   mergeCSS: /^(?!.*css\/test\.scss).*$/,

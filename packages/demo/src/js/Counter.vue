@@ -17,6 +17,7 @@
 </template>
 
 <script>
+  // eslint-disable-next-line import/no-unresolved
   import VueIcon from '../svg/icon.svg?as-vue-component';
 
   export default {
