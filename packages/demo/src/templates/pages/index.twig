@@ -2,6 +2,7 @@
 
 {% block body %}
   hello world
+  <div class="w-96 h-96 rounded-3xl bg-green-400 rotate-45"></div>
   {% include '@components/component.twig' with { content: 'Lorem ipsum' } %}
   {% set foo = 'value' %}
   <h1 class="text-2xl font-bold">{{ foo }}</h1>
