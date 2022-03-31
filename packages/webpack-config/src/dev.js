@@ -99,6 +99,7 @@ export default async (options = {}) => {
       })
     );
     console.log('');
+    console.log('');
   });
 
   const browserSyncConfig = {
