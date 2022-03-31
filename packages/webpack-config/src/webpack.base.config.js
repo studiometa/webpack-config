@@ -48,6 +48,8 @@ export default async (config, options = {}) => {
       clean: true,
       uniqueName: process.env.BABEL_ENV,
       module: isModern || isDev,
+      // Do not consider scripts to be type="module"
+      scriptType: false,
       environment: {
         // The environment supports arrow functions ('() => { ... }').
         arrowFunction: isModern || isDev,
