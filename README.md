@@ -135,7 +135,8 @@ module.exports = {
     ['twig', {}], // use the `twig` preset with custom options
     'tailwindcss', // use the `tailwindcss` preset,
     'prototyping', // use the `prototyping` preset
-    'yaml', // use the `yaml` preset
+    'yaml', // use the `yaml` preset,
+    './my-preset.js', // use a custom preset
   ],
 };
 ```
@@ -179,6 +180,23 @@ Presets can be used to extend the CLI configuration elegantly. The following pre
 - [`yaml`](#yaml)
 
 Read their documentation below to find out how to use and configure them.
+
+Custom presets can be used by using the path of a JS file (relative to the `meta.config.js` file):
+
+```js
+// meta.config.js
+export default {
+  presets: ['./my-preset.js'],
+}
+
+// my-preset.js
+export default async function myPreset(metaConfig, options, helpers) {
+  metaConfig.public = 'auto';
+  await helpers.extendWebpack(metaConfig, async (webpackConfig) => {
+    webpackConfig.optimization.minimize = false;
+  });
+}
+```
 
 ### `twig`
 
