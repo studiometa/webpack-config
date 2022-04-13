@@ -1,5 +1,6 @@
 import path from 'path';
 import bs from 'browser-sync';
+import chalk from 'chalk';
 
 const instance = bs.create();
 
@@ -89,15 +90,18 @@ export default (metaConfig) => ({
   get getInfo() {
     return () => {
       if (!instance.active) {
-        return 'Application not running.';
+        return 'Application not running.\n';
       }
 
-      const port = instance.getOption('port');
-      const proxy = instance.getOption('proxy');
-      const protocol = this.config.https ? 'https://' : 'http://';
-      const target = proxy ? proxy.get('target') : `${protocol}localhost`;
+      const url = new URL('http://localhost');
+      url.port = instance.getOption('port');
+      url.protocol = this.config.https ? 'https://' : 'http://';
 
-      return `Application running at \x1b[34m${target}:${port}\x1b[0m\n`;
+      const proxy = instance.getOption('proxy');
+
+      return `Application running at ${chalk.blue(url.toString())}${
+        proxy ? chalk.white(` (proxying ${chalk.blue(proxy.get('target'))})`) : ''
+      }\n`;
     };
   },
 });
