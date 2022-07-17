@@ -1,5 +1,4 @@
 import path from 'path';
-import VueLoaderPlugin from 'vue-loader/lib/plugin.js';
 import WebpackBar from 'webpackbar';
 import entry from 'webpack-glob-entry';
 import RemoveEmptyScriptsPlugin from 'webpack-remove-empty-scripts';
@@ -130,22 +129,11 @@ export default async (config, options = {}) => {
           },
         },
         {
-          test: /\.vue$/,
-          use: isDev ? ['vue-loader', 'webpack-module-hot-accept'] : ['vue-loader'],
-        },
-        {
           test: /\.(png|jpe?g|gif|webp)$/i,
           type: 'asset',
           generator: {
             filename: isDev ? 'img/[name][ext]' : 'img/[name].[contenthash][ext]',
           },
-        },
-        {
-          test: /\.svg$/i,
-          resourceQuery(input) {
-            return input.includes('as-vue-component');
-          },
-          use: ['vue-svg-loader'],
         },
         {
           test: /\.svg$/i,
@@ -174,7 +162,7 @@ export default async (config, options = {}) => {
       ],
     },
     resolve: {
-      extensions: ['.vue', '.mjs', '.js', '.json'],
+      extensions: ['.mjs', '.js', '.json'],
       modules: [
         'node_modules',
         path.join(new URL(path.dirname(import.meta.url)).pathname, '..', 'node_modules'),
@@ -209,7 +197,6 @@ export default async (config, options = {}) => {
         failOnError: !isDev,
         configOverride: { extends: '@studiometa/stylelint-config/prettier' },
       }),
-      new VueLoaderPlugin(),
       new WebpackBar(),
       new RemoveEmptyScriptsPlugin(),
       new MiniCssExtractPlugin({
