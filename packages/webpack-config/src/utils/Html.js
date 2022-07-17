@@ -161,4 +161,24 @@ export default class Html {
     }
     return `<${name}${formattedAttributes}>\n${content}\n</${name}>`;
   }
+
+  /**
+   * Merge attributes.
+   * @param   {Object} attributes
+   * @param   {Object} defaultAttributes
+   * @param   {Object} requiredAttributes
+   * @returns {Object}
+   */
+  static mergeAttributes(attributes = {}, defaultAttributes = {}, requiredAttributes = {}) {
+    requiredAttributes.class = [
+      attributes.class ?? defaultAttributes.class ?? [],
+      requiredAttributes.class ?? [],
+    ];
+
+     return {
+      ...defaultAttributes,
+      ...attributes,
+      ...requiredAttributes
+    };
+  }
 }
