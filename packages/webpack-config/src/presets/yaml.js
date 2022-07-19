@@ -1,7 +1,11 @@
 import merge from 'lodash.merge';
-import extendWebpackConfig from '../utils/extend-webpack-config.js';
 
-export default async (config, options = {}) => {
+/**
+ * YAML loader preset.
+ * @param   {any} options
+ * @returns {(config:WebpackConfig) => Promise<void>}
+ */
+export default function yaml(options = {}) {
   const opts = merge(
     {
       loaderOptions: {},
@@ -9,15 +13,20 @@ export default async (config, options = {}) => {
     options
   );
 
-  await extendWebpackConfig(config, async (webpackConfig) => {
-    webpackConfig.module.rules.push({
-      test: /\.ya?ml$/,
-      use: [
-        {
-          loader: 'js-yaml-loader',
-          options: opts.loaderOptions,
-        },
-      ],
-    });
-  });
-};
+  return {
+    name: 'yaml',
+    async handler(config, { extendWebpack }) {
+      await extendWebpack(config, async (webpackConfig) => {
+        webpackConfig.module.rules.push({
+          test: /\.ya?ml$/,
+          use: [
+            {
+              loader: 'js-yaml-loader',
+              options: opts.loaderOptions,
+            },
+          ],
+        });
+      });
+    },
+  };
+}

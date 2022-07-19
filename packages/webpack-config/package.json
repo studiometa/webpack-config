@@ -5,6 +5,18 @@
   "type": "module",
   "main": "src/index.js",
   "types": "src/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.js",
+      "require": "./src/index.cjs",
+      "types": "./src/index.d.ts"
+    },
+    "./presets": {
+      "import": "./src/presets/index.js",
+      "require": "./src/presets/index.cjs",
+      "types": "./src/presets/index.d.ts"
+    }
+  },
   "bin": {
     "meta": "bin/cli.js"
   },

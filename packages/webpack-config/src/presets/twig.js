@@ -1,19 +1,28 @@
 import merge from 'lodash.merge';
-import extendWebpackConfig from '../utils/extend-webpack-config.js';
 
-export default async (config, options = {}) => {
-  const opts = merge({ data: {} }, options);
+/**
+ * Twig preset.
+ * @param   {{ data: Record<string, any> }} [options]
+ * @returns {(config:WebpackConfig)=>Promise<void>}
+ */
+export default function twig(options = {}) {
+  return {
+    name: 'twig',
+    async handler(config, { extendWebpack }) {
+      const opts = merge({ data: {} }, options);
 
-  await extendWebpackConfig(config, async (webpackConfig) => {
-    webpackConfig.module.rules.push({
-      test: /\.twig$/,
-      use: [
-        'raw-loader',
-        {
-          loader: 'twig-html-loader',
-          options: opts,
-        },
-      ],
-    });
-  });
-};
+      await extendWebpack(config, async (webpackConfig) => {
+        webpackConfig.module.rules.push({
+          test: /\.twig$/,
+          use: [
+            'raw-loader',
+            {
+              loader: 'twig-html-loader',
+              options: opts,
+            },
+          ],
+        });
+      });
+    },
+  };
+}
