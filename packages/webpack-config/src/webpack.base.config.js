@@ -23,6 +23,33 @@ export default async (config, options = {}) => {
   const { isModern, isLegacy } = { isModern: false, isLegacy: false, ...options };
   const src = commonDir(config.src);
 
+  const babel = {
+    loader: 'babel-loader',
+    options: {
+      cacheDirectory: true,
+      rootMode: 'upward-optional',
+      plugins: ['@babel/plugin-transform-runtime'],
+      presets: [
+        [
+          '@babel/preset-env',
+          {
+            targets: '> 0.2%, last 4 versions, not dead',
+            useBuiltIns: 'usage',
+            corejs: '3.11',
+          },
+        ],
+      ],
+    },
+  };
+
+  const esbuild = {
+    loader: 'esbuild-loader',
+    options: {
+      target: isDev ? 'es2020' : 'es2015',
+      format: 'esm',
+    },
+  };
+
   const webpackBaseConfig = {
     entry: entry((filePath) => {
       const extname = path.extname(filePath);
@@ -36,10 +63,9 @@ export default async (config, options = {}) => {
         config.dist,
         config.modern && config.legacy && isLegacy ? '__legacy__' : ''
       ),
-      publicPath: config.public ? path.join(
-        config.public,
-        config.modern && config.legacy && isLegacy ? '__legacy__' : ''
-      ) : 'auto',
+      publicPath: config.public
+        ? path.join(config.public, config.modern && config.legacy && isLegacy ? '__legacy__' : '')
+        : 'auto',
       pathinfo: false,
       filename: `[name].js`,
       chunkFilename: isDev ? '[name].js' : '[name].[contenthash].js',
@@ -92,41 +118,12 @@ export default async (config, options = {}) => {
           // Exclude all but packages from the `@studiometa/` namespace
           exclude: [/node_modules[\\/](?!@studiometa[\\/]).*/],
           type: 'javascript/auto',
-          get use() {
-            const babel = {
-              loader: 'babel-loader',
-              options: {
-                cacheDirectory: true,
-                rootMode: 'upward-optional',
-                plugins: ['@babel/plugin-transform-runtime'],
-                presets: [
-                  [
-                    '@babel/preset-env',
-                    {
-                      targets: '> 0.2%, last 4 versions, not dead',
-                      useBuiltIns: 'usage',
-                      corejs: '3.11',
-                    },
-                  ],
-                ],
-              },
-            };
-
-            const esbuild = {
-              loader: 'esbuild-loader',
-              options: {
-                target: isDev ? 'es2020' : 'es2015',
-                format: 'esm',
-              },
-            };
-
-            // eslint-disable-next-line no-nested-ternary
-            return isDev
-              ? ['webpack-module-hot-accept', esbuild]
-              : isModern
-              ? [esbuild]
-              : [babel, esbuild];
-          },
+          // eslint-disable-next-line no-nested-ternary
+          use: isDev
+            ? ['webpack-module-hot-accept', esbuild]
+            : isModern
+            ? [esbuild]
+            : [babel, esbuild],
         },
         {
           test: /\.(png|jpe?g|gif|webp)$/i,
