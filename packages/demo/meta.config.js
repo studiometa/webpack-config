@@ -1,11 +1,12 @@
 import { defineConfig } from '@studiometa/webpack-config';
-import { prototyping, yaml, vue2 } from '@studiometa/webpack-config/presets';
+import { prototyping, yaml } from '@studiometa/webpack-config/presets';
+import vue from '@studiometa/webpack-config-preset-vue-3';
 
 export default defineConfig({
   presets: [
     prototyping(),
     yaml(),
-    vue2(),
+    vue(),
     {
       name: 'foo',
       handler: (metaConfig, { extendWebpack }) =>
