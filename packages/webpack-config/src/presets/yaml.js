@@ -3,7 +3,7 @@ import merge from 'lodash.merge';
 /**
  * YAML loader preset.
  * @param   {any} options
- * @returns {(config:WebpackConfig) => Promise<void>}
+ * @returns {import('./index').Preset}
  */
 export default function yaml(options = {}) {
   const opts = merge(

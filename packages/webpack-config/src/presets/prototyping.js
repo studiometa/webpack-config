@@ -9,13 +9,9 @@ import tailwindcssPreset from './tailwindcss.js';
 import Html from '../utils/Html.js';
 
 /**
- * @typedef {import('./index').Preset} Preset
- */
-
-/**
  * Prototyping preset.
  * @param   {{ tailwindcss?: any, twig?: any, html?: any }} options
- * @returns {Preset}
+ * @returns {import('./index').Preset}
  */
 export default function prototyping(options) {
   return {

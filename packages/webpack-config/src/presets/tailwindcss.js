@@ -10,12 +10,12 @@ const require = createRequire(import.meta.url);
 /**
  * Tailwind CSS preset.
  * @param   {{ path: string, configViewerPath: string }} options
- * @returns {(config:WebpackConfig)=>Promise<void>}
+ * @returns {import('./index').Preset}
  */
 export default function tailwindcss(options = {}) {
   return {
     name: 'tailwindcss',
-    async handler(config, { extendWebpack, extendBrowsersync }) {
+    async handler(config, { extendWebpack, extendBrowsersync, isDev }) {
       const configPath = config.PATH;
 
       const opts = merge(
@@ -26,7 +26,7 @@ export default function tailwindcss(options = {}) {
         options
       );
 
-      if (process.env.NODE_ENV === 'development') {
+      if (isDev) {
         await extendBrowsersync(config, async (bsConfig) => {
           const tailwindConfigViewerServer = createServer({
             tailwindConfigProvider: () =>
@@ -50,7 +50,7 @@ export default function tailwindcss(options = {}) {
         });
       }
 
-      await extendWebpack(config, async (webpackConfig, isDev) => {
+      await extendWebpack(config, async (webpackConfig) => {
         const tailwind = opts.path
           ? opts.path
           : require.resolve('tailwindcss', { paths: [configPath] });

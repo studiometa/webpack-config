@@ -3,7 +3,7 @@ import merge from 'lodash.merge';
 /**
  * Twig preset.
  * @param   {{ data: Record<string, any> }} [options]
- * @returns {(config:WebpackConfig)=>Promise<void>}
+ * @returns {import('./index').Preset}
  */
 export default function twig(options = {}) {
   return {
