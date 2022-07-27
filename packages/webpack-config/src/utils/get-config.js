@@ -33,7 +33,11 @@ export default async (options = { analyze: false, target: [] }) => {
         }
 
         console.log(`Using the "${preset.name}" preset.`);
-        await preset.handler(config, { extendBrowsersync, extendWebpack });
+        await preset.handler(config, {
+          extendBrowsersync,
+          extendWebpack,
+          isDev: process.env.NODE_ENV !== 'production',
+        });
       })
     );
   }

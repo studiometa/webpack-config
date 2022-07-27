@@ -1,11 +1,13 @@
-import VueLoaderPlugin from 'vue-loader/lib/plugin.js';
+import { VueLoaderPlugin } from 'vue-loader';
 
-export default function vue2() {
+/**
+ * Vue preset.
+ * @returns {import('./index').Preset}
+ */
+export default function vue() {
   return {
-    name: 'vue2',
-    async handler(config, {extendWebpack}) {
-      const isDev = process.env.NODE_ENV !== 'production';
-
+    name: 'vue',
+    async handler(config, { extendWebpack, isDev }) {
       await extendWebpack(config, async (webpackConfig) => {
         // Do vue2 stuff here
         webpackConfig.module.rules.push(
@@ -18,7 +20,9 @@ export default function vue2() {
             resourceQuery(input) {
               return input.includes('as-vue-component');
             },
-            use: ['vue-svg-loader'],
+            use: isDev
+              ? ['vue-loader', 'vue-svg-loader', 'webpack-module-hot-accept']
+              : ['vue-loader', 'vue-svg-loader'],
           }
         );
 
