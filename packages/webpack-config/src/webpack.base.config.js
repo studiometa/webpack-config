@@ -114,6 +114,10 @@ export default async (config, options = {}) => {
     module: {
       rules: [
         {
+          resourceQuery: /raw/,
+          type: 'asset/source',
+        },
+        {
           test: /\.m?js$/,
           // Exclude all but packages from the `@studiometa/` namespace
           exclude: [/node_modules[\\/](?!@studiometa[\\/]).*/],
