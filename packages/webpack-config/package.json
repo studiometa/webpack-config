@@ -46,10 +46,10 @@
   },
   "homepage": "https://github.com/studiometa/webpack-config#readme",
   "devDependencies": {
-    "@studiometa/eslint-config": "^3.0.2",
+    "@studiometa/eslint-config": "^3.0.3",
     "@studiometa/prettier-config": "^2.1.1",
-    "eslint": "^8.2.0",
-    "prettier": "^2.6.0",
+    "eslint": "^8.20.0",
+    "prettier": "^2.7.1",
     "stylelint": "^13.13.1"
   },
   "peerDependencies": {

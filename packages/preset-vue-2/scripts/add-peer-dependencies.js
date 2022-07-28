@@ -6,7 +6,7 @@ const pkgPath = path.resolve(dirname, '../package.json');
 const pkg = JSON.parse(fs.readFileSync(pkgPath));
 
 pkg.peerDependencies = {
-  vue: '^2.6.14',
+  vue: '^2.7.8',
 };
 
 fs.writeFileSync(pkgPath, JSON.stringify(pkg, null, 2));
