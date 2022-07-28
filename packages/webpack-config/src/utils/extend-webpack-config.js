@@ -1,13 +1,19 @@
 /**
- * Extends the `webpack` configuration property while.
- * @param {Object}   config The meta config object.
- * @param {Function} fn     The function to apply.
+ * @typedef {import('../index').MetaConfig} MetaConfig
+ * @typedef {import('webpack').Configuration} WebpackConfig
  */
-export default async (config, fn) => {
+
+/**
+ * Extends the `webpack` configuration property.
+ *
+ * @param {MetaConfig}   config
+ * @param {(config:WebpackConfig, isDev: boolean) => Promise<void>} fn
+ */
+export default async function extendWebpackConfig(config, fn) {
   const oldWebpackConfig = typeof config.webpack === 'function' ? config.webpack : () => {};
 
   config.webpack = async (webpackConfig, isDev) => {
-    await fn(webpackConfig, isDev);
     await oldWebpackConfig(webpackConfig, isDev);
+    await fn(webpackConfig, isDev);
   };
 };

@@ -1,0 +1,37 @@
+{
+  "name": "@studiometa/webpack-config-preset-vue-2",
+  "version": "4.0.0-alpha.0",
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/studiometa/webpack-config.git"
+  },
+  "keywords": [
+    "webpack",
+    "configuration",
+    "config",
+    "vue",
+    "vue2"
+  ],
+  "author": "Studio Meta <agence@studiometa.fr> (https://www.studiometa.fr)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/studiometa/webpack-config/issues"
+  },
+  "engines": {
+    "node": "^14.13.1 || >=16.0.0"
+  },
+  "homepage": "https://github.com/studiometa/webpack-config#readme",
+  "scripts": {
+    "prepublishOnly": "node scripts/add-peer-dependencies.js"
+  },
+  "dependencies": {
+    "vue-loader": "^15.10.0",
+    "vue-svg-loader": "^0.16.0",
+    "vue-template-compiler": "^2.7.8"
+  }
+}

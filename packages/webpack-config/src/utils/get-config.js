@@ -1,5 +1,6 @@
-import fs from 'fs';
 import { findUp } from 'find-up';
+import extendBrowsersync from './extend-browsersync-config.js';
+import extendWebpack from './extend-webpack-config.js';
 
 export default async (options = { analyze: false, target: [] }) => {
   const configPath = await findUp(['meta.config.js', 'meta.config.mjs']);
@@ -26,19 +27,17 @@ export default async (options = { analyze: false, target: [] }) => {
 
     await Promise.all(
       config.presets.map(async (preset) => {
-        const name = Array.isArray(preset) ? preset[0] : preset;
-        const opts = Array.isArray(preset) ? preset[1] : {};
-        const presetPathInfo = new URL(`../presets/${name}.js`, import.meta.url);
-
-        if (!fs.existsSync(presetPathInfo.pathname)) {
-          console.error(`The "${name}" preset is not available.`);
+        if (!preset.name && typeof preset.handler !== 'function') {
+          console.log('Preset misconfigured.', preset);
           return;
         }
 
-        console.log(`Using the "${name}" preset.`);
-
-        const { default: presetHandler } = await import(presetPathInfo.pathname);
-        await presetHandler(config, opts);
+        console.log(`Using the "${preset.name}" preset.`);
+        await preset.handler(config, {
+          extendBrowsersync,
+          extendWebpack,
+          isDev: process.env.NODE_ENV !== 'production',
+        });
       })
     );
   }
