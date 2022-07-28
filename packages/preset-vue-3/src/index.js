@@ -20,9 +20,7 @@ export default function vue() {
             resourceQuery(input) {
               return input.includes('as-vue-component');
             },
-            use: isDev
-              ? ['vue-loader', 'vue-svg-loader', 'webpack-module-hot-accept']
-              : ['vue-loader', 'vue-svg-loader'],
+            use: ['vue-loader', 'vue-svg-loader'],
           }
         );
 
