@@ -3,6 +3,10 @@ import { Cursor } from '@studiometa/ui';
 import { createApp as createVueApp } from 'vue';
 import VueComponent from './VueComponent.vue';
 import config from './config.yaml';
+import configRaw from './config.yaml?raw';
+import ComponentRaw from './components/Component.js?raw';
+
+console.log({ ComponentRaw });
 
 /**
  * App class.
@@ -31,7 +35,7 @@ class App extends Base {
    * Mounted hook.
    */
   async mounted() {
-    this.$log('config', config, this.$options);
+    this.$log('config', config, configRaw, this.$options);
     this.content = 'mounted';
     this.VueComponent = VueComponent;
   }
@@ -58,7 +62,7 @@ class App extends Base {
 
   /**
    * Set the component's content.
-   * @param {String} value The content to add.
+   * @param {string} value The content to add.
    */
   set content(value) {
     this.$refs.content.innerHTML += `<br>${value}`;
