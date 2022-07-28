@@ -9,18 +9,24 @@ export default function vue() {
     name: 'vue',
     async handler(config, { extendWebpack, isDev }) {
       await extendWebpack(config, async (webpackConfig) => {
-        // Do vue2 stuff here
+        const vueLoader = {
+          loader: 'vue-loader',
+          options: {
+            reactivityTransform: true,
+          },
+        };
+
         webpackConfig.module.rules.push(
           {
             test: /\.vue$/,
-            use: isDev ? ['vue-loader', 'webpack-module-hot-accept'] : ['vue-loader'],
+            use: isDev ? [vueLoader, 'webpack-module-hot-accept'] : [vueLoader],
           },
           {
             test: /\.svg$/i,
             resourceQuery(input) {
               return input.includes('as-vue-component');
             },
-            use: ['vue-loader', 'vue-svg-loader'],
+            use: [vueLoader, 'vue-svg-loader'],
           }
         );
 

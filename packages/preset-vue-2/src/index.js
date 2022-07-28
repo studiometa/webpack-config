@@ -9,7 +9,6 @@ export default function vue() {
     name: 'vue',
     async handler(config, { extendWebpack, isDev }) {
       await extendWebpack(config, async (webpackConfig) => {
-        // Do vue2 stuff here
         webpackConfig.module.rules.push(
           {
             test: /\.vue$/,
