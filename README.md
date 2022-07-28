@@ -1,8 +1,6 @@
 # Webpack Configuration
 
 [![NPM Version](https://img.shields.io/npm/v/@studiometa/webpack-config.svg?style=flat-square)](https://www.npmjs.com/package/@studiometa/webpack-config)
-[![Dependency Status](https://img.shields.io/david/studiometa/webpack-config.svg?label=deps&style=flat-square)](https://david-dm.org/studiometa/webpack-config)
-[![devDependency Status](https://img.shields.io/david/dev/studiometa/webpack-config.svg?label=devDeps&style=flat-square)](https://david-dm.org/studiometa/webpack-config?type=dev)
 
 > Run a development server and build your assets with Webpack.
 
@@ -18,9 +16,13 @@ npm install --save-dev @studiometa/webpack-config
 
 Create a `meta.config.js` file at the root of yout project:
 
-```ts
-// meta.config.js
-module.exports = {
+````ts
+// meta.config.mjs
+import { defineConfig } from '@studiometa/webpack-config';
+import { twig, yaml, tailwindcss, prototyping } from '@studiometa/webpack-config/presets';
+import vue from '@studiometa/webpack-config-preset-vue-3';
+
+export default defineConfig({
   src: [
     './path/to/src/js/*.js',
     './path/to/src/css/*.scss',
@@ -131,15 +133,20 @@ module.exports = {
    * @optional
    */
   presets: [
-    'twig', // use the `twig` preset
-    ['twig', {}], // use the `twig` preset with custom options
-    'tailwindcss', // use the `tailwindcss` preset,
-    'prototyping', // use the `prototyping` preset
-    'yaml', // use the `yaml` preset,
-    './my-preset.js', // use a custom preset
+    twig(), // use the `twig` preset
+    tailwindcss(), // use the `tailwindcss` preset,
+    prototyping(), // use the `prototyping` preset
+    yaml(), // use the `yaml` preset,
+    vue(), // use the Vue 3 preset
+    {
+      name: 'my-custom-preset',
+      handler(metaConfig, { extendWebpack, extendBrowsersync, isDev }) {
+        // ...
+      },
+    },
   ],
 };
-```
+````
 
 Configure a `.env` file with the following values:
 
@@ -170,6 +177,11 @@ You can analyze your bundle(s) with the `--analyze` (or `-a`) argument:s
 node_modules/.bin/meta build --analyze
 ```
 
+## Features
+
+- Raw imports with the `?raw` query
+- SVG to Vue component with the `?as-vue-component` (requires a [vue preset](#vue))
+
 ## Presets
 
 Presets can be used to extend the CLI configuration elegantly. The following presets are shipped with the package and can be used without installing any more dependencies:
@@ -178,23 +190,34 @@ Presets can be used to extend the CLI configuration elegantly. The following pre
 - [`tailwindcss`](#tailwindcss)
 - [`prototyping`](#prototyping)
 - [`yaml`](#yaml)
+- [`vue`](#vue)
 
 Read their documentation below to find out how to use and configure them.
 
 Custom presets can be used by using the path of a JS file (relative to the `meta.config.js` file):
 
 ```js
-// meta.config.js
-export default {
-  presets: ['./my-preset.js'],
-}
+// meta.config.mjs
+import { defineConfig } from '@studiometa/webpack-config';
+import myPreset from './my-preset.mjs';
 
-// my-preset.js
-export default async function myPreset(metaConfig, options, helpers) {
-  metaConfig.public = 'auto';
-  await helpers.extendWebpack(metaConfig, async (webpackConfig) => {
-    webpackConfig.optimization.minimize = false;
-  });
+export default defineConfig({
+  presets: [
+    myPreset({ option: true })
+  ],
+})
+
+// my-preset.mjs
+export default function myPreset(options) {
+  return {
+    name: 'my-preset',
+    async handler(metaConfig, { extendWebpack, isDev }) {
+      metaConfig.public = 'auto';
+      await extendWebpack(metaConfig, async (webpackConfig) => {
+        webpackConfig.optimization.minimize = false;
+      });
+    }
+  }
 }
 ```
 
@@ -211,24 +234,27 @@ The options object is directly passed to the [`twig-html-loader`](https://github
 Use it without configuration:
 
 ```js
-module.exports = {
-  presets: ['twig'],
-};
+import { defineConfig } from '@studiometa/webpack-config';
+import { twig } from '@studiometa/webpack-config/presets';
+
+export default defineConfig({
+  presets: [twig()],
+});
 ```
 
 Or configure the loader options:
 
 ```js
-module.exports = {
+import { defineConfig } from '@studiometa/webpack-config';
+import { twig } from '@studiometa/webpack-config/presets';
+
+export default defineConfig({
   presets: [
-    [
-      'twig',
-      {
-        debug: true,
-      },
-    ],
+    twig({
+      debug: true,
+    }),
   ],
-};
+});
 ```
 
 ### `tailwindcss`
@@ -244,36 +270,43 @@ Add [Tailwind CSS](https://github.com/tailwindlabs/tailwindcss) to the [PostCSS]
 Use it without configuration:
 
 ```js
-module.exports = {
-  presets: ['tailwindcss'],
-};
+import { defineConfig } from '@studiometa/webpack-config';
+import { tailwindcss } from '@studiometa/webpack-config/presets';
+
+export default defineConfig({
+  presets: [tailwindcss()],
+});
 ```
 
 If the `meta` CLI fails to resolve the `tailwindcss` package, specify its path:
 
 ```js
-const path = require('path');
+import path from 'node:path';
+import { defineConfig } from '@studiometa/webpack-config';
+import { twig } from '@studiometa/webpack-config/presets';
 
-module.exports = {
+export default defineConfig({
   presets: [
-    [
-      'tailwindcss',
-      {
-        path: path.resolver(__dirname, 'node_modules/tailwindcss/lib/index.js'),
-      }
-    ],
+    tailwindcss({
+      path: path.resolve('./node_modules/tailwindcss/lib/index.js'),
+    }),
   ],
-};
+});
 ```
 
 The default route for the Tailwind config viewer is `/_tailwind/`. It is customisable with the `configViewerPath` options:
 
 ```js
-module.exports = {
+import { defineConfig } from '@studiometa/webpack-config';
+import { twig } from '@studiometa/webpack-config/presets';
+
+export default defineConfig({
   presets: [
-    ['tailwindcss', { configViewerPath: '/__custom_tailwind_viewer_path' }],
+    tailwindcss({
+      configViewerPath: '/__custom_tailwind_viewer_path',
+    }),
   ],
-}
+});
 ```
 
 ### `prototyping`
@@ -291,9 +324,12 @@ Add the [`twig`](#twig) and [`tailwindcss`](#tailwindcss) presets as well as def
 Use it in your `meta.config.js` file:
 
 ```js
-module.exports = {
-  presets: ['prototyping'],
-};
+import { defineConfig } from '@studiometa/webpack-config';
+import { prototyping } from '@studiometa/webpack-config/presets';
+
+export default defineConfig({
+  presets: [prototyping()],
+});
 ```
 
 And set up your project with the following folder structure:
@@ -327,9 +363,34 @@ Add support for the import of YAML files with the [js-yaml-loader](https://githu
 #### Example
 
 ```js
-module.exports = {
-  presets: ['yaml'],
-};
+import { defineConfig } from '@studiometa/webpack-config';
+import { yaml } from '@studiometa/webpack-config/presets';
+
+export default defineConfig({
+  presets: [yaml()],
+});
+```
+
+### `vue`
+
+Add support for Vue 2 or 3. The presets for Vue are available in two different packages, as their dependencies can not be installed in a single one. You will have to install the package corresponding to the version you want to use in your project:
+
+```sh
+# For Vue 2
+npm install --save-dev @studiometa/webpack-config-preset-vue-2
+# Or for Vue 3
+npm install --save-dev @studiometa/webpack-config-preset-vue-3
+```
+
+#### Example
+
+```js
+import { defineConfig } from '@studiometa/webpack-config';
+import vue from '@studiometa/webpack-config-preset-vue-3';
+
+export default defineConfig({
+  presets: [vue()],
+});
 ```
 
 ## Contributing

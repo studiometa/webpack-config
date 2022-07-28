@@ -1,8 +1,12 @@
 import { Base, createApp } from '@studiometa/js-toolkit';
 import { Cursor } from '@studiometa/ui';
-import Vue from 'vue';
+import { createApp as createVueApp } from 'vue';
 import VueComponent from './VueComponent.vue';
 import config from './config.yaml';
+import configRaw from './config.yaml?raw';
+import ComponentRaw from './components/Component.js?raw';
+
+console.log({ ComponentRaw });
 
 /**
  * App class.
@@ -30,8 +34,8 @@ class App extends Base {
   /**
    * Mounted hook.
    */
-  mounted() {
-    this.$log('config', config, this.$options);
+  async mounted() {
+    this.$log('config', config, configRaw, this.$options);
     this.content = 'mounted';
     this.VueComponent = VueComponent;
   }
@@ -40,14 +44,13 @@ class App extends Base {
    * Load the Vue app on click.
    */
   async onClick() {
+    if (this.vue) {
+      return;
+    }
+
     const { default: VueCounter } = await import(/* webpackPreload: true */ './Counter.vue');
-    this.vue = new Vue({
-      components: {
-        VueCounter,
-      },
-      render: (h) => h('VueCounter'),
-    });
-    this.vue.$mount(this.$refs.vue);
+    this.vue = createVueApp(VueCounter);
+    this.vue.mount(this.$refs.vue);
   }
 
   /**
@@ -59,7 +62,7 @@ class App extends Base {
 
   /**
    * Set the component's content.
-   * @param {String} value The content to add.
+   * @param {string} value The content to add.
    */
   set content(value) {
     this.$refs.content.innerHTML += `<br>${value}`;

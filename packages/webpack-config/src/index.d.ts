@@ -4,8 +4,7 @@ import {
   Options as BrowsersyncOptions,
   BrowserSyncInstance,
 } from '@types/browser-sync';
-
-export type Presets = 'prototyping' | 'tailwindcss' | 'twig' | 'yaml';
+import type { Preset } from './presets/index.js';
 
 interface CacheGroupsContext {
   moduleGraph: ModuleGraph;
@@ -115,7 +114,7 @@ export interface MetaConfig {
    * - `yaml` ([doc](https://github.com/studiometa/webpack-config#yaml))
    * - `twig` ([doc](https://github.com/studiometa/webpack-config#twig))
    */
-  presets?: Array<Presets | [Presets, any]>;
+  presets?: Array<Preset | (() => Preset)>;
 }
 
 /**

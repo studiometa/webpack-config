@@ -1,5 +1,4 @@
 import path from 'path';
-import VueLoaderPlugin from 'vue-loader/lib/plugin.js';
 import WebpackBar from 'webpackbar';
 import entry from 'webpack-glob-entry';
 import RemoveEmptyScriptsPlugin from 'webpack-remove-empty-scripts';
@@ -24,6 +23,33 @@ export default async (config, options = {}) => {
   const { isModern, isLegacy } = { isModern: false, isLegacy: false, ...options };
   const src = commonDir(config.src);
 
+  const babel = {
+    loader: 'babel-loader',
+    options: {
+      cacheDirectory: true,
+      rootMode: 'upward-optional',
+      plugins: ['@babel/plugin-transform-runtime'],
+      presets: [
+        [
+          '@babel/preset-env',
+          {
+            targets: '> 0.2%, last 4 versions, not dead',
+            useBuiltIns: 'usage',
+            corejs: '3.11',
+          },
+        ],
+      ],
+    },
+  };
+
+  const esbuild = {
+    loader: 'esbuild-loader',
+    options: {
+      target: isDev ? 'es2020' : 'es2015',
+      format: 'esm',
+    },
+  };
+
   const webpackBaseConfig = {
     entry: entry((filePath) => {
       const extname = path.extname(filePath);
@@ -37,10 +63,9 @@ export default async (config, options = {}) => {
         config.dist,
         config.modern && config.legacy && isLegacy ? '__legacy__' : ''
       ),
-      publicPath: config.public ? path.join(
-        config.public,
-        config.modern && config.legacy && isLegacy ? '__legacy__' : ''
-      ) : 'auto',
+      publicPath: config.public
+        ? path.join(config.public, config.modern && config.legacy && isLegacy ? '__legacy__' : '')
+        : 'auto',
       pathinfo: false,
       filename: `[name].js`,
       chunkFilename: isDev ? '[name].js' : '[name].[contenthash].js',
@@ -89,49 +114,20 @@ export default async (config, options = {}) => {
     module: {
       rules: [
         {
+          resourceQuery: /raw/,
+          type: 'asset/source',
+        },
+        {
           test: /\.m?js$/,
           // Exclude all but packages from the `@studiometa/` namespace
           exclude: [/node_modules[\\/](?!@studiometa[\\/]).*/],
           type: 'javascript/auto',
-          get use() {
-            const babel = {
-              loader: 'babel-loader',
-              options: {
-                cacheDirectory: true,
-                rootMode: 'upward-optional',
-                plugins: ['@babel/plugin-transform-runtime'],
-                presets: [
-                  [
-                    '@babel/preset-env',
-                    {
-                      targets: '> 0.2%, last 4 versions, not dead',
-                      useBuiltIns: 'usage',
-                      corejs: '3.11',
-                    },
-                  ],
-                ],
-              },
-            };
-
-            const esbuild = {
-              loader: 'esbuild-loader',
-              options: {
-                target: isDev ? 'es2020' : 'es2015',
-                format: 'esm',
-              },
-            };
-
-            // eslint-disable-next-line no-nested-ternary
-            return isDev
-              ? ['webpack-module-hot-accept', esbuild]
-              : isModern
-              ? [esbuild]
-              : [babel, esbuild];
-          },
-        },
-        {
-          test: /\.vue$/,
-          use: isDev ? ['vue-loader', 'webpack-module-hot-accept'] : ['vue-loader'],
+          // eslint-disable-next-line no-nested-ternary
+          use: isDev
+            ? ['webpack-module-hot-accept', esbuild]
+            : isModern
+            ? [esbuild]
+            : [babel, esbuild],
         },
         {
           test: /\.(png|jpe?g|gif|webp)$/i,
@@ -139,13 +135,6 @@ export default async (config, options = {}) => {
           generator: {
             filename: isDev ? 'img/[name][ext]' : 'img/[name].[contenthash][ext]',
           },
-        },
-        {
-          test: /\.svg$/i,
-          resourceQuery(input) {
-            return input.includes('as-vue-component');
-          },
-          use: ['vue-svg-loader'],
         },
         {
           test: /\.svg$/i,
@@ -174,7 +163,7 @@ export default async (config, options = {}) => {
       ],
     },
     resolve: {
-      extensions: ['.vue', '.mjs', '.js', '.json'],
+      extensions: ['.mjs', '.js', '.json'],
       modules: [
         'node_modules',
         path.join(new URL(path.dirname(import.meta.url)).pathname, '..', 'node_modules'),
@@ -209,7 +198,6 @@ export default async (config, options = {}) => {
         failOnError: !isDev,
         configOverride: { extends: '@studiometa/stylelint-config/prettier' },
       }),
-      new VueLoaderPlugin(),
       new WebpackBar(),
       new RemoveEmptyScriptsPlugin(),
       new MiniCssExtractPlugin({

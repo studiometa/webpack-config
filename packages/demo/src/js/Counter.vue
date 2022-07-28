@@ -1,9 +1,21 @@
+<script setup>
+  import { ref, watch } from 'vue';
+  // eslint-disable-next-line import/no-unresolved
+  import VueIcon from '../svg/icon.svg?as-vue-component';
+
+  const count = ref(0);
+
+  watch(count, (newValue) => {
+    console.log({ newValue });
+  });
+</script>
+
 <template>
   <div class="counter">
-    <button class="counter__btn" @click="count += 1">
+    <button class="counter__btn" @click="count = count + 1">
       Up
     </button>
-    <button class="counter__btn" @click="count -= 1">
+    <button class="counter__btn" @click="count = count - 1">
       Down
     </button>
     <input class="counter__input" :value="count" readonly>
@@ -15,18 +27,6 @@
     <hr>
   </div>
 </template>
-
-<script>
-  // eslint-disable-next-line import/no-unresolved
-  import VueIcon from '../svg/icon.svg?as-vue-component';
-
-  export default {
-    components: {
-      VueIcon,
-    },
-    data: () => ({ count: 0 }),
-  };
-</script>
 
 <style lang="scss">
   .counter {
