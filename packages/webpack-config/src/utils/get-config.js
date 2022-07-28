@@ -51,9 +51,9 @@ export default async (options = { analyze: false, target: [] }) => {
     config.modern = targetConfig.includes('modern');
     config.legacy = targetConfig.includes('legacy');
   } else {
-    // Default to only legacy build.
-    config.modern = false;
-    config.legacy = true;
+    // Default to only modern build.
+    config.modern = true;
+    config.legacy = false;
   }
 
   if (process.env.NODE_ENV === 'production') {
