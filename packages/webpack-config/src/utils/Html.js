@@ -122,7 +122,7 @@ export default class Html {
         }
       }
 
-      renderedAttributes.push(`${key}="${value}"`);
+      renderedAttributes.push(`${key}='${value}'`);
     }
 
     return renderedAttributes.join(' ');
