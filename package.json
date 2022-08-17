@@ -15,7 +15,7 @@
   "devDependencies": {
     "@studiometa/eslint-config": "^3.0.4",
     "@studiometa/prettier-config": "^2.1.1",
-    "eslint": "^8.20.0",
+    "eslint": "^8.21.0",
     "prettier": "^2.7.1"
   }
 }
