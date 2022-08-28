@@ -223,11 +223,14 @@ export default async (config, options = {}) => {
         new TerserPlugin({
           parallel: true,
           extractComments: true,
+          minify: TerserPlugin.esbuildMinify,
           terserOptions: {
             module: isModern,
           },
         }),
-        new CssMinimizerPlugin(),
+        new CssMinimizerPlugin({
+          minify: CssMinimizerPlugin.esbuildMinify,
+        }),
       ],
       runtimeChunk: {
         name: 'manifest',
