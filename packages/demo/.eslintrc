@@ -5,7 +5,8 @@
     "import/extensions": ["error", "always", { "ignorePackages": false }],
     "import/no-extraneous-dependencies": "off",
     "no-unused-vars": "off",
-    "import/no-duplicates": ["error", {"considerQueryString": true}]
-    "no-console": "off"
+    "import/no-duplicates": ["error", {"considerQueryString": true}],
+    "no-console": "off",
+    "require-jsdoc": "off"
   }
 }
