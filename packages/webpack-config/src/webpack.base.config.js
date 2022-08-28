@@ -45,6 +45,7 @@ export default async (config, options = {}) => {
   const esbuild = {
     loader: 'esbuild-loader',
     options: {
+      loader: 'ts',
       target: isDev ? 'es2020' : 'es2015',
       format: 'esm',
     },
@@ -118,7 +119,7 @@ export default async (config, options = {}) => {
           type: 'asset/source',
         },
         {
-          test: /\.m?js$/,
+          test: /\.m?(j|t)s$/,
           // Exclude all but packages from the `@studiometa/` namespace
           exclude: [/node_modules[\\/](?!@studiometa[\\/]).*/],
           type: 'javascript/auto',
@@ -163,7 +164,11 @@ export default async (config, options = {}) => {
       ],
     },
     resolve: {
-      extensions: ['.mjs', '.js', '.json'],
+      extensions: ['.mjs', '.js', '.json', '.ts'],
+      extensionAlias: {
+        '.js': ['.ts', '.js'],
+        '.mjs': ['.mts', '.mjs'],
+      },
       modules: [
         'node_modules',
         path.join(new URL(path.dirname(import.meta.url)).pathname, '..', 'node_modules'),
