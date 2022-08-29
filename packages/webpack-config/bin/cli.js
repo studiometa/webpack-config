@@ -4,6 +4,7 @@ import chalk from 'chalk';
 import { createRequire } from 'module';
 import build from '../src/build.js';
 import dev from '../src/dev.js';
+import watch from '../src/watch.js';
 
 const require = createRequire(import.meta.url);
 const { version, name } = require('../package.json');
@@ -24,6 +25,13 @@ cli
   .option('-a, --analyze', 'Analyze bundle(s).')
   .action((options) => {
     dev(options);
+  });
+
+cli
+  .command('watch', 'Watch and build assets on change.')
+  .option('-a, --analyze', 'Analyze bundle(s).')
+  .action((options) => {
+    watch(options);
   });
 
 cli.help();

@@ -165,7 +165,13 @@ You can then start the development server:
 node_modules/.bin/meta dev
 ```
 
-And build your assets:
+Or watch for changes to build you assets:
+
+```bash
+node_modules/.bin/meta watch
+```
+
+And build your assets for production:
 
 ```bash
 node_modules/.bin/meta build

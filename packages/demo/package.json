@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "node ../webpack-config/bin/cli.js dev",
+    "watch": "node ../webpack-config/bin/cli.js watch",
     "build": "node ../webpack-config/bin/cli.js build"
   },
   "devDependencies": {
