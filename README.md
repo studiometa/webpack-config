@@ -165,7 +165,13 @@ You can then start the development server:
 node_modules/.bin/meta dev
 ```
 
-And build your assets:
+Or watch for changes to build you assets:
+
+```bash
+node_modules/.bin/meta watch
+```
+
+And build your assets for production:
 
 ```bash
 node_modules/.bin/meta build
@@ -315,6 +321,7 @@ Add the [`twig`](#twig) and [`tailwindcss`](#tailwindcss) presets as well as def
 
 #### Options
 
+- `ts` (`boolean`): use `app.ts` as entry point instead of `app.js`
 - `twig` (`Object`): options for the [`twig` preset](#twig)
 - `tailwindcss` (`Object`): options for the [`tailwindcss` preset](#tailwindcss)
 - `html` (`Object`): options for the [`html-webpack-plugin` plugin](https://github.com/jantimon/html-webpack-plugin#options)
