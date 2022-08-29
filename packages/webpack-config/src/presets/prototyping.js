@@ -20,6 +20,7 @@ export default function prototyping(options) {
       const isDev = process.env.NODE_ENV !== 'production';
       const opts = merge(
         {
+          ts: false,
           tailwindcss: {},
           twig: {},
           html: {
@@ -156,7 +157,11 @@ export default function prototyping(options) {
       const { handler: tailwindcssPresetHandler } = tailwindcssPreset(opts.tailwindcss);
       await tailwindcssPresetHandler(config, { extendWebpack, extendBrowsersync });
 
-      config.src = ['./src/js/app.js', './src/css/**/[!_]*.scss', ...(config.src ?? [])];
+      config.src = [
+        opts.ts ? './src/js/app.ts' : './src/js/app.js',
+        './src/css/**/[!_]*.scss',
+        ...(config.src ?? []),
+      ];
       config.dist = config.dist ?? './dist';
       config.public = config.public ?? '/';
       config.server = config.server ?? ['dist', 'public'];
