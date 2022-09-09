@@ -32,6 +32,6 @@
   "dependencies": {
     "vue-loader": "^17.0.0",
     "vue-svg-loader": "^0.17.0-beta.2",
-    "@vue/compiler-sfc": "^3.2.37"
+    "@vue/compiler-sfc": "^3.2.38"
   }
 }
