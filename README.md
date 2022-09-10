@@ -19,7 +19,7 @@ Create a `meta.config.js` file at the root of yout project:
 ````ts
 // meta.config.mjs
 import { defineConfig } from '@studiometa/webpack-config';
-import { twig, yaml, tailwindcss, prototyping } from '@studiometa/webpack-config/presets';
+import { twig, yaml, tailwindcss, prototyping, eslint, stylelint } from '@studiometa/webpack-config/presets';
 import vue from '@studiometa/webpack-config-preset-vue-3';
 
 export default defineConfig({
@@ -133,6 +133,8 @@ export default defineConfig({
    * @optional
    */
   presets: [
+    eslint(), // use the `eslint` preset
+    stylelint(), // use the `stylelint` preset
     twig(), // use the `twig` preset
     tailwindcss(), // use the `tailwindcss` preset,
     prototyping(), // use the `prototyping` preset
@@ -192,6 +194,8 @@ node_modules/.bin/meta build --analyze
 
 Presets can be used to extend the CLI configuration elegantly. The following presets are shipped with the package and can be used without installing any more dependencies:
 
+- [`eslint`](#eslint)
+- [`stylelint`](#stylelint)
 - [`twig`](#twig)
 - [`tailwindcss`](#tailwindcss)
 - [`prototyping`](#prototyping)
@@ -225,6 +229,74 @@ export default function myPreset(options) {
     }
   }
 }
+```
+
+### `eslint`
+
+Add ESLint validation with [`eslint-webpack-plugin`](https://github.com/webpack-contrib/eslint-webpack-plugin).
+
+#### Options
+
+The options object is directly passed to the `ESLintPlugin` constructor, see [the package documentation](https://github.com/webpack-contrib/eslint-webpack-plugin#options) for details.
+
+#### Examples
+
+Use it without configuration:
+
+```js
+import { defineConfig } from '@studiometa/webpack-config';
+import { eslint } from '@studiometa/webpack-config/presets';
+
+export default defineConfig({
+  presets: [eslint()],
+});
+```
+
+Or pass custom options:
+
+```js
+import { defineConfig } from '@studiometa/webpack-config';
+import { eslint } from '@studiometa/webpack-config/presets';
+
+export default defineConfig({
+  presets: [eslint({
+    fix: false,
+  })],
+});
+```
+
+### `stylelint`
+
+Add StyleLint validation with [`stylelint-webpack-plugin`](https://github.com/webpack-contrib/stylelint-webpack-plugin).
+
+#### Options
+
+The options object is directly passed to the `StylelintPlugin` constructor, see [the package documentation](https://github.com/webpack-contrib/stylelint-webpack-plugin#options) for details.
+
+#### Examples
+
+Use it without configuration:
+
+```js
+import { defineConfig } from '@studiometa/webpack-config';
+import { stylelint } from '@studiometa/webpack-config/presets';
+
+export default defineConfig({
+  presets: [stylelint()],
+});
+```
+
+Or pass custom options:
+
+```js
+import { defineConfig } from '@studiometa/webpack-config';
+import { stylelint } from '@studiometa/webpack-config/presets';
+
+export default defineConfig({
+  presets: [stylelint({
+    fix: false,
+  })],
+});
 ```
 
 ### `twig`
