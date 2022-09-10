@@ -1,9 +1,11 @@
 import { defineConfig } from '@studiometa/webpack-config';
-import { prototyping, yaml } from '@studiometa/webpack-config/presets';
+import { prototyping, yaml, eslint, stylelint } from '@studiometa/webpack-config/presets';
 import vue from '@studiometa/webpack-config-preset-vue-3';
 
 export default defineConfig({
   presets: [
+    eslint(),
+    stylelint(),
     prototyping(),
     yaml(),
     vue(),
