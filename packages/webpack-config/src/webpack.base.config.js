@@ -4,8 +4,6 @@ import entry from 'webpack-glob-entry';
 import RemoveEmptyScriptsPlugin from 'webpack-remove-empty-scripts';
 import webpack from 'webpack';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import StylelintPlugin from 'stylelint-webpack-plugin';
-import ESLintPlugin from 'eslint-webpack-plugin';
 import BundleAnalyzerPluginImport from 'webpack-bundle-analyzer';
 import TerserPlugin from 'terser-webpack-plugin';
 import commonDir from 'common-dir';
@@ -183,26 +181,6 @@ export default async (config, options = {}) => {
       ],
     },
     plugins: [
-      new ESLintPlugin({
-        context: src,
-        extensions: ['js', 'vue'],
-        fix: true,
-        failOnError: !isDev,
-        baseConfig: {
-          extends: '@studiometa/eslint-config',
-          globals: {
-            __DEV__: false,
-          },
-        },
-      }),
-      new StylelintPlugin({
-        context: src,
-        files: ['**/*.s?(a|c)ss', '**/*.vue'],
-        fix: true,
-        allowEmptyInput: true,
-        failOnError: !isDev,
-        configOverride: { extends: '@studiometa/stylelint-config/prettier' },
-      }),
       new WebpackBar(),
       new RemoveEmptyScriptsPlugin(),
       new MiniCssExtractPlugin({
@@ -313,8 +291,7 @@ export default async (config, options = {}) => {
         },
       ],
     };
-    webpackBaseConfig.module.rules.push(defaultCssRule);
-    webpackBaseConfig.module.rules.push(vueCssRule);
+    webpackBaseConfig.module.rules.push(defaultCssRule, vueCssRule);
   }
 
   if (config.analyze) {
