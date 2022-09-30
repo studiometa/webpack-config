@@ -28,7 +28,27 @@ export default function prototyping(options) {
         {
           ts: false,
           tailwindcss: {},
-          twig: {},
+          twig: {
+            data: async (context) => {
+              const loaderPaths = ['.ts', '.js'].map((extension) =>
+                path.join(
+                  path.dirname(context.resource),
+                  path.basename(context.resource).replace(/\.twig$/, extension)
+                )
+              );
+              const loaderPath = loaderPaths.find((potentialLoaderPath) =>
+                fs.existsSync(potentialLoaderPath)
+              );
+
+              if (!loaderPath) {
+                return {};
+              }
+
+              context.addDependency(loaderPath);
+              const { data } = await context.importModule(loaderPath);
+              return data();
+            },
+          },
           html: {
             template: './src/templates/index.twig',
             scriptLoading: 'defer',
@@ -172,6 +192,7 @@ export default function prototyping(options) {
         );
       }
 
+      console.log(opts.twig);
       const { handler: twigPresetHandler } = twigPreset(opts.twig);
       await twigPresetHandler(config, { extendWebpack, extendBrowsersync, isDev });
       const { handler: tailwindcssPresetHandler } = tailwindcssPreset(opts.tailwindcss);

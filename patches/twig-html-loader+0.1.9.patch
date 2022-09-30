@@ -1,0 +1,22 @@
+diff --git a/node_modules/twig-html-loader/index.js b/node_modules/twig-html-loader/index.js
+index 55f0919..28d0df6 100644
+--- a/node_modules/twig-html-loader/index.js
++++ b/node_modules/twig-html-loader/index.js
+@@ -45,7 +45,7 @@ const relativePathsToAbsolutePathsForSourceFn = (str, resourcePath) => {
+   return result;
+ };
+ 
+-module.exports = function loader(source) {
++module.exports = async function loader(source) {
+   // eslint-disable-next-line no-param-reassign
+   source = relativePathsToAbsolutePathsForSourceFn(source, this.resourcePath);
+ 
+@@ -85,7 +85,7 @@ module.exports = function loader(source) {
+     }
+ 
+     if (typeof data === 'function') {
+-      data = data(this);
++      data = await data(this);
+       if (typeof data !== 'object') {
+         this.emitError('data parameter should return an object');
+       }
