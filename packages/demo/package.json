@@ -21,6 +21,6 @@
   "dependencies": {
     "@studiometa/js-toolkit": "^2.6.0",
     "@studiometa/ui": "^0.2.14",
-    "vue": "^3.2.39"
+    "vue": "^3.2.40"
   }
 }
