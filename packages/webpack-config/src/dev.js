@@ -58,33 +58,14 @@ export default async (options = {}) => {
     new webpack.HotModuleReplacementPlugin(),
   ];
 
-  // Add the dev server and hot middleware dependencies to the JS entries
-  webpackConfig.entry = Object.entries(webpackConfig.entry).reduce((entry, [name, value]) => {
-    if (value.endsWith('.js')) {
-      entry[name] = [
-        'webpack-hot-middleware/client?reload=true',
-        ...(Array.isArray(value) ? value : [value]),
-      ];
-    } else {
-      entry[name] = value;
-    }
-
-    return entry;
-  }, {});
+  webpackConfig.entry = Object.fromEntries(
+    Object.entries(webpackConfig.entry).map(([name, value]) => [
+      name,
+      ['webpack-hot-middleware/client?reload=true', ...(Array.isArray(value) ? value : [value])],
+    ])
+  );
 
   const bundler = webpack(webpackConfig);
-  bundler.hooks.done.tap('BrowserSync', (stats) => {
-    const { assets, outputPath } = stats.toJson();
-
-    // Inject only CSS files as other files are handled by the Webpack dev server
-    const files = assets
-      .filter(({ emitted, name }) => emitted && name.endsWith('.css'))
-      .map(({ name }) => {
-        return path.join(outputPath, name);
-      });
-
-    return server.instance.reload(files);
-  });
 
   bundler.hooks.afterDone.tap('@studiometa/webpack-config', (stats) => {
     if (stats.hasErrors()) {
@@ -108,9 +89,6 @@ export default async (options = {}) => {
       ...(server.config.middleware || []),
       webpackDevMiddleware(bundler, {
         publicPath: webpackConfig.output.publicPath,
-        writeToDisk(filePath) {
-          return !filePath.includes('hot-update');
-        },
       }),
       webpackHotMiddleware(bundler, { log: false }),
     ],

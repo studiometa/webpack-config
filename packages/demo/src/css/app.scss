@@ -1,12 +1,10 @@
-@tailwind base;
-
-@tailwind components;
-
-@tailwind utilities;
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
 
 body {
   min-height: 80vh;
   padding: 2em;
   color: #fff;
-  background-color: #00f;
+  background-color: #00F;
 }

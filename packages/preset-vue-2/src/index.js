@@ -7,12 +7,12 @@ import { VueLoaderPlugin } from 'vue-loader';
 export default function vue() {
   return {
     name: 'vue',
-    async handler(config, { extendWebpack, isDev }) {
+    async handler(config, { extendWebpack }) {
       await extendWebpack(config, async (webpackConfig) => {
         webpackConfig.module.rules.push(
           {
             test: /\.vue$/,
-            use: isDev ? ['vue-loader', 'webpack-module-hot-accept'] : ['vue-loader'],
+            use: 'vue-loader',
           },
           {
             test: /\.svg$/i,

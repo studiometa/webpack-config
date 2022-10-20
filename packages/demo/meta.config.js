@@ -6,7 +6,7 @@ export default defineConfig({
   presets: [
     eslint(),
     stylelint(),
-    prototyping(),
+    prototyping({ ts: true }),
     yaml(),
     vue(),
     {

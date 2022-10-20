@@ -23,8 +23,7 @@ export default class Component<
   };
 
   async mounted() {
-    const foo = await this.$children.ComponentFoo[0];
-    foo.$options.foo;
-    foo.$refs.btn;
+    // const foo = await this.$children.ComponentFoo[0];
+    // console.log(foo.$options.foo, foo.$refs.btn);
   }
 }

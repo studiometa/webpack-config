@@ -1,4 +1,5 @@
 import HtmlWebpackPlugin from 'html-webpack-plugin';
+import HtmlWebpackHarddiskPlugin from 'html-webpack-harddisk-plugin';
 import FileManagerPlugin from 'filemanager-webpack-plugin';
 import fs from 'fs';
 import glob from 'glob';
@@ -136,6 +137,7 @@ export default function prototyping(options) {
             ...opts.html,
             template: path.resolve(file),
             filename: file.replace('./src/templates/pages/', '').replace(/\.twig$/, '.html'),
+            alwaysWriteToDisk: true,
           })
       );
 
@@ -182,6 +184,8 @@ export default function prototyping(options) {
               filename: '[name].[contenthash].css',
             });
           }
+        } else {
+          webpackConfig.plugins.push(new HtmlWebpackHarddiskPlugin());
         }
       });
     },
