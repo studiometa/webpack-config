@@ -123,7 +123,7 @@ export default async (config, options = {}) => {
           type: 'javascript/auto',
           // eslint-disable-next-line no-nested-ternary
           use: isDev
-            ? ['webpack-module-hot-accept', esbuild]
+            ? [esbuild]
             : isModern
             ? [esbuild]
             : [babel, esbuild],
