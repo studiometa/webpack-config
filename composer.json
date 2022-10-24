@@ -1,0 +1,21 @@
+{
+    "name": "studiometa/webpack-config",
+    "description": "PHP Helpers for @studiometa/webpack-config",
+    "type": "library",
+    "require": {
+        "php": "^7.3|^8.0",
+        "anahkiasen/html-object": "^1.4"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Studiometa\\WebpackConfig\\": "packages/php/src"
+        }
+    },
+    "authors": [
+        {
+            "name": "Titouan Mathis",
+            "email": "titouan@studiometa.fr"
+        }
+    ]
+}

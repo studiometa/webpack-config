@@ -23,7 +23,7 @@ class App extends Base {
     ...config,
     components: {
       Cursor,
-      Component: () => import('./components/Component.js'),
+      Component: () => import(/* webpackPrefetch: true */'./components/Component.js'),
     },
   };
 
