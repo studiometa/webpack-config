@@ -1,7 +1,7 @@
 name: Tests
 
 on:
-  push:
+  pull_request:
     paths:
       - packages/php/**/*.php
       - phpcs.xml
@@ -9,7 +9,6 @@ on:
       - phpstan.neon
       - composer.json
       - composer.lock
-  pull_request:
 
 jobs:
   phpcs:
@@ -35,7 +34,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['7.3', '8.0']
+        php-versions:
+          - '7.3'
+          - '7.4'
+          - '8.0'
+          - '8.1'
     steps:
       - uses: actions/checkout@v2
 
@@ -68,7 +71,11 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php-versions: ['7.3', '8.0']
+        php-versions:
+          - '7.3'
+          - '7.4'
+          - '8.0'
+          - '8.1'
     steps:
       - uses: actions/checkout@v2
 

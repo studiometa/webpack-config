@@ -30,7 +30,13 @@ class Manifest
             throw new Exception(sprintf('Could not find a manifest in %s', $path));
         }
 
-        $content = file_get_contents($path);
+        $content = null;
+
+        try {
+            $content = file_get_contents($path);
+        } catch (\Exception $error) {
+            throw new Exception(sprintf('Could not read the manifest in %s', $path));
+        }
 
         if (!$content) {
             throw new Exception(sprintf('Could not read the manifest in %s', $path));
