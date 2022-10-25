@@ -40,7 +40,7 @@ it('should not load duplicate and inexisting assets', function() {
         ],
     ], '/');
     expect($entry->scripts)->toHaveLength(2);
-    expect($entry->scripts->getKeys())->toEqual(['a.js', 'b.js']);
+    expect($entry->scripts->keys()->all())->toEqual(['a.js', 'b.js']);
     expect($entry->styles)->toHaveLength(0);
     expect($entry->preload)->toHaveLength(0);
     expect($entry->prefetch)->toHaveLength(0);

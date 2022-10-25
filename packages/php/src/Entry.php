@@ -3,39 +3,44 @@
 namespace Studiometa\WebpackConfig;
 
 use Studiometa\WebpackConfig\Traits\AssetsPath;
-use Doctrine\Common\Collections\ArrayCollection;
+use Tightenco\Collect\Support\Collection;
 
 class Entry
 {
     use AssetsPath;
 
     /**
-     * @var ArrayCollection<string, Script>
+     * @var Collection<string, Script>
      */
     public $scripts;
 
     /**
-     * @var ArrayCollection<string, Link>
+     * @var Collection<string, Link>
      */
     public $styles;
 
     /**
-     * @var ArrayCollection<string, Link>
+     * @var Collection<string, Link>
      */
     public $preload;
 
     /**
-     * @var ArrayCollection<string, Link>
+     * @var Collection<string, Link>
      */
     public $prefetch;
 
+    /**
+     * Constructor.
+     * @param array  $entrypoint
+     * @param string $publicPath
+     */
     public function __construct(array $entrypoint, string $publicPath)
     {
         $this->publicPath = $publicPath;
-        $this->scripts = new ArrayCollection();
-        $this->styles = new ArrayCollection();
-        $this->preload = new ArrayCollection();
-        $this->prefetch = new ArrayCollection();
+        $this->scripts = new Collection();
+        $this->styles = new Collection();
+        $this->preload = new Collection();
+        $this->prefetch = new Collection();
 
         $assets = $entrypoint['assets'] ?? [];
         $preload = $entrypoint['preload'] ?? [];
@@ -81,11 +86,11 @@ class Entry
         }
 
         foreach ($assets as $asset) {
-            if (!is_null($this->$type->get($asset))) {
+            if ($this->$type->has($asset)) {
                 continue;
             }
 
-            $this->$type->set($asset, $callback($this->getAssetPath($asset)));
+            $this->$type->put($asset, $callback($this->getAssetPath($asset)));
         }
 
         return $this;
@@ -100,10 +105,10 @@ class Entry
         return implode(
             PHP_EOL,
             array_merge(
-                $this->preload->toArray(),
-                $this->styles->toArray(),
-                $this->scripts->toArray(),
-                $this->prefetch->toArray()
+                $this->preload->all(),
+                $this->styles->all(),
+                $this->scripts->all(),
+                $this->prefetch->all()
             )
         ) . PHP_EOL;
     }

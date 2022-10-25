@@ -32,6 +32,7 @@ it('should return the real path of an asset or null', function() {
 it('should print HTML tags for a given entrypoint', function() {
     $entry = $this->manifest->entry('css/app');
     expect((string)$entry)->toBe('<link href="/public/styles.hash.css" rel="stylesheet">' . PHP_EOL);
+    expect((string)$this->manifest->entries->get('css/app'))->toBe('<link href="/public/styles.hash.css" rel="stylesheet">' . PHP_EOL);
 });
 
 it('should print HTML tags for all entrypoints', function() {
