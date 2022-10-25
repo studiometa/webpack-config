@@ -4,3 +4,4 @@ export { default as stylelint } from './stylelint.js';
 export { default as tailwindcss } from './tailwindcss.js';
 export { default as twig } from './twig.js';
 export { default as yaml } from './yaml.js';
+export { default as withContentHash } from './withContentHash.js';

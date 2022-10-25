@@ -12,3 +12,6 @@ backup/
 /packages/demo/dist/
 /packages/demo-basic/dist/
 /packages/*/package-lock.json
+
+/vendor/
+.phpunit.result.cache

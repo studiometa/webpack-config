@@ -7,6 +7,7 @@ import path from 'path';
 import merge from 'lodash.merge';
 import twigPreset from './twig.js';
 import tailwindcssPreset from './tailwindcss.js';
+import withContentHash from './withContentHash.js';
 import Html from '../utils/Html.js';
 
 /**
@@ -17,8 +18,7 @@ import Html from '../utils/Html.js';
 export default function prototyping(options) {
   return {
     name: 'prototyping',
-    async handler(config, { extendWebpack, extendBrowsersync }) {
-      const isDev = process.env.NODE_ENV !== 'production';
+    async handler(config, { extendWebpack, extendBrowsersync, isDev }) {
       const opts = merge(
         {
           ts: false,
@@ -155,9 +155,9 @@ export default function prototyping(options) {
       }
 
       const { handler: twigPresetHandler } = twigPreset(opts.twig);
-      await twigPresetHandler(config, { extendWebpack, extendBrowsersync });
+      await twigPresetHandler(config, { extendWebpack, extendBrowsersync, isDev });
       const { handler: tailwindcssPresetHandler } = tailwindcssPreset(opts.tailwindcss);
-      await tailwindcssPresetHandler(config, { extendWebpack, extendBrowsersync });
+      await tailwindcssPresetHandler(config, { extendWebpack, extendBrowsersync, isDev });
 
       config.src = [
         opts.ts ? './src/js/app.ts' : './src/js/app.js',
@@ -171,20 +171,12 @@ export default function prototyping(options) {
       config.mergeCSS = config.mergeCSS ?? true;
       config.target = config.target ?? ['modern'];
 
+      const { handler: withContentHashHandler } = withContentHash(opts.tailwindcss);
+      await withContentHashHandler(config, { extendWebpack, extendBrowsersync, isDev });
+
       await extendWebpack(config, async (webpackConfig) => {
         webpackConfig.plugins = [...webpackConfig.plugins, ...plugins];
-        if (!isDev) {
-          webpackConfig.output.filename = '[name].[contenthash].js';
-
-          const MiniCssExtractPlugin = webpackConfig.plugins.find(
-            (plugin) => plugin.constructor.name === 'MiniCssExtractPlugin'
-          );
-          if (MiniCssExtractPlugin) {
-            MiniCssExtractPlugin.options = Object.assign(MiniCssExtractPlugin.options, {
-              filename: '[name].[contenthash].css',
-            });
-          }
-        } else {
+        if (isDev) {
           webpackConfig.plugins.push(new HtmlWebpackHarddiskPlugin());
         }
       });
