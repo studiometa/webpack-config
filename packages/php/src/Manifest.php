@@ -4,20 +4,21 @@ namespace Studiometa\WebpackConfig;
 
 use Exception;
 use Studiometa\WebpackConfig\Traits\AssetsPath;
+use Tightenco\Collect\Support\Collection;
 
 class Manifest
 {
     use AssetsPath;
 
     /**
-     * @var array
+     * @var Collection<string, string>
      */
-    private $manifest;
+    public $manifest;
 
     /**
-     * @var array<Entry>
+     * @var Collection<string, Entry>
      */
-    private $entries = [];
+    public $entries;
 
     /**
      * Constructor.
@@ -34,7 +35,7 @@ class Manifest
 
         try {
             $content = file_get_contents($path);
-        } catch (\Exception $error) {
+        } catch (Exception $error) {
             throw new Exception(sprintf('Could not read the manifest in %s', $path));
         }
 
@@ -48,11 +49,12 @@ class Manifest
             throw new Exception('Manifest schema is not valid.');
         }
 
-        $this->manifest = $json;
+        $this->manifest = (new Collection($json))->except('entrypoints');
         $this->publicPath = $publicPath;
+        $this->entries = new Collection();
 
-        foreach ($this->manifest['entrypoints'] as $name => $entrypoint) {
-            $this->entries[$name] = new Entry($entrypoint, $publicPath);
+        foreach ($json['entrypoints'] as $name => $entrypoint) {
+            $this->entries->put($name, new Entry($entrypoint, $publicPath));
         }
     }
 
@@ -63,7 +65,8 @@ class Manifest
      */
     public function entry(string $name):?Entry
     {
-        return $this->entries[$name] ?? null;
+        /** @var Entry|null */
+        return $this->entries->get($name);
     }
 
     /**
@@ -73,7 +76,14 @@ class Manifest
      */
     public function asset(string $asset):?string
     {
-        return key_exists($asset, $this->manifest) ? $this->getAssetPath($this->manifest[$asset]) : null;
+        if (!$this->manifest->has($asset)) {
+            return null;
+        }
+
+        /** @var string $filename */
+        $filename = $this->manifest->get($asset);
+
+        return $this->getAssetPath($filename);
     }
 
     /**
@@ -88,11 +98,11 @@ class Manifest
         $prefetch = [];
 
         // Merge all entries
-        foreach ($this->entries as $entry) {
-            $preload = $preload + $entry->preload->toArray();
-            $styles = $styles + $entry->styles->toArray();
-            $scripts = $scripts + $entry->scripts->toArray();
-            $prefetch = $prefetch + $entry->prefetch->toArray();
+        foreach ($this->entries->all() as $entry) {
+            $preload = $preload + $entry->preload->all();
+            $styles = $styles + $entry->styles->all();
+            $scripts = $scripts + $entry->scripts->all();
+            $prefetch = $prefetch + $entry->prefetch->all();
         }
 
         return implode(PHP_EOL, array_merge($preload, $styles, $scripts, $prefetch)) . PHP_EOL;

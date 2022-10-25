@@ -1,12 +1,12 @@
 {
   "name": "studiometa/webpack-config",
-  "version": "4.0.5",
+  "version": "4.0.6",
   "description": "PHP Helpers for @studiometa/webpack-config",
   "type": "library",
   "require": {
     "php": "^7.3|^8.0",
     "anahkiasen/html-object": "^1.4",
-    "doctrine/collections": "^1.8"
+    "tightenco/collect": "^8.83"
   },
   "license": "MIT",
   "autoload": {
