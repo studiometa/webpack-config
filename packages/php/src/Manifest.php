@@ -5,7 +5,8 @@ namespace Studiometa\WebpackConfig;
 use Exception;
 use Studiometa\WebpackConfig\Traits\AssetsPath;
 
-class Manifest {
+class Manifest
+{
     use AssetsPath;
 
     /**
@@ -23,7 +24,8 @@ class Manifest {
      * @param string $path       The path to the manifest file.
      * @param string $publicPath The public path to the manifest folder.
      */
-    public function __construct(string $path, string $publicPath) {
+    public function __construct(string $path, string $publicPath)
+    {
         if (!file_exists($path)) {
             throw new Exception(sprintf('Could not find a manifest in %s', $path));
         }
@@ -53,7 +55,8 @@ class Manifest {
      * @param   string $name
      * @return  Entry|null
      */
-    public function entry(string $name):?Entry {
+    public function entry(string $name):?Entry
+    {
         return $this->entries[$name] ?? null;
     }
 
@@ -62,7 +65,8 @@ class Manifest {
      * @param  string $asset
      * @return string|null
      */
-    public function asset(string $asset):?string {
+    public function asset(string $asset):?string
+    {
         return key_exists($asset, $this->manifest) ? $this->getAssetPath($this->manifest[$asset]) : null;
     }
 
@@ -70,7 +74,8 @@ class Manifest {
      * Print HTML.
      * @return string
      */
-    public function __toString():string  {
+    public function __toString():string
+    {
         $preload = [];
         $styles = [];
         $scripts = [];

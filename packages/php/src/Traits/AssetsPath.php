@@ -2,7 +2,8 @@
 
 namespace Studiometa\WebpackConfig\Traits;
 
-trait AssetsPath {
+trait AssetsPath
+{
     /**
      * @var string
      */
@@ -13,7 +14,8 @@ trait AssetsPath {
      * @param  string $src
      * @return string
      */
-    private function getAssetPath(string $src):string {
+    private function getAssetPath(string $src):string
+    {
         return rtrim($this->publicPath, '/') . '/' . $src;
     }
 }

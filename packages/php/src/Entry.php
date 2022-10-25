@@ -5,7 +5,8 @@ namespace Studiometa\WebpackConfig;
 use Studiometa\WebpackConfig\Traits\AssetsPath;
 use Doctrine\Common\Collections\ArrayCollection;
 
-class Entry {
+class Entry
+{
     use AssetsPath;
 
     /**
@@ -28,7 +29,8 @@ class Entry {
      */
     public $prefetch;
 
-    public function __construct(array $entrypoint, string $publicPath) {
+    public function __construct(array $entrypoint, string $publicPath)
+    {
         $this->publicPath = $publicPath;
         $this->scripts = new ArrayCollection();
         $this->styles = new ArrayCollection();
@@ -72,7 +74,8 @@ class Entry {
      * @param callable $callback
      * @return $this
      */
-    private function addAssets(?array $assets, string $type, callable $callback) {
+    private function addAssets(?array $assets, string $type, callable $callback)
+    {
         if (empty($assets)) {
             return $this;
         }
@@ -92,7 +95,16 @@ class Entry {
      * Print HTML tags.
      * @return string
      */
-    public function __toString():string {
-        return implode(PHP_EOL, array_merge($this->preload->toArray(), $this->styles->toArray(), $this->scripts->toArray(), $this->prefetch->toArray())) . PHP_EOL;
+    public function __toString():string
+    {
+        return implode(
+            PHP_EOL,
+            array_merge(
+                $this->preload->toArray(),
+                $this->styles->toArray(),
+                $this->scripts->toArray(),
+                $this->prefetch->toArray()
+            )
+        ) . PHP_EOL;
     }
 }

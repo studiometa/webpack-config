@@ -4,7 +4,8 @@ namespace Studiometa\WebpackConfig;
 
 use HtmlObject\Element;
 
-class Script extends Element {
+class Script extends Element
+{
     /**
      * @var string
      */
@@ -14,7 +15,8 @@ class Script extends Element {
      * @param string|array|null $value
      * @param array  $attributes
      */
-    public function __construct($value = null, $attributes = []) {
+    public function __construct($value = null, $attributes = [])
+    {
         if (is_array($value)) {
             $attributes = $value;
             $value = null;

@@ -21,11 +21,18 @@
     ],
     "require-dev": {
         "pestphp/pest": "^1.22",
-        "phpstan/phpstan": "^1.8"
+        "phpstan/phpstan": "^1.8",
+        "squizlabs/php_codesniffer": "^3.7"
     },
     "config": {
         "allow-plugins": {
             "pestphp/pest-plugin": true
         }
+    },
+    "scripts": {
+      "phpstan": "phpstan",
+      "phpcs": "phpcs",
+      "phpcbf": "phpcbf",
+      "pest": "pest"
     }
 }

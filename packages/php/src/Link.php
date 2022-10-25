@@ -4,7 +4,8 @@ namespace Studiometa\WebpackConfig;
 
 use HtmlObject\Element;
 
-class Link extends Element {
+class Link extends Element
+{
     /**
      * @var string
      */
@@ -18,7 +19,8 @@ class Link extends Element {
     /**
      * @param array $attributes
      */
-    public function __construct($attributes = []) {
-        parent::__construct($this->element,  null, $attributes);
+    public function __construct($attributes = [])
+    {
+        parent::__construct($this->element, null, $attributes);
     }
 }
