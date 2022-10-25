@@ -1,38 +1,39 @@
 {
-    "name": "studiometa/webpack-config",
-    "description": "PHP Helpers for @studiometa/webpack-config",
-    "type": "library",
-    "require": {
-        "php": "^7.3|^8.0",
-        "anahkiasen/html-object": "^1.4",
-        "doctrine/collections": "^1.8"
-    },
-    "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Studiometa\\WebpackConfig\\": "packages/php/src"
-        }
-    },
-    "authors": [
-        {
-            "name": "Titouan Mathis",
-            "email": "titouan@studiometa.fr"
-        }
-    ],
-    "require-dev": {
-        "pestphp/pest": "^1.22",
-        "phpstan/phpstan": "^1.8",
-        "squizlabs/php_codesniffer": "^3.7"
-    },
-    "config": {
-        "allow-plugins": {
-            "pestphp/pest-plugin": true
-        }
-    },
-    "scripts": {
-      "phpstan": "phpstan",
-      "phpcs": "phpcs",
-      "phpcbf": "phpcbf",
-      "pest": "pest"
+  "name": "studiometa/webpack-config",
+  "version": "4.0.4",
+  "description": "PHP Helpers for @studiometa/webpack-config",
+  "type": "library",
+  "require": {
+    "php": "^7.3|^8.0",
+    "anahkiasen/html-object": "^1.4",
+    "doctrine/collections": "^1.8"
+  },
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Studiometa\\WebpackConfig\\": "packages/php/src"
     }
+  },
+  "authors": [
+    {
+      "name": "Titouan Mathis",
+      "email": "titouan@studiometa.fr"
+    }
+  ],
+  "require-dev": {
+    "pestphp/pest": "^1.22",
+    "phpstan/phpstan": "^1.8",
+    "squizlabs/php_codesniffer": "^3.7"
+  },
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  },
+  "scripts": {
+    "phpstan": "phpstan",
+    "phpcs": "phpcs",
+    "phpcbf": "phpcbf",
+    "pest": "pest"
+  }
 }
