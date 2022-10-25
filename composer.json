@@ -4,7 +4,8 @@
     "type": "library",
     "require": {
         "php": "^7.3|^8.0",
-        "anahkiasen/html-object": "^1.4"
+        "anahkiasen/html-object": "^1.4",
+        "doctrine/collections": "^1.8"
     },
     "license": "MIT",
     "autoload": {
@@ -17,5 +18,14 @@
             "name": "Titouan Mathis",
             "email": "titouan@studiometa.fr"
         }
-    ]
+    ],
+    "require-dev": {
+        "pestphp/pest": "^1.22",
+        "phpstan/phpstan": "^1.8"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
 }

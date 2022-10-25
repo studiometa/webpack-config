@@ -1,24 +1,39 @@
 <?php
 
 namespace Studiometa\WebpackConfig;
+
 use Studiometa\WebpackConfig\Traits\AssetsPath;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class Entry {
     use AssetsPath;
 
-    private $entrypoint;
+    /**
+     * @var ArrayCollection<string, Script>
+     */
+    public $scripts;
 
-    public $scripts = [];
+    /**
+     * @var ArrayCollection<string, Link>
+     */
+    public $styles;
 
-    public $styles = [];
+    /**
+     * @var ArrayCollection<string, Link>
+     */
+    public $preload;
 
-    public $preload = [];
-
-    public $prefetch = [];
+    /**
+     * @var ArrayCollection<string, Link>
+     */
+    public $prefetch;
 
     public function __construct(array $entrypoint, string $publicPath) {
         $this->publicPath = $publicPath;
-        $this->entrypoint = $entrypoint;
+        $this->scripts = new ArrayCollection();
+        $this->styles = new ArrayCollection();
+        $this->preload = new ArrayCollection();
+        $this->prefetch = new ArrayCollection();
 
         $assets = $entrypoint['assets'] ?? [];
         $preload = $entrypoint['preload'] ?? [];
@@ -55,19 +70,22 @@ class Entry {
      * @param array<string> $assets
      * @param 'scripts'|'styles'|'preload'|'prefetch' $type
      * @param callable $callback
+     * @return $this
      */
     private function addAssets(?array $assets, string $type, callable $callback) {
         if (empty($assets)) {
-            return;
+            return $this;
         }
 
         foreach ($assets as $asset) {
-            if (key_exists($asset, $this->$type)) {
+            if (!is_null($this->$type->get($asset))) {
                 continue;
             }
 
-            $this->$type[$asset] = $callback($this->getAssetPath($asset));
+            $this->$type->set($asset, $callback($this->getAssetPath($asset)));
         }
+
+        return $this;
     }
 
     /**
@@ -75,6 +93,6 @@ class Entry {
      * @return string
      */
     public function __toString():string {
-        return implode(PHP_EOL, array_merge($this->preload, $this->styles, $this->scripts, $this->prefetch)) . PHP_EOL;
+        return implode(PHP_EOL, array_merge($this->preload->toArray(), $this->styles->toArray(), $this->scripts->toArray(), $this->prefetch->toArray())) . PHP_EOL;
     }
 }

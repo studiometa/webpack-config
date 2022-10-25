@@ -14,3 +14,4 @@ backup/
 /packages/*/package-lock.json
 
 /vendor/
+.phpunit.result.cache

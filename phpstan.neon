@@ -1,0 +1,6 @@
+#$ vendor/bin/phpstan analyze
+parameters:
+  level: max
+  paths:
+    - ./packages/php/src
+  checkMissingIterableValueType: false

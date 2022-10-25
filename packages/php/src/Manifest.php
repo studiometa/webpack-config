@@ -9,14 +9,14 @@ class Manifest {
     use AssetsPath;
 
     /**
-     * @var string
-     */
-    public $manifestPath;
-
-    /**
      * @var array
      */
-    public $manifest;
+    private $manifest;
+
+    /**
+     * @var array<Entry>
+     */
+    private $entries = [];
 
     /**
      * Constructor.
@@ -28,9 +28,20 @@ class Manifest {
             throw new Exception(sprintf('Could not find a manifest in %s', $path));
         }
 
-        $this->manifestPath = $path;
+        $content = file_get_contents($path);
+
+        if (!$content) {
+            throw new Exception(sprintf('Could not read the manifest in %s', $path));
+        }
+
+        $json = json_decode($content, true);
+
+        if (!is_array($json) || !key_exists('entrypoints', $json)) {
+            throw new Exception('Manifest schema is not valid.');
+        }
+
+        $this->manifest = $json;
         $this->publicPath = $publicPath;
-        $this->manifest = json_decode(file_get_contents($path), true);
 
         foreach ($this->manifest['entrypoints'] as $name => $entrypoint) {
             $this->entries[$name] = new Entry($entrypoint, $publicPath);
@@ -67,10 +78,10 @@ class Manifest {
 
         // Merge all entries
         foreach ($this->entries as $entry) {
-            $preload = $preload + $entry->preload;
-            $styles = $styles + $entry->styles;
-            $scripts = $scripts + $entry->scripts;
-            $prefetch = $prefetch + $entry->prefetch;
+            $preload = $preload + $entry->preload->toArray();
+            $styles = $styles + $entry->styles->toArray();
+            $scripts = $scripts + $entry->scripts->toArray();
+            $prefetch = $prefetch + $entry->prefetch->toArray();
         }
 
         return implode(PHP_EOL, array_merge($preload, $styles, $scripts, $prefetch)) . PHP_EOL;
