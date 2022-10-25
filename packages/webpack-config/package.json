@@ -107,7 +107,7 @@
     "webpack-hot-middleware": "^2.25.2",
     "webpack-merge": "^5.8.0",
     "webpack-module-hot-accept": "^1.0.5",
-    "webpack-remove-empty-scripts": "^0.8.4",
+    "webpack-remove-empty-scripts": "^1.0.1",
     "webpackbar": "^5.0.2"
   }
 }

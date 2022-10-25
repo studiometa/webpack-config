@@ -19,7 +19,7 @@ Create a `meta.config.js` file at the root of yout project:
 ````ts
 // meta.config.mjs
 import { defineConfig } from '@studiometa/webpack-config';
-import { twig, yaml, tailwindcss, prototyping, eslint, stylelint } from '@studiometa/webpack-config/presets';
+import { twig, yaml, tailwindcss, prototyping, eslint, stylelint, withContentHash } from '@studiometa/webpack-config/presets';
 import vue from '@studiometa/webpack-config-preset-vue-3';
 
 export default defineConfig({
@@ -139,7 +139,8 @@ export default defineConfig({
     tailwindcss(), // use the `tailwindcss` preset,
     prototyping(), // use the `prototyping` preset
     yaml(), // use the `yaml` preset,
-    vue(), // use the Vue 3 preset
+    vue(), // use the Vue 3 preset,
+    withContentHash(), // use the content hash preset
     {
       name: 'my-custom-preset',
       handler(metaConfig, { extendWebpack, extendBrowsersync, isDev }) {
@@ -201,6 +202,7 @@ Presets can be used to extend the CLI configuration elegantly. The following pre
 - [`prototyping`](#prototyping)
 - [`yaml`](#yaml)
 - [`vue`](#vue)
+- [`withContentHash`](#withContentHash)
 
 Read their documentation below to find out how to use and configure them.
 
@@ -469,6 +471,25 @@ import vue from '@studiometa/webpack-config-preset-vue-3';
 
 export default defineConfig({
   presets: [vue()],
+});
+```
+
+### `withContentHash`
+
+Add content hash to filenames in production.
+
+#### Options
+
+This preset has no options.
+
+#### Example
+
+```js
+import { defineConfig } from '@studiometa/webpack-config';
+import { withContentHash } from '@studiometa/webpack-config/presets';
+
+export default defineConfig({
+  presets: [withContentHash()],
 });
 ```
 

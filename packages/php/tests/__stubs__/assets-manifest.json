@@ -1,0 +1,14 @@
+{
+  "a.js": "a.hash.js",
+  "b.js": "b.hash.js",
+  "a.css": "a.hash.css",
+  "b.css": "b.hash.css",
+  "entrypoints": {
+    "js/app": {
+      "assets": { "js": ["a.hash.js", "b.hash.js"], "css": ["a.hash.css", "b.hash.css"] },
+      "preload": { "js": ["preload.hash.js"], "css": ["preload.hash.css"] },
+      "prefetch": { "js": ["prefetch.hash.js"], "css": ["prefetch.hash.css"] }
+    },
+    "css/app": { "assets": { "css": ["styles.hash.css"] } }
+  }
+}
