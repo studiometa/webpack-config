@@ -69,6 +69,8 @@ const getConfig = (metaConfig) => {
     if (browserSyncConfig.proxy) {
       browserSyncConfig.proxy = `https://${browserSyncConfig.proxy}`;
     }
+
+    // @todo try to create certificate with mkcert if available, otherwise simply use `https = true`
     browserSyncConfig.https = {
       cert: path.resolve(process.env.APP_SSL_CERT),
       key: path.resolve(process.env.APP_SSL_KEY),
