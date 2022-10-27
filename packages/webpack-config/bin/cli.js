@@ -16,7 +16,7 @@ cli
   .option('-t, --target <target>', 'Define targets to bundle for: `legacy` or `modern` or both.')
   .action(({ analyze = false, target = [] } = {}) => {
     const options = { analyze, target: Array.isArray(target) ? target : [target] };
-    build(options);
+    build(options).catch(() => process.exit(1));
   });
 
 cli

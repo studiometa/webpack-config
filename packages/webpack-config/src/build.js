@@ -18,6 +18,7 @@ async function build(config, name) {
         reject(err);
         return;
       }
+
       console.log(
         stats.toString({
           ...config.stats,
@@ -25,7 +26,12 @@ async function build(config, name) {
         })
       );
       console.log('');
-      resolve(stats);
+
+      if (stats.hasErrors()) {
+        reject(stats);
+      } else {
+        resolve(stats);
+      }
     });
   });
 }
