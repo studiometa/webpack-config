@@ -81,6 +81,7 @@
     "filemanager-webpack-plugin": "^7.0.0",
     "find-up": "^6.3.0",
     "glob": "^8.0.3",
+    "hot-accept-webpack-plugin": "^2.0.0-beta.7",
     "html-webpack-harddisk-plugin": "^2.0.0",
     "html-webpack-plugin": "^5.5.0",
     "js-yaml-loader": "^1.2.2",

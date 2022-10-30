@@ -2,6 +2,7 @@ import path from 'path';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
+import { HotAcceptPlugin } from 'hot-accept-webpack-plugin';
 import FriendlyErrorsWebpackPlugin from '@soda/friendly-errors-webpack-plugin';
 import getConfig from './utils/get-config.js';
 import getWebpackConfig from './webpack.dev.config.js';
@@ -56,6 +57,9 @@ export default async (options = {}) => {
       },
     }),
     new webpack.HotModuleReplacementPlugin(),
+    new HotAcceptPlugin({
+      test: /\.js$/,
+    }),
   ];
 
   webpackConfig.entry = Object.fromEntries(
