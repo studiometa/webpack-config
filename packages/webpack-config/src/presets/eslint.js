@@ -14,7 +14,7 @@ export default function eslint(options = {}) {
         webpackConfig.plugins.push(
           new ESLintPlugin({
             context: commonDir(config.src),
-            extensions: ['js', 'vue'],
+            extensions: ['js', 'vue', 'ts'],
             fix: true,
             failOnError: !isDev,
             baseConfig: {

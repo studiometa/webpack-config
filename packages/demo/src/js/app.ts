@@ -4,9 +4,6 @@ import { createApp as createVueApp } from 'vue';
 import VueComponent from './VueComponent.vue';
 import config from './config.yaml';
 import configRaw from './config.yaml?raw';
-import ComponentRaw from './components/Component.js?raw';
-
-console.log({ ComponentRaw });
 
 /**
  * App class.
@@ -23,6 +20,7 @@ class App extends Base {
     ...config,
     components: {
       Cursor,
+      // eslint-disable-next-line import/extensions
       Component: () => import(/* webpackPrefetch: true */'./components/Component.js'),
     },
   };
