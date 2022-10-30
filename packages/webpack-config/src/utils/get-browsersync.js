@@ -80,8 +80,8 @@ const getConfig = (metaConfig) => {
   if (metaConfig.server && typeof metaConfig.server !== 'function') {
     browserSyncConfig.server = metaConfig.server;
   } else {
-    const APP_HOST = process.env.APP_HOST || process.env.APP_HOSTNAME;
-    browserSyncConfig.proxy = APP_HOST;
+    browserSyncConfig.proxy =
+      process.env.APP_HOST ?? process.env.APP_HOSTNAME ?? process.env.APP_URL;
   }
 
   if (metaConfig.watch && !WATCH_HANDLERS_BINDED) {
