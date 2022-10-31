@@ -9,7 +9,6 @@ const getConfig = (metaConfig) => {
   const browserSyncConfig = {
     open: false,
     logPrefix: '',
-    port: 3042,
     logFileChanges: false,
     logLevel: 'silent',
     notify: {
