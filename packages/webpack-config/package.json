@@ -80,6 +80,7 @@
     "eslint-webpack-plugin": "^3.2.0",
     "filemanager-webpack-plugin": "^7.0.0",
     "find-up": "^6.3.0",
+    "get-port": "^6.1.2",
     "glob": "^8.0.3",
     "hot-accept-webpack-plugin": "^2.0.0-beta.7",
     "html-webpack-harddisk-plugin": "^2.0.0",

@@ -1,4 +1,3 @@
-import path from 'path';
 import webpack from 'webpack';
 import webpackDevMiddleware from 'webpack-dev-middleware';
 import webpackHotMiddleware from 'webpack-hot-middleware';
@@ -8,12 +7,17 @@ import getConfig from './utils/get-config.js';
 import getWebpackConfig from './webpack.dev.config.js';
 import getServer from './utils/get-browsersync.js';
 
-export default async (options = {}) => {
+/**
+ * Init dev server.
+ * @param   {{ analyze?: boolean }} [options]
+ * @returns {Promise<void>}
+ */
+export default async function dev(options = {}) {
   process.env.NODE_ENV = 'development';
 
   const config = await getConfig(options);
   const webpackConfig = await getWebpackConfig(config);
-  const server = getServer(config);
+  const server = await getServer(config);
 
   const webpackBar = webpackConfig.plugins.find(
     (plugin) => plugin.constructor.name === 'WebpackBarPlugin'
