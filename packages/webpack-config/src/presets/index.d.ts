@@ -6,7 +6,7 @@ export type Preset = {
   name: string;
   handler(config: MetaConfig, utils:{
     extendWebpack: typeof extendWebpackConfig,
-    extendBrowserySync: typeof extendBrowsersyncConfig,
+    extendBrowsersync: typeof extendBrowsersyncConfig,
     isDev: boolean,
   }):Promise<void>;
 }
