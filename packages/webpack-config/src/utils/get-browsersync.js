@@ -1,53 +1,9 @@
-import { execSync, spawnSync } from 'node:child_process';
-import fs from 'node:fs';
-import path from 'node:path';
 import bs from 'browser-sync';
 import chalk from 'chalk';
 
 const instance = bs.create();
 
 let WATCH_HANDLERS_BINDED = false;
-
-/**
- * Create certificates on the fly.
- * @returns {{cert?:string,key?:string}}
- */
-function createCertificates() {
-  try {
-    execSync('which mkcert', { encoding: 'utf-8' });
-  } catch {
-    console.log('mkcert not found, skipping creating SSL certificates.');
-    return { cert: null, key: null };
-  }
-  const cachePath = path.join(
-    path.dirname(process.env.npm_package_json),
-    'node_modules/.cache/@studiometa/webpack-config/certificates/'
-  );
-
-  execSync(`mkdir -p ${cachePath}`);
-
-  const certPath = path.join(cachePath, 'localhost.cert');
-  const keyPath = path.join(cachePath, 'localhost.key');
-
-  if (fs.existsSync(certPath) && fs.existsSync(keyPath)) {
-    return {
-      cert: certPath,
-      key: keyPath,
-    };
-  }
-
-  try {
-    spawnSync(`mkcert`, [`-cert-file`, certPath, '-key-file', keyPath, 'localhost', '127.0.01']);
-  } catch {
-    console.log('could not create SSL certificates, continuing...');
-    return { cert: null, key: null };
-  }
-
-  return {
-    cert: certPath,
-    key: keyPath,
-  };
-}
 
 const getConfig = (metaConfig) => {
   const browserSyncConfig = {
@@ -101,16 +57,6 @@ const getConfig = (metaConfig) => {
         instance.watch(glob).on('change', instance.reload);
       }
     });
-  }
-
-  const { cert, key } = createCertificates();
-
-  // Enable `https://` with browserSync
-  if (cert && key) {
-    browserSyncConfig.https = {
-      cert,
-      key,
-    };
   }
 
   if (typeof metaConfig.server === 'function') {
