@@ -1,4 +1,3 @@
-import path from 'path';
 import bs from 'browser-sync';
 import chalk from 'chalk';
 
@@ -10,6 +9,7 @@ const getConfig = (metaConfig) => {
   const browserSyncConfig = {
     open: false,
     logPrefix: '',
+    port: 3042,
     logFileChanges: false,
     logLevel: 'silent',
     notify: {
@@ -36,8 +36,8 @@ const getConfig = (metaConfig) => {
   if (metaConfig.server && typeof metaConfig.server !== 'function') {
     browserSyncConfig.server = metaConfig.server;
   } else {
-    const APP_HOST = process.env.APP_HOST || process.env.APP_HOSTNAME;
-    browserSyncConfig.proxy = APP_HOST;
+    browserSyncConfig.proxy =
+      process.env.APP_HOST ?? process.env.APP_HOSTNAME ?? process.env.APP_URL;
   }
 
   if (metaConfig.watch && !WATCH_HANDLERS_BINDED) {
@@ -59,24 +59,6 @@ const getConfig = (metaConfig) => {
     });
   }
 
-  // Enable `https://` with browserSync
-  if (
-    process.env.APP_SSL &&
-    process.env.APP_SSL === 'true' &&
-    process.env.APP_SSL_CERT &&
-    process.env.APP_SSL_KEY
-  ) {
-    if (browserSyncConfig.proxy) {
-      browserSyncConfig.proxy = `https://${browserSyncConfig.proxy}`;
-    }
-
-    // @todo try to create certificate with mkcert if available, otherwise simply use `https = true`
-    browserSyncConfig.https = {
-      cert: path.resolve(process.env.APP_SSL_CERT),
-      key: path.resolve(process.env.APP_SSL_KEY),
-    };
-  }
-
   if (typeof metaConfig.server === 'function') {
     metaConfig.server(browserSyncConfig, instance);
   }
@@ -84,10 +66,15 @@ const getConfig = (metaConfig) => {
   return browserSyncConfig;
 };
 
+let config;
+
 export default (metaConfig) => ({
   instance,
   get config() {
-    return getConfig(metaConfig);
+    if (!config) {
+      config = getConfig(metaConfig);
+    }
+    return config;
   },
   get getInfo() {
     return () => {

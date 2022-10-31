@@ -1,5 +1,5 @@
 import { defineConfig } from '@studiometa/webpack-config';
-import { prototyping, yaml, eslint, stylelint } from '@studiometa/webpack-config/presets';
+import { prototyping, yaml, eslint, stylelint, https } from '@studiometa/webpack-config/presets';
 import vue from '@studiometa/webpack-config-preset-vue-3';
 
 export default defineConfig({
@@ -9,6 +9,7 @@ export default defineConfig({
     prototyping({ ts: true }),
     yaml(),
     vue(),
+    https(),
     {
       name: 'foo',
       handler: (metaConfig, { extendWebpack }) =>
