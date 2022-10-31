@@ -19,7 +19,7 @@ Create a `meta.config.js` file at the root of yout project:
 ````ts
 // meta.config.mjs
 import { defineConfig } from '@studiometa/webpack-config';
-import { twig, yaml, tailwindcss, prototyping, eslint, stylelint, withContentHash } from '@studiometa/webpack-config/presets';
+import { twig, yaml, tailwindcss, prototyping, eslint, stylelint, withContentHash, https } from '@studiometa/webpack-config/presets';
 import vue from '@studiometa/webpack-config-preset-vue-3';
 
 export default defineConfig({
@@ -141,6 +141,7 @@ export default defineConfig({
     yaml(), // use the `yaml` preset,
     vue(), // use the Vue 3 preset,
     withContentHash(), // use the content hash preset
+    https(), // use the https preset
     {
       name: 'my-custom-preset',
       handler(metaConfig, { extendWebpack, extendBrowsersync, isDev }) {
@@ -151,15 +152,12 @@ export default defineConfig({
 };
 ````
 
-Configure a `.env` file with the following values:
+Configure a `.env` file with one of the following variable defining your application domain to use for the proxy:
 
 ```bash
 APP_HOST=local.fqdn.com
-APP_SSL=true|false
-
-# If APP_SSL is true, add the following:
-APP_SSL_CERT=/absolute/path/to/ssl/cert
-APP_SSL_KEY=/absolute/path/to/ssl/key
+APP_HOSTNAME=local.fqdn.com
+APP_URL=https://local.fqdn.com
 ```
 
 You can then start the development server:
@@ -203,6 +201,7 @@ Presets can be used to extend the CLI configuration elegantly. The following pre
 - [`yaml`](#yaml)
 - [`vue`](#vue)
 - [`withContentHash`](#withContentHash)
+- [`https`](#https)
 
 Read their documentation below to find out how to use and configure them.
 
@@ -490,6 +489,25 @@ import { withContentHash } from '@studiometa/webpack-config/presets';
 
 export default defineConfig({
   presets: [withContentHash()],
+});
+```
+
+### `https`
+
+Generate an SSL certificate with [`mkcert`](https://github.com/FiloSottile/mkcert) for the local dev server. Can be useful when proxying to an HTTPS only url in dev mode.
+
+#### Options
+
+This preset has no options.
+
+#### Example
+
+```js
+import { defineConfig } from '@studiometa/webpack-config';
+import { https } from '@studiometa/webpack-config/presets';
+
+export default defineConfig({
+  presets: [https()],
 });
 ```
 
