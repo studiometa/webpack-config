@@ -2,7 +2,13 @@ import { findUp } from 'find-up';
 import extendBrowsersync from './extend-browsersync-config.js';
 import extendWebpack from './extend-webpack-config.js';
 
-export default async (options = { analyze: false, target: [] }) => {
+/**
+ * Get config from meta.config.js file.
+ *
+ * @param   {{ analyze: boolean, target: Array<'modern'|'legacy'> }} [options] CLI Options.
+ * @returns {import('../index').MetaConfig}
+ */
+export default async function getConfig({ analyze = false, target = [] } = {}) {
   const configPath = await findUp(['meta.config.js', 'meta.config.mjs']);
 
   if (!configPath) {
@@ -16,7 +22,7 @@ export default async (options = { analyze: false, target: [] }) => {
 
   const { default: config } = await import(configPath);
 
-  if (options.analyze) {
+  if (analyze) {
     config.analyze = true;
   }
 
@@ -43,9 +49,9 @@ export default async (options = { analyze: false, target: [] }) => {
   }
 
   // Read from command line args first, then meta.config.js, then set default
-  if (Array.isArray(options.target) && options.target.length) {
-    config.modern = options.target.includes('modern');
-    config.legacy = options.target.includes('legacy');
+  if (Array.isArray(target) && target.length) {
+    config.modern = target.includes('modern');
+    config.legacy = target.includes('legacy');
   } else if (config.target) {
     const targetConfig = Array.isArray(config.target) ? config.target : [config.target];
     config.modern = targetConfig.includes('modern');
@@ -71,4 +77,4 @@ export default async (options = { analyze: false, target: [] }) => {
   }
 
   return config;
-};
+}

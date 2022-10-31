@@ -109,7 +109,7 @@ export default function prototyping(options) {
         // Add debug comments
         Twig.Templates.registerParser('twig', (params) => {
           if (params.id) {
-            const namespace = Object.entries(params.options.namespaces).find(([key, value]) =>
+            const namespace = Object.entries(params.options.namespaces).find(([, value]) =>
               params.id.startsWith(value)
             );
             let tpl = params.id;

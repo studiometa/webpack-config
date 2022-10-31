@@ -16,4 +16,4 @@ export default async function extendWebpackConfig(config, fn) {
     await oldWebpackConfig(webpackConfig, isDev);
     await fn(webpackConfig, isDev);
   };
-};
+}

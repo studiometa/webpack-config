@@ -6,7 +6,7 @@ import getWebpackDevConfig from './webpack.dev.config.js';
  * Create a configuration.
  *
  * @param  {MetaConfig} config
- * @return {MetaConfig}
+ * @returns {MetaConfig}
  */
 export function createConfig(config) {
   return config;
@@ -28,15 +28,12 @@ export function defineConfig(config) {
  * @param {Object} options
  * @param {'production'|'development'} [options.mode]
  * @param {'modern'|'legacy'} [options.target]
- *
- * @return {import('webpack').Configuration}
+ * @returns {import('webpack').Configuration}
  */
-export function getWebpackConfig(
-  { mode, target } = { mode: process.env.NODE_ENV, target: 'legacy' }
-) {
-  const config = getMetaConfig();
+export function getWebpackConfig({ mode = process.env.NODE_ENV, target = 'legacy' } = {}) {
+  const config = getMetaConfig({ target: [target] });
   const options = { isModern: target === 'modern', isLegacy: target === 'legacy' };
   return mode === 'production'
     ? getWebpackProdConfig(config, options)
-    : getWebpackDevConfig(config, options);
+    : getWebpackDevConfig(config);
 }

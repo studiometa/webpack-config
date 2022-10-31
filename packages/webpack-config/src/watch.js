@@ -7,7 +7,7 @@ import getWebpackConfig from './webpack.prod.config.js';
 /**
  * Build a given Webpack config.
  * @param {WebpackConfig} config The Weback configuration object.
- * @param {String} name The name of the build.
+ * @param {string} name The name of the build.
  */
 async function build(config, name) {
   console.log(`Building ${name} bundle in ${config.output.path.replace(cwd(), '.')}...`);

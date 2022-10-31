@@ -36,7 +36,7 @@ export default class Html {
   /**
    * Render classes.
    * @param  {Classes} classes
-   * @return {string}
+   * @returns {string}
    */
   static renderClass(classes) {
     if (!classes) {
@@ -65,7 +65,7 @@ export default class Html {
   /**
    * Render a style attribute.
    * @param  {Record<string, string|number>} styles
-   * @return {string}
+   * @returns {string}
    */
   static renderStyleAttribute(styles) {
     if (!styles) {
@@ -87,7 +87,7 @@ export default class Html {
    * Render attributes.
    *
    * @param  {Record<string, any>} attributes
-   * @return {string}
+   * @returns {string}
    */
   static renderAttributes(attributes) {
     if (!attributes) {
@@ -132,7 +132,7 @@ export default class Html {
    * Convert a map to an object.
    *
    * @param  {Map} map
-   * @return {Record<string, any>}
+   * @returns {Record<string, any>}
    */
   static mapToObject(map) {
     const obj = {};
@@ -152,7 +152,7 @@ export default class Html {
    * @param  {string} name
    * @param  {Record<string, any>} attributes
    * @param  {string} content
-   * @return {string}
+   * @returns {string}
    */
   static renderTag(name, attributes, content = '') {
     const formattedAttributes = Html.renderAttributes(attributes);
