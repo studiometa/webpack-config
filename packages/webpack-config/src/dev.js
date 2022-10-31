@@ -103,4 +103,4 @@ export default async function dev(options = {}) {
   };
 
   server.instance.init(browserSyncConfig);
-};
+}

@@ -16,7 +16,13 @@ const { BundleAnalyzerPlugin } = BundleAnalyzerPluginImport;
 
 dotenv.config();
 
-export default async (config, options = {}) => {
+/**
+ * Get Webpack base config.
+ * @param   {import('./index').MetaConfig} config
+ * @param   {{ isModern?: boolean, isLegacy?: boolean }} [options]
+ * @returns {import('webpack').Configuration}
+ */
+export default async function getWebpackBaseConfig(config, options = {}) {
   const isDev = process.env.NODE_ENV !== 'production';
   const { isModern, isLegacy } = { isModern: false, isLegacy: false, ...options };
   const src = commonDir(config.src);
@@ -122,11 +128,7 @@ export default async (config, options = {}) => {
           exclude: [/node_modules[\\/](?!@studiometa[\\/]).*/],
           type: 'javascript/auto',
           // eslint-disable-next-line no-nested-ternary
-          use: isDev
-            ? [esbuild]
-            : isModern
-            ? [esbuild]
-            : [babel, esbuild],
+          use: isDev || isModern ? [esbuild] : [babel, esbuild],
         },
         {
           test: /\.(png|jpe?g|gif|webp)$/i,
@@ -308,4 +310,4 @@ export default async (config, options = {}) => {
   }
 
   return webpackBaseConfig;
-};
+}
