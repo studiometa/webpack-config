@@ -1,15 +1,21 @@
 import bs from 'browser-sync';
 import chalk from 'chalk';
+import getPort, { portNumbers } from 'get-port';
 
 const instance = bs.create();
 
 let WATCH_HANDLERS_BINDED = false;
 
-const getConfig = (metaConfig) => {
+/**
+ * Get BrowserSync config
+ * @param   {import('./index').MetaConfig} metaConfig
+ * @returns {Promise<import('@types/browser-sync').Options>}
+ */
+async function getConfig(metaConfig) {
   const browserSyncConfig = {
     open: false,
+    port: await getPort({ port: portNumbers(3000, 3100) }),
     logPrefix: '',
-    port: 3042,
     logFileChanges: false,
     logLevel: 'silent',
     notify: {
@@ -64,33 +70,40 @@ const getConfig = (metaConfig) => {
   }
 
   return browserSyncConfig;
-};
+}
 
 let config;
 
-export default (metaConfig) => ({
-  instance,
-  get config() {
-    if (!config) {
-      config = getConfig(metaConfig);
-    }
-    return config;
-  },
-  get getInfo() {
-    return () => {
-      if (!instance.active) {
-        return 'Application not running.\n';
-      }
+/**
+ * Get the BrowserSync config and other server stuff.
+ * @param   {import('./index').MetaConfig} metaConfig
+ * @returns {{ instance: import('@types/browser-sync').BrowserSyncInstance, config: import('@types/browser-sync').Options, getInfo: () => string }}
+ */
+export default async function getServer(metaConfig) {
+  if (!config) {
+    config = await getConfig(metaConfig);
+  }
+  return {
+    instance,
+    get config() {
+      return config;
+    },
+    get getInfo() {
+      return () => {
+        if (!instance.active) {
+          return 'Application not running.\n';
+        }
 
-      const url = new URL('http://localhost');
-      url.port = instance.getOption('port');
-      url.protocol = this.config.https ? 'https://' : 'http://';
+        const url = new URL('http://localhost');
+        url.port = instance.getOption('port');
+        url.protocol = this.config.https ? 'https://' : 'http://';
 
-      const proxy = instance.getOption('proxy');
+        const proxy = instance.getOption('proxy');
 
-      return `Application running at ${chalk.blue(url.toString())}${
-        proxy ? chalk.white(` (proxying ${chalk.blue(proxy.get('target'))})`) : ''
-      }\n`;
-    };
-  },
-});
+        return `Application running at ${chalk.blue(url.toString())}${
+          proxy ? chalk.white(` (proxying ${chalk.blue(proxy.get('target'))})`) : ''
+        }\n`;
+      };
+    },
+  };
+}

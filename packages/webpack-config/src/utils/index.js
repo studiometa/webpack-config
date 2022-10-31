@@ -1,7 +1,7 @@
 /**
  * Test if the given input has a trailing slash.
  * @param {string = ''} input The string to test.
- * @return {boolean}
+ * @returns {boolean}
  */
 export function hasTrailingSlash(input = '') {
   return input.endsWith('/');
@@ -10,7 +10,7 @@ export function hasTrailingSlash(input = '') {
 /**
  * Make sure that a string does not end with a trailing slash.
  * @param {string = ''} input The string to test.
- * @return {string} The string without trailing slash.
+ * @returns {string} The string without trailing slash.
  */
 export function withoutTrailingSlash(input = '') {
   return (hasTrailingSlash(input) ? input.slice(0, -1) : input) || '/';
@@ -19,7 +19,7 @@ export function withoutTrailingSlash(input = '') {
 /**
  * Make sure the string given ends with a trailing slash.
  * @param  {string = ''} input The string to test.
- * @return {string} The string with a trailing slash.
+ * @returns {string} The string with a trailing slash.
  */
 export function withTrailingSlash(input = '') {
   return input.endsWith('/') ? input : `${input}/`;
@@ -28,7 +28,7 @@ export function withTrailingSlash(input = '') {
 /**
  * Test if the given input has a leading slash.
  * @param {string = ''} input The string to test.
- * @return {boolean}
+ * @returns {boolean}
  */
 export function hasLeadingSlash(input = '') {
   return input.startsWith('/');
@@ -37,10 +37,10 @@ export function hasLeadingSlash(input = '') {
 /**
  * Make sure the given string does not have a leading slash.
  * @param {string = ''} input The string to test.
- * @return {string} The string without leading slash.
+ * @returns {string} The string without leading slash.
  */
 export function withoutLeadingSlash(input = '') {
-  return (hasLeadingSlash(input) ? input.substr(1) : input) || '/';
+  return (hasLeadingSlash(input) ? input.slice(1) : input) || '/';
 }
 
 /**
