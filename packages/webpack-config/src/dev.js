@@ -62,7 +62,7 @@ export default async function dev(options = {}) {
     }),
     new webpack.HotModuleReplacementPlugin(),
     new HotAcceptPlugin({
-      test: /\.js$/,
+      test: /^(?!.*\/node_modules\/).*\.(js|ts|mjs|cjs)$/,
     }),
   ];
 
