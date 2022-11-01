@@ -1,8 +1,8 @@
 diff --git a/node_modules/twig-html-loader/index.js b/node_modules/twig-html-loader/index.js
-index 55f0919..28d0df6 100644
+index 55f0919..7c126bc 100644
 --- a/node_modules/twig-html-loader/index.js
 +++ b/node_modules/twig-html-loader/index.js
-@@ -45,7 +45,7 @@ const relativePathsToAbsolutePathsForSourceFn = (str, resourcePath) => {
+@@ -45,14 +45,14 @@ const relativePathsToAbsolutePathsForSourceFn = (str, resourcePath) => {
    return result;
  };
  
@@ -11,12 +11,40 @@ index 55f0919..28d0df6 100644
    // eslint-disable-next-line no-param-reassign
    source = relativePathsToAbsolutePathsForSourceFn(source, this.resourcePath);
  
-@@ -85,7 +85,7 @@ module.exports = function loader(source) {
+   try {
+     const query = utils.getOptions(this) || {};
+     let data = query.data || {};
+-    const templateFile = require.resolve(this.resource);
++    const templateFile = require.resolve(this.resourcePath);
+     const options = {
+       path: templateFile,
+       data: source,
+@@ -84,13 +84,6 @@ module.exports = function loader(source) {
+       Twig.extend(query.extend);
      }
  
-     if (typeof data === 'function') {
+-    if (typeof data === 'function') {
 -      data = data(this);
+-      if (typeof data !== 'object') {
+-        this.emitError('data parameter should return an object');
+-      }
+-    }
+-
+     const registry = [];
+ 
+     Twig.extend((Twig) => {
+@@ -105,6 +98,14 @@ module.exports = function loader(source) {
+     });
+ 
+     const template = Twig.twig(options);
++
++    if (typeof data === 'function') {
 +      data = await data(this);
-       if (typeof data !== 'object') {
-         this.emitError('data parameter should return an object');
-       }
++      if (typeof data !== 'object') {
++        this.emitError('data parameter should return an object');
++      }
++    }
++
+     const output = template.render(data);
+ 
+     registry.forEach(this.addDependency);
