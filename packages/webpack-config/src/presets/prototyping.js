@@ -35,6 +35,7 @@ export default function prototyping(options) {
               const resourceFilename = path.basename(context.resourcePath);
               let data = {};
               const query = new URLSearchParams(context.resourceQuery);
+              const params = query.has('params') ? JSON.parse(query.get('params')) : null;
 
               // Try to get data from JS or TS file
               const dataLoaderPaths = ['.ts', '.js'].map((extension) =>
@@ -49,8 +50,7 @@ export default function prototyping(options) {
               if (dataLoaderPath) {
                 context.addDependency(dataLoaderPath);
                 const loader = await context.importModule(dataLoaderPath);
-                const params = query.has('params') ? JSON.parse(query.get('params')) : null;
-                data = await loader.data(params);
+                data = await loader.data({ ...twigContext, params });
               }
 
               // Try to get content from MD file
@@ -65,7 +65,7 @@ export default function prototyping(options) {
                 data.content = loader;
               }
 
-              return { ...twigContext, ...data };
+              return { ...twigContext, ...data, page: { params } };
             },
           },
           html: {
@@ -246,6 +246,17 @@ export default function prototyping(options) {
           file.replace(twigExtensionRegex, '').replace(dynamicRouteRegex, '(?<$1>.*)')
         );
 
+        // Add dynamic folders
+        if (file.endsWith('index.twig')) {
+          const dynamicFoldersGlob = `${path.dirname(file).replace(dynamicRouteRegex, '*')}/`;
+          const dynamicFolders = glob.sync(dynamicFoldersGlob, { cwd: pageRoot });
+          dynamicFolders.forEach((dynamicFolder) => {
+            if (!dynamicRouteRegex.test(dynamicFolder)) {
+              dynamicFiles.add(path.join(dynamicFolder, 'index'));
+            }
+          });
+        }
+
         return Array.from(dynamicFiles).map((dynamicFile) => {
           const params = new URLSearchParams();
           const absoluteDynamicFile = path.join(pageRoot, dynamicFile);
@@ -273,6 +284,10 @@ export default function prototyping(options) {
           });
         });
       });
+
+      twigContext.site = {
+        links: plugins.map((html) => `/${html.userOptions.filename}`),
+      };
 
       if (!isDev && fs.existsSync(path.resolve('./public'))) {
         plugins.push(

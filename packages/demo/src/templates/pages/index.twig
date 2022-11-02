@@ -3,6 +3,7 @@
 {% block body %}
   hello world
   {{ foo }}
+  {{ fn() }}
   <div class="w-96 h-96 my-32 rounded-3xl bg-green-400 rotate-45"></div>
   {% include '@components/component.twig' with { content: 'Lorem ipsum' } %}
   {% set foo = 'value' %}
