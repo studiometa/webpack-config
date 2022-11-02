@@ -19,7 +19,7 @@ Create a `meta.config.js` file at the root of yout project:
 ````ts
 // meta.config.mjs
 import { defineConfig } from '@studiometa/webpack-config';
-import { twig, yaml, tailwindcss, prototyping, eslint, stylelint, withContentHash, https } from '@studiometa/webpack-config/presets';
+import { twig, yaml, tailwindcss, prototyping, eslint, stylelint, hash, https } from '@studiometa/webpack-config/presets';
 import vue from '@studiometa/webpack-config-preset-vue-3';
 
 export default defineConfig({
@@ -140,7 +140,7 @@ export default defineConfig({
     prototyping(), // use the `prototyping` preset
     yaml(), // use the `yaml` preset,
     vue(), // use the Vue 3 preset,
-    withContentHash(), // use the content hash preset
+    hash(), // use the content hash preset
     https(), // use the https preset
     {
       name: 'my-custom-preset',
@@ -200,7 +200,7 @@ Presets can be used to extend the CLI configuration elegantly. The following pre
 - [`prototyping`](#prototyping)
 - [`yaml`](#yaml)
 - [`vue`](#vue)
-- [`withContentHash`](#withContentHash)
+- [`hash`](#hash)
 - [`https`](#https)
 
 Read their documentation below to find out how to use and configure them.
@@ -473,7 +473,7 @@ export default defineConfig({
 });
 ```
 
-### `withContentHash`
+### `hash`
 
 Add content hash to filenames in production.
 
@@ -485,10 +485,10 @@ This preset has no options.
 
 ```js
 import { defineConfig } from '@studiometa/webpack-config';
-import { withContentHash } from '@studiometa/webpack-config/presets';
+import { hash } from '@studiometa/webpack-config/presets';
 
 export default defineConfig({
-  presets: [withContentHash()],
+  presets: [hash()],
 });
 ```
 
