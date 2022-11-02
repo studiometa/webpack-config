@@ -15,11 +15,7 @@ export interface MetaConfig {
   /**
    * Toggle the modern build.
    */
-  modern?: boolean;
-  /**
-   * Toggle the legacy build.
-   */
-  legacy?: boolean;
+  target?: 'modern'|'legacy'|Array<'modern'|'legacy'>;
   /**
    * A list of glob for files to consider as entries.
    */
