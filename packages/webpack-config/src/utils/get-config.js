@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { findUp } from 'find-up';
 import extendBrowsersync from './extend-browsersync-config.js';
 import extendWebpack from './extend-webpack-config.js';
@@ -47,6 +48,14 @@ export default async function getConfig({ analyze = false, target = [] } = {}) {
         isDev: process.env.NODE_ENV !== 'production',
       });
     }
+  }
+
+  if (!config.context) {
+    config.context = path.dirname(configPath);
+  }
+
+  if (!path.isAbsolute(config.context)) {
+    config.context = path.resolve(process.cwd(), config.context);
   }
 
   // Read from command line args first, then meta.config.js, then set default

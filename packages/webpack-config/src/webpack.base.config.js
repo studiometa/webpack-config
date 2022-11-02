@@ -1,6 +1,6 @@
-import path from 'path';
+import path from 'node:path';
 import WebpackBar from 'webpackbar';
-import entry from 'webpack-glob-entry';
+import glob from 'glob';
 import RemoveEmptyScriptsPlugin from 'webpack-remove-empty-scripts';
 import webpack from 'webpack';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
@@ -55,11 +55,17 @@ export default async function getWebpackBaseConfig(config, options = {}) {
     },
   };
 
+  const entry = Object.fromEntries(
+    config.src.flatMap((entryGlob) => {
+      return glob.sync(entryGlob, { cwd: config.context }).map((file) => {
+        return [file.replace(src, '').replace(path.extname(file), ''), file];
+      });
+    })
+  );
+
   const webpackBaseConfig = {
-    entry: entry((filePath) => {
-      const extname = path.extname(filePath);
-      return filePath.replace(src, '').replace(extname, '');
-    }, ...config.src),
+    context: config.context,
+    entry,
     devtool: 'source-map',
     target: ['web', isModern ? 'es6' : 'es5'],
     output: {

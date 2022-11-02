@@ -105,7 +105,6 @@
     "webpack-assets-manifest": "^5.1.0",
     "webpack-bundle-analyzer": "^4.7.0",
     "webpack-dev-middleware": "^5.3.3",
-    "webpack-glob-entry": "^2.1.1",
     "webpack-hot-middleware": "^2.25.2",
     "webpack-merge": "^5.8.0",
     "webpack-module-hot-accept": "^1.0.5",

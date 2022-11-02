@@ -33,6 +33,10 @@ export interface MetaConfig {
    */
   public?: string;
   /**
+   * Base path for path resolution.
+   */
+  context?: string;
+  /**
    * Analyze the bundle with the WebpackBundleAnalyzer plugin.
    */
   analyze?: boolean;
