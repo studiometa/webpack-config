@@ -56,11 +56,11 @@ async function getConfig(metaConfig) {
             'A watch item should implement the following schema: [glob:string, callback:function]'
           );
         }
-        instance.watch(fileGlob, (event, file) => {
+        instance.watch(fileGlob, { cwd: metaConfig.context }, (event, file) => {
           callback(event, file, instance, browserSyncConfig);
         });
       } else {
-        instance.watch(glob).on('change', instance.reload);
+        instance.watch(glob, { cwd: metaConfig.context }).on('change', instance.reload);
       }
     });
   }
