@@ -159,10 +159,9 @@ export default function prototyping(options) {
       const { handler: tailwindcssPresetHandler } = tailwindcssPreset(opts.tailwindcss);
       await tailwindcssPresetHandler(config, { extendWebpack, extendBrowsersync, isDev });
 
-      config.context = './src';
       config.src = [
-        opts.ts ? './js/app.ts' : './js/app.js',
-        './css/**/[!_]*.scss',
+        opts.ts ? './src/js/app.ts' : './src/js/app.js',
+        './src/css/**/[!_]*.scss',
         ...(config.src ?? []),
       ];
       config.dist = config.dist ?? './dist';

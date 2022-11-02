@@ -70,7 +70,7 @@ export default async function getWebpackBaseConfig(config, options = {}) {
     target: ['web', isModern ? 'es6' : 'es5'],
     output: {
       path: path.resolve(
-        path.dirname(config.PATH),
+        config.context,
         config.dist,
         config.modern && config.legacy && isLegacy ? '__legacy__' : ''
       ),
