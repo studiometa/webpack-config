@@ -2,9 +2,9 @@
  * With hash preset.
  * @returns {import('./index').Preset}
  */
-export default function withContentHash() {
+export default function hash() {
   return {
-    name: 'with-content-hash',
+    name: 'hash',
     async handler(config, { extendWebpack, isDev }) {
       if (isDev) {
         return;

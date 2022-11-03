@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { findUp } from 'find-up';
 import extendBrowsersync from './extend-browsersync-config.js';
 import extendWebpack from './extend-webpack-config.js';
@@ -31,21 +32,30 @@ export default async function getConfig({ analyze = false, target = [] } = {}) {
   if (Array.isArray(config.presets) && config.presets.length) {
     console.log('Applying presets...');
 
-    await Promise.all(
-      config.presets.map(async (preset) => {
-        if (!preset.name && typeof preset.handler !== 'function') {
-          console.log('Preset misconfigured.', preset);
-          return;
-        }
+    // eslint-disable-next-line no-restricted-syntax
+    for (const preset of config.presets) {
+      if (!preset.name && typeof preset.handler !== 'function') {
+        console.log('Preset misconfigured.', preset);
+        return;
+      }
 
-        console.log(`Using the "${preset.name}" preset.`);
-        await preset.handler(config, {
-          extendBrowsersync,
-          extendWebpack,
-          isDev: process.env.NODE_ENV !== 'production',
-        });
-      })
-    );
+      console.log(`Using the "${preset.name}" preset.`);
+
+      // eslint-disable-next-line no-await-in-loop
+      await preset.handler(config, {
+        extendBrowsersync,
+        extendWebpack,
+        isDev: process.env.NODE_ENV !== 'production',
+      });
+    }
+  }
+
+  if (!config.context) {
+    config.context = path.dirname(configPath);
+  }
+
+  if (!path.isAbsolute(config.context)) {
+    config.context = path.resolve(process.cwd(), config.context);
   }
 
   // Read from command line args first, then meta.config.js, then set default

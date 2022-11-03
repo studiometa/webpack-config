@@ -15,11 +15,7 @@ export interface MetaConfig {
   /**
    * Toggle the modern build.
    */
-  modern?: boolean;
-  /**
-   * Toggle the legacy build.
-   */
-  legacy?: boolean;
+  target?: 'modern'|'legacy'|Array<'modern'|'legacy'>;
   /**
    * A list of glob for files to consider as entries.
    */
@@ -32,6 +28,10 @@ export interface MetaConfig {
    * The absolute public path of the generated dist folder.
    */
   public?: string;
+  /**
+   * Base path for path resolution.
+   */
+  context?: string;
   /**
    * Analyze the bundle with the WebpackBundleAnalyzer plugin.
    */
