@@ -5,6 +5,7 @@ import fs from 'fs';
 import glob from 'glob';
 import path from 'path';
 import merge from 'lodash.merge';
+import minimatch from 'minimatch';
 import twigPreset from './twig.js';
 import tailwindcssPreset from './tailwindcss.js';
 import hash from './hash.js';
@@ -33,9 +34,24 @@ export default function prototyping(options) {
             data: async (context) => {
               const resourceDir = path.dirname(context.resourcePath);
               const resourceFilename = path.basename(context.resourcePath);
-              let data = {};
               const query = new URLSearchParams(context.resourceQuery);
               const params = query.has('params') ? JSON.parse(query.get('params')) : null;
+
+              const localContext = {
+                site: twigContext,
+                pages(q) {
+                  return twigContext.pages.filter((page) => {
+                    return minimatch(page.href, q);
+                  });
+                },
+                page: {
+                  dirname: resourceDir,
+                  filename: resourceFilename,
+                  query,
+                  params,
+                },
+                content: '',
+              };
 
               // Try to get data from JS or TS file
               const dataLoaderPaths = ['.ts', '.js'].map((extension) =>
@@ -47,10 +63,11 @@ export default function prototyping(options) {
                   fs.existsSync(potentialDataLoaderPath)
                 );
 
+              let data;
               if (dataLoaderPath) {
                 context.addDependency(dataLoaderPath);
                 const loader = await context.importModule(dataLoaderPath);
-                data = await loader.data({ ...twigContext, params });
+                data = await loader.data(localContext);
               }
 
               // Try to get content from MD file
@@ -62,10 +79,10 @@ export default function prototyping(options) {
                 context.addDependency(contentLoaderPath);
                 const loader = await context.importModule(contentLoaderPath);
                 // Markdown is treated as raw for now
-                data.content = loader;
+                localContext.content = loader;
               }
 
-              return { ...twigContext, ...data, page: { params } };
+              return { ...localContext, ...data };
             },
           },
           html: {
@@ -221,9 +238,16 @@ export default function prototyping(options) {
         const dynamicMatches = file.match(dynamicRouteRegex);
         const templatePath = path.resolve(path.join(pageRoot, file));
         if (!dynamicMatches) {
+          const stats = fs.statSync(templatePath);
           return new HtmlWebpackPlugin({
             ...opts.html,
             template: templatePath,
+            templateParameters: {
+              updatedAt: stats.mtime,
+              createdAt: stats.birthtime,
+              templatePath,
+              params: {},
+            },
             filename: file.replace(twigExtensionRegex, '.html'),
             alwaysWriteToDisk: true,
           });
@@ -276,18 +300,31 @@ export default function prototyping(options) {
             params.set('content', `${absoluteDynamicFile}.md`);
           }
 
+          const stats = fs.statSync(params.get('content') ?? params.get('data') ?? templatePath);
+
           return new HtmlWebpackPlugin({
             ...opts.html,
             template: `${templatePath}?${params}`,
+            templateParameters: {
+              createdAt: stats.birthtime,
+              updatedAt: stats.mtime,
+              templatePath,
+              ...Object.fromEntries(params.entries()),
+              params: JSON.parse(JSON.stringify(matches.groups)),
+            },
             filename: `${dynamicFile}.html`,
             alwaysWriteToDisk: true,
           });
         });
       });
 
-      twigContext.site = {
-        links: plugins.map((html) => `/${html.userOptions.filename}`),
-      };
+      twigContext.pages = plugins.map((html) => ({
+        href: `/${html.userOptions.filename}`,
+        meta: html.userOptions.templateParameters,
+      }));
+
+      // console.log(...twigContext.pages);
+      // process.exit();
 
       if (!isDev && fs.existsSync(path.resolve('./public'))) {
         plugins.push(

@@ -4,6 +4,13 @@
   hello world
   {{ foo }}
   {{ fn() }}
+  <ul>
+    {% for note in pages('/notes/**/!(index).html') %}
+      <li>
+        <a href="{{ note.href }}">{{ note.href }}</a>
+      </li>
+    {% endfor %}
+  </ul>
   <div class="w-96 h-96 my-32 rounded-3xl bg-green-400 rotate-45"></div>
   {% include '@components/component.twig' with { content: 'Lorem ipsum' } %}
   {% set foo = 'value' %}
