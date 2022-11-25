@@ -70,6 +70,7 @@
     "browser-sync": "^2.29.1",
     "cac": "^6.7.14",
     "chalk": "^5.2.0",
+    "collect.js": "^4.34.3",
     "common-dir": "^3.0.1",
     "core-js": "^3.30.0",
     "css-loader": "^6.7.3",

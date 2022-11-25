@@ -6,10 +6,14 @@ import glob from 'glob';
 import path from 'path';
 import merge from 'lodash.merge';
 import minimatch from 'minimatch';
-import twigPreset from './twig.js';
-import tailwindcssPreset from './tailwindcss.js';
-import hash from './hash.js';
-import Html from '../utils/Html.js';
+import { collect } from 'collect.js';
+import twigPreset from '../twig.js';
+import tailwindcssPreset from '../tailwindcss.js';
+import yamlPreset from '../yaml.js';
+import hash from '../hash.js';
+import Html from '../../utils/Html.js';
+
+const dirname = path.dirname(new URL(import.meta.url).pathname);
 
 const LEADING_SLASH_REGEX = /^\//;
 const TWIG_FILE_REGEX = /\.twig$/;
@@ -40,6 +44,10 @@ export default function prototyping(options) {
               const localContext = {
                 site: twigContext,
                 pages(q) {
+                  if (!q) {
+                    return twigContext.pages;
+                  }
+
                   return twigContext.pages.filter((page) => {
                     return minimatch(page.href, q);
                   });
@@ -53,8 +61,8 @@ export default function prototyping(options) {
                 content: '',
               };
 
-              // Try to get data from JS or TS file
-              const dataLoaderPaths = ['.ts', '.js'].map((extension) =>
+              // Try to get data from JS, TS or YAML file
+              const dataLoaderPaths = ['.ts', '.js', '.yml'].map((extension) =>
                 path.join(resourceDir, resourceFilename.replace(/\.twig$/, extension))
               );
               const dataLoaderPath =
@@ -67,7 +75,7 @@ export default function prototyping(options) {
               if (dataLoaderPath) {
                 context.addDependency(dataLoaderPath);
                 const loader = await context.importModule(dataLoaderPath);
-                data = await loader.data(localContext);
+                data = dataLoaderPath.endsWith('.yml') ? loader : await loader.data(localContext);
               }
 
               // Try to get content from MD file
@@ -82,13 +90,14 @@ export default function prototyping(options) {
                 localContext.content = loader;
               }
 
-              return { ...localContext, ...data };
+              return { ...data, ...localContext };
             },
           },
           html: {
             template: './src/templates/index.twig',
             scriptLoading: 'defer',
           },
+          yaml: {},
         },
         options
       );
@@ -103,6 +112,14 @@ export default function prototyping(options) {
           acc[name] = path.resolve(file);
           return acc;
         }, opts.twig.namespaces || {});
+
+      // @todo wait for support of multiple path by namespace in twig.js
+      // opts.twig.namespaces.layouts = [
+      //   ...(Array.isArray(opts.twig.namespaces.layouts)
+      //     ? opts.twig.namespaces.layouts
+      //     : [opts.twig.namespaces.layouts]),
+      //   path.resolve(dirname, './layouts'),
+      // ].filter(Boolean);
 
       const extendTwig = typeof opts.twig.extend === 'function' ? opts.twig.extend : () => {};
       opts.twig.functions = {
@@ -245,7 +262,7 @@ export default function prototyping(options) {
             templateParameters: {
               updatedAt: stats.mtime,
               createdAt: stats.birthtime,
-              templatePath,
+              template: file,
               params: {},
             },
             filename: file.replace(twigExtensionRegex, '.html'),
@@ -308,7 +325,7 @@ export default function prototyping(options) {
             templateParameters: {
               createdAt: stats.birthtime,
               updatedAt: stats.mtime,
-              templatePath,
+              template: file,
               ...Object.fromEntries(params.entries()),
               params: JSON.parse(JSON.stringify(matches.groups)),
             },
@@ -318,13 +335,10 @@ export default function prototyping(options) {
         });
       });
 
-      twigContext.pages = plugins.map((html) => ({
+      twigContext.pages = collect(plugins).map((html) => ({
         href: `/${html.userOptions.filename}`,
         meta: html.userOptions.templateParameters,
       }));
-
-      // console.log(...twigContext.pages);
-      // process.exit();
 
       if (!isDev && fs.existsSync(path.resolve('./public'))) {
         plugins.push(
@@ -343,6 +357,8 @@ export default function prototyping(options) {
       await twigPresetHandler(config, { extendWebpack, extendBrowsersync, isDev });
       const { handler: tailwindcssPresetHandler } = tailwindcssPreset(opts.tailwindcss);
       await tailwindcssPresetHandler(config, { extendWebpack, extendBrowsersync, isDev });
+      const { handler: yamlPresetHandler } = yamlPreset(opts.yaml);
+      await yamlPresetHandler(config, { extendWebpack, extendBrowsersync, isDev });
 
       config.src = [
         opts.ts ? './src/js/app.ts' : './src/js/app.js',
@@ -356,7 +372,7 @@ export default function prototyping(options) {
       config.mergeCSS = config.mergeCSS ?? true;
       config.target = config.target ?? ['modern'];
 
-      const { handler: withContentHashHandler } = hash(opts.tailwindcss);
+      const { handler: withContentHashHandler } = hash();
       await withContentHashHandler(config, { extendWebpack, extendBrowsersync, isDev });
 
       await extendWebpack(config, async (webpackConfig) => {

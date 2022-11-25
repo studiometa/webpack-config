@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html {{ html_attributes(html_attr ?? null) }}>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ page_title ?? '@studiometa/webpack-config' }}</title>
+    {% block head %}{% endblock %}
+  </head>
+  <body {{ html_attributes(body_attr ?? null) }}>
+    {% block body %}
+      No content.
+    {% endblock %}
+  </body>
+</html>
