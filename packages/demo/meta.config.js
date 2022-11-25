@@ -7,7 +7,6 @@ export default defineConfig({
     (isDev) => (isDev ? null : eslint({ fix: false })),
     (isDev) => (isDev ? null : stylelint({ fix: false })),
     prototyping({ ts: true }),
-    yaml(),
     vue(),
     https(),
     {
@@ -21,6 +20,6 @@ export default defineConfig({
   // Exclude the `test.scss` file from the merge
   mergeCSS: /^(?!.*css\/test\.scss).*$/,
   webpack(config) {
-    // config.cache = false;
+    config.cache = false;
   },
 });

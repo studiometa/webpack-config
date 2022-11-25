@@ -3,8 +3,12 @@
 {% block body %}
   <h1>This is a single post</h1>
   <pre>
-  {{ _context|json_encode }}
+  {{ site.pages.all()|json_encode }}
   </pre>
+
+  {% for page in pages().where('meta.template', 'posts/[slug].twig').all() %}
+    <pre>{{ page|json_encode }}</pre>
+  {% endfor %}
 
   dede
 {% endblock %}
