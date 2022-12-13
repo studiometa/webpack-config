@@ -1,4 +1,8 @@
 import merge from 'lodash.merge';
+import { createRequire } from 'node:module';
+
+const require = createRequire(import.meta.url);
+const loader = require.resolve('../loaders/twig-html-loader.cjs');
 
 /**
  * Twig preset.
@@ -17,7 +21,7 @@ export default function twig(options = {}) {
           use: [
             'raw-loader',
             {
-              loader: 'twig-html-loader',
+              loader,
               options: opts,
             },
           ],
