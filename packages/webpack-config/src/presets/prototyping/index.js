@@ -42,6 +42,7 @@ export default function prototyping(options) {
               const params = query.has('params') ? JSON.parse(query.get('params')) : null;
 
               const localContext = {
+                is_dev: isDev,
                 site: twigContext,
                 pages(q) {
                   if (!q) {
