@@ -136,6 +136,10 @@ export default function prototyping(options) {
         html_classes(classes) {
           return Html.renderClass(classes);
         },
+        // eslint-disable-next-line camelcase
+        merge_html_attributes(attributes = null, defaultAttributes = null, requiredAttributes = null) {
+          return Html.mergeAttributes(attributes, defaultAttributes, requiredAttributes);
+        },
       };
 
       opts.twig.extend = (Twig) => {

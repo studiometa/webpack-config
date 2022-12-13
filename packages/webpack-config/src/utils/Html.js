@@ -129,6 +129,41 @@ export default class Html {
   }
 
   /**
+   * Merge HTML attributes with sane defaults.
+   *
+   * @param   {Record<string, any>} [attributes]
+   * @param   {Record<string, any>} defaultAttributes
+   * @param   {Record<string, any>} requiredAttributes
+   * @returns {Record<string, any>}
+   */
+  mergeAttributes(attributes = null, defaultAttributes = null, requiredAttributes = null) {
+    if (!attributes) {
+      attributes = {};
+    }
+
+    if (!defaultAttributes) {
+      defaultAttributes = {};
+    }
+
+    if (!requiredAttributes) {
+      requiredAttributes = {};
+    }
+
+    // Merge `class` attributes before the others
+    requiredAttributes.class = [
+      attributes.class ?? defaultAttributes.class ?? '',
+      requiredAttributes.class ?? '',
+    ].filter(Boolean);
+
+    // Remove the `class` attribute if empty
+    if (requiredAttributes.class.length < 1) {
+      delete requiredAttributes.class;
+    }
+
+    return { ...defaultAttributes, ...attributes, ...requiredAttributes };
+  }
+
+  /**
    * Convert a map to an object.
    *
    * @param  {Map} map
