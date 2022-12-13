@@ -138,7 +138,7 @@ export default function prototyping(options) {
           return Html.renderClass(classes);
         },
         // eslint-disable-next-line camelcase
-        merge_html_attributes(attributes = null, defaultAttributes = null, requiredAttributes = null) {
+        merge_html_attributes(attributes = {}, defaultAttributes = {}, requiredAttributes = {}) {
           return Html.mergeAttributes(attributes, defaultAttributes, requiredAttributes);
         },
       };

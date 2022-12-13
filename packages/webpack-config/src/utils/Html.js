@@ -136,19 +136,7 @@ export default class Html {
    * @param   {Record<string, any>} requiredAttributes
    * @returns {Record<string, any>}
    */
-  mergeAttributes(attributes = null, defaultAttributes = null, requiredAttributes = null) {
-    if (!attributes) {
-      attributes = {};
-    }
-
-    if (!defaultAttributes) {
-      defaultAttributes = {};
-    }
-
-    if (!requiredAttributes) {
-      requiredAttributes = {};
-    }
-
+  static mergeAttributes(attributes = {}, defaultAttributes = {}, requiredAttributes = {}) {
     // Merge `class` attributes before the others
     requiredAttributes.class = [
       attributes.class ?? defaultAttributes.class ?? '',
