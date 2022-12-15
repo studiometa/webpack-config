@@ -63,7 +63,7 @@ export default async function getWebpackBaseConfig(config, options = {}) {
     loader: 'esbuild-loader',
     options: {
       loader: 'ts',
-      target: isDev ? 'es2020' : 'es2015',
+      target: isDev ? 'es2022' : 'es2020',
       format: 'esm',
     },
   };
