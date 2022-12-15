@@ -5,6 +5,7 @@
  * @license https://github.com/studiometa/twig-toolkit/blob/master/LICENSE
  */
 import { paramCase } from 'param-case';
+import { escape } from 'html-escaper';
 
 /**
  * @typdef {string | Record<string, boolean> | Record<number, Classes>} Classes
@@ -122,7 +123,7 @@ export default class Html {
         }
       }
 
-      renderedAttributes.push(`${key}='${value}'`);
+      renderedAttributes.push(`${key}="${escape(value)}"`);
     }
 
     return renderedAttributes.join(' ');
