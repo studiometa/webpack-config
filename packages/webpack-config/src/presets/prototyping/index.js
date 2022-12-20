@@ -34,66 +34,7 @@ export default function prototyping(options) {
         {
           ts: false,
           tailwindcss: {},
-          twig: {
-            data: async (context) => {
-              const resourceDir = path.dirname(context.resourcePath);
-              const resourceFilename = path.basename(context.resourcePath);
-              const query = new URLSearchParams(context.resourceQuery);
-              const params = query.has('params') ? JSON.parse(query.get('params')) : null;
-
-              const localContext = {
-                is_dev: isDev,
-                site: twigContext,
-                pages(q) {
-                  if (!q) {
-                    return twigContext.pages;
-                  }
-
-                  return twigContext.pages.filter((page) => {
-                    return minimatch(page.href, q);
-                  });
-                },
-                page: {
-                  dirname: resourceDir,
-                  filename: resourceFilename,
-                  query,
-                  params,
-                },
-                content: '',
-              };
-
-              // Try to get data from JS, TS or YAML file
-              const dataLoaderPaths = ['.ts', '.js', '.yml'].map((extension) =>
-                path.join(resourceDir, resourceFilename.replace(/\.twig$/, extension))
-              );
-              const dataLoaderPath =
-                query.get('data') ??
-                dataLoaderPaths.find((potentialDataLoaderPath) =>
-                  fs.existsSync(potentialDataLoaderPath)
-                );
-
-              let data;
-              if (dataLoaderPath) {
-                context.addDependency(dataLoaderPath);
-                const loader = await context.importModule(dataLoaderPath);
-                data = dataLoaderPath.endsWith('.yml') ? loader : await loader.data(localContext);
-              }
-
-              // Try to get content from MD file
-              const contentLoaderPath =
-                query.get('content') ??
-                path.join(resourceDir, resourceFilename.replace(/\.twig$/, '.md'));
-
-              if (fs.existsSync(contentLoaderPath)) {
-                context.addDependency(contentLoaderPath);
-                const loader = await context.importModule(contentLoaderPath);
-                // Markdown is treated as raw for now
-                localContext.content = loader;
-              }
-
-              return { ...data, ...localContext };
-            },
-          },
+          twig: {},
           html: {
             template: './src/templates/index.twig',
             scriptLoading: 'defer',
@@ -103,16 +44,87 @@ export default function prototyping(options) {
         options
       );
 
-      const templateContext = path.resolve(config.context, 'src/templates');
-      const pageContext = path.resolve(templateContext, 'pages');
+      opts.twig.data = async (context) => {
+        const resourceDir = path.dirname(context.resourcePath);
+        const resourceFilename = path.basename(context.resourcePath);
+        const query = new URLSearchParams(context.resourceQuery);
 
-      opts.twig.namespaces = glob
-        .sync('*', { cwd: templateContext, absolute: true })
-        .reduce((acc, file) => {
-          const name = path.basename(file);
-          acc[name] = path.resolve(file);
-          return acc;
-        }, opts.twig.namespaces || {});
+        const href = query.get('href');
+        const page = twigContext.pages.firstWhere('meta.href', href);
+
+        let globalContext = {};
+        if (typeof options?.twig?.data === 'function') {
+          globalContext = await options.twig.data(twigContext);
+        } else if (typeof options?.twig?.data === 'string') {
+          const dataPath = path.resolve(options.twig.data);
+          context.addDependency(dataPath);
+          const loader = await context.importModule(dataPath);
+          globalContext =
+            dataPath.endsWith('.yml') || dataPath.endsWith('.yaml')
+              ? loader
+              : await loader.data(twigContext);
+        } else if (options?.twig?.data) {
+          globalContext = options.twig.data;
+        }
+
+        const localContext = {
+          ...globalContext,
+          // eslint-disable-next-line camelcase
+          is_dev: isDev,
+          site: {
+            ...twigContext,
+            page,
+          },
+          pages(q) {
+            if (!q) {
+              return twigContext.pages;
+            }
+
+            return twigContext.pages.filter((p) => {
+              return minimatch(p.href, q);
+            });
+          },
+          content: '',
+        };
+
+        // Try to get data from JS, TS or YAML file
+        const dataLoaderPaths = ['.ts', '.js', '.yml'].map((extension) =>
+          path.join(resourceDir, resourceFilename.replace(/\.twig$/, extension))
+        );
+        const dataLoaderPath =
+          query.get('data') ??
+          dataLoaderPaths.find((potentialDataLoaderPath) => fs.existsSync(potentialDataLoaderPath));
+
+        let data;
+        if (dataLoaderPath) {
+          context.addDependency(dataLoaderPath);
+          const loader = await context.importModule(dataLoaderPath);
+          data =
+            dataLoaderPath.endsWith('.yml') || dataLoaderPath.endsWith('.yaml')
+              ? loader
+              : await loader.data(localContext);
+        }
+
+        // Try to get content from MD file
+        const contentLoaderPath =
+          query.get('content') ??
+          path.join(resourceDir, resourceFilename.replace(/\.twig$/, '.md'));
+
+        if (fs.existsSync(contentLoaderPath)) {
+          context.addDependency(contentLoaderPath);
+          const loader = await context.importModule(contentLoaderPath);
+          // Markdown is treated as raw for now
+          localContext.content = loader;
+        }
+
+        return { ...data, ...localContext };
+      };
+
+      opts.twig.namespaces = glob.sync('./src/templates/*/').reduce((acc, file) => {
+        const name = path.basename(file);
+        acc[name] = path.resolve(file);
+        return acc;
+      }, opts.twig.namespaces || {});
 
       // @todo wait for support of multiple path by namespace in twig.js
       // opts.twig.namespaces.layouts = [
@@ -234,6 +246,7 @@ export default function prototyping(options) {
       const pageRoot = path.resolve('./src/templates/pages');
       const dynamicRouteRegex = /\[([^\]]*)\]/g;
       const twigExtensionRegex = /\.twig$/;
+      const indexHtmlRegex = /\/index\.html$/;
       const templateExtensionsRegex = /\.(twig|js|ts|md)$/;
 
       const twigTemplates = glob.sync('**/*.twig', { cwd: pageRoot });
@@ -261,16 +274,21 @@ export default function prototyping(options) {
         const templatePath = path.resolve(path.join(pageRoot, file));
         if (!dynamicMatches) {
           const stats = fs.statSync(templatePath);
+          const filename = file.replace(twigExtensionRegex, '.html');
+          const params = new URLSearchParams({
+            href: `/${filename}`.replace(indexHtmlRegex, '/'),
+          });
           return new HtmlWebpackPlugin({
             ...opts.html,
-            template: templatePath,
+            template: `${templatePath}?${params}`,
             templateParameters: {
               updatedAt: stats.mtime,
               createdAt: stats.birthtime,
               template: file,
+              ...Object.fromEntries(params.entries()),
               params: {},
             },
-            filename: file.replace(twigExtensionRegex, '.html'),
+            filename,
             alwaysWriteToDisk: true,
           });
         }
@@ -323,7 +341,8 @@ export default function prototyping(options) {
           }
 
           const stats = fs.statSync(params.get('content') ?? params.get('data') ?? templatePath);
-
+          const filename = `${dynamicFile}.html`;
+          params.set('href', `/${filename}`.replace(indexHtmlRegex, '/'));
           return new HtmlWebpackPlugin({
             ...opts.html,
             template: `${templatePath}?${params}`,
@@ -334,14 +353,14 @@ export default function prototyping(options) {
               ...Object.fromEntries(params.entries()),
               params: JSON.parse(JSON.stringify(matches.groups)),
             },
-            filename: `${dynamicFile}.html`,
+            filename,
             alwaysWriteToDisk: true,
           });
         });
       });
 
       twigContext.pages = collect(plugins).map((html) => ({
-        href: `/${html.userOptions.filename}`,
+        href: html.userOptions.templateParameters.href,
         meta: html.userOptions.templateParameters,
       }));
 
