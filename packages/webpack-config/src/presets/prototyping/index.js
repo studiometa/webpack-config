@@ -126,6 +126,8 @@ export default function prototyping(options) {
         return acc;
       }, opts.twig.namespaces || {});
 
+      opts.twig.namespaces['pkg-layouts'] = path.resolve(dirname, 'layouts');
+
       // @todo wait for support of multiple path by namespace in twig.js
       // opts.twig.namespaces.layouts = [
       //   ...(Array.isArray(opts.twig.namespaces.layouts)
