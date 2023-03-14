@@ -1,5 +1,6 @@
 import { cwd } from 'process';
-import webpack from 'webpack';
+// import webpack from 'webpack';
+import rspack from '@rspack/core';
 import getConfig from './utils/get-config.js';
 import getWebpackConfig from './webpack.prod.config.js';
 
@@ -13,7 +14,8 @@ async function build(config, name) {
 
   return new Promise((resolve, reject) => {
     console.time('Built in');
-    webpack(config, (err, stats) => {
+    const compiler = rspack.createCompiler(config);
+    compiler.run((err, stats) => {
       if (err) {
         console.error(err.message);
         reject(err);
