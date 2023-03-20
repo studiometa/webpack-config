@@ -1,12 +1,15 @@
 import { defineConfig } from '@studiometa/webpack-config';
-import { prototyping, yaml, eslint, stylelint, https } from '@studiometa/webpack-config/presets';
+import { prototyping, tailwindcss, yaml, eslint, stylelint, https, hash } from '@studiometa/webpack-config/presets';
 // import vue from '@studiometa/webpack-config-preset-vue-3';
 
 export default defineConfig({
+  src: ['./src/js/app.ts', './src/css/*.scss'],
+  dist: './dist',
   presets: [
-    (isDev) => (isDev ? null : eslint({ fix: false })),
-    (isDev) => (isDev ? null : stylelint({ fix: false })),
-    prototyping({ ts: true }),
+    // (isDev) => (isDev ? null : eslint({ fix: false })),
+    // (isDev) => (isDev ? null : stylelint({ fix: false })),
+    // prototyping({ ts: true }),
+    tailwindcss(),
     yaml(),
     // vue(),
     https(),
@@ -14,7 +17,7 @@ export default defineConfig({
       name: 'foo',
       handler: (metaConfig, { extendWebpack }) =>
         extendWebpack(metaConfig, async (webpackConfig) => {
-          webpackConfig.optimization.minimize = false;
+          // webpackConfig.optimization.minimize = false;
         }),
     },
   ],

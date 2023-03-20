@@ -22,7 +22,7 @@ export default function yaml(options = {}) {
           resourceQuery: /^(?!.*raw).*$/,
           use: [
             {
-              loader: 'js-yaml-loader',
+              loader: 'yaml-loader',
               options: opts.loaderOptions,
             },
           ],

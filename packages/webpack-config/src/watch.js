@@ -1,5 +1,6 @@
 import { cwd } from 'process';
-import webpack from 'webpack';
+import rspack from '@rspack/core';
+import FriendlyErrorsWebpackPlugin from '@soda/friendly-errors-webpack-plugin';
 import getConfig from './utils/get-config.js';
 import getWebpackConfig from './webpack.prod.config.js';
 
@@ -12,21 +13,28 @@ async function build(config, name) {
   console.log(`Building ${name} bundle in ${config.output.path.replace(cwd(), '.')}...`);
 
   return new Promise((resolve, reject) => {
-    webpack(config, (err, stats) => {
-      if (err) {
-        console.error(err.message);
-        reject(err);
-        return;
+    const compiler = rspack.createCompiler(config);
+
+    compiler.watch(
+      {
+        ignored: /node_modules/,
+      },
+      (err, stats) => {
+        if (err) {
+          console.error(err.message);
+          reject(err);
+          return;
+        }
+        console.log(
+          stats.toString({
+            ...config.stats,
+            colors: true,
+          })
+        );
+        console.log('');
+        resolve(stats);
       }
-      console.log(
-        stats.toString({
-          ...config.stats,
-          colors: true,
-        })
-      );
-      console.log('');
-      resolve(stats);
-    });
+    );
   });
 }
 
@@ -47,6 +55,32 @@ export default async (options = {}) => {
     colors: true,
     excludeAssets: [/\.map$/, /^(assets-)?manifest\.(js|json)$/],
   };
+
+  const webpackBar = webpackConfig.plugins.find(
+    (plugin) => plugin.constructor.name === 'WebpackBarPlugin'
+  );
+
+  let webpackBarHasRunOnce = false;
+  const [fancyReporter] = webpackBar.reporters;
+  webpackBar.reporters = [
+    {
+      progress: (...args) => {
+        if (webpackBarHasRunOnce) {
+          return;
+        }
+        fancyReporter.progress(...args);
+      },
+      done: () => {
+        webpackBarHasRunOnce = true;
+      },
+    },
+  ];
+
+  webpackConfig.plugins.push(
+    new FriendlyErrorsWebpackPlugin({
+      clearConsole: true,
+    })
+  );
 
   await build(webpackConfig, 'modern');
 };

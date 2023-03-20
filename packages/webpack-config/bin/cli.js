@@ -20,10 +20,7 @@ cli
     console.log(chalk.green(fullVersion), chalk.white('meta build'), '\n');
     const options = { analyze, target: Array.isArray(target) ? target : [target] };
 
-    build(options).catch((error) => {
-      console.error(error);
-      process.exit(1);
-    });
+    build(options).catch(() => process.exit(1));
   });
 
 cli

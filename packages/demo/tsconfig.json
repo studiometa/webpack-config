@@ -1,4 +1,7 @@
 {
+  "compilerOptions": {
+    "isolatedModules": true
+  },
   "include": [
     "src/js/**/*.js",
     "src/js/**/*.ts"

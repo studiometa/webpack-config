@@ -1,1 +1,2 @@
 log: true
+emits: ['dede']

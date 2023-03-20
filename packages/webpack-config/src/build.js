@@ -30,7 +30,6 @@ async function build(config, name) {
       );
       console.log('');
       console.timeEnd('Built in');
-
       if (stats.hasErrors()) {
         reject(stats);
       } else {

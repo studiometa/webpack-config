@@ -86,7 +86,7 @@
     "hot-accept-webpack-plugin": "^4.0.2",
     "html-webpack-harddisk-plugin": "^2.0.0",
     "html-webpack-plugin": "^5.5.0",
-    "js-yaml-loader": "^1.2.2",
+    "yaml-loader": "^0.8.0",
     "lodash.merge": "^4.6.2",
     "mini-css-extract-plugin": "^2.7.5",
     "param-case": "^3.0.4",

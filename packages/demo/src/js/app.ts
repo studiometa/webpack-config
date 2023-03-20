@@ -1,7 +1,7 @@
 import { Base, createApp } from '@studiometa/js-toolkit';
 import { Cursor } from '@studiometa/ui';
-import { createApp as createVueApp } from 'vue';
-import VueComponent from './VueComponent.vue';
+// import { createApp as createVueApp } from 'vue';
+// import VueComponent from './VueComponent.vue';
 import config from './config.yaml';
 import configRaw from './config.yaml?raw';
 
@@ -12,7 +12,7 @@ import configRaw from './config.yaml?raw';
 class App extends Base {
   /**
    * App configuration.
-   */
+   // */
   static config = {
     name: 'App',
     log: true,
@@ -21,7 +21,7 @@ class App extends Base {
     components: {
       Cursor,
       // eslint-disable-next-line import/extensions
-      Component: () => import(/* webpackPrefetch: true */ './components/Component.js'),
+      // Component: () => import('./components/Component.js'),
     },
   };
 
@@ -35,7 +35,7 @@ class App extends Base {
   async mounted() {
     this.$log('config', config, configRaw, this.$options);
     this.content = 'mounted';
-    this.VueComponent = VueComponent;
+    // this.VueComponent = VueComponent;
   }
 
   /**
@@ -46,9 +46,9 @@ class App extends Base {
       return;
     }
 
-    const { default: VueCounter } = await import(/* webpackPreload: true */ './Counter.vue');
-    this.vue = createVueApp(VueCounter);
-    this.vue.mount(this.$refs.vue);
+    // const { default: VueCounter } = await import(/* webpackPreload: true */ './Counter.vue');
+    // this.vue = createVueApp(VueCounter);
+    // this.vue.mount(this.$refs.vue);
   }
 
   /**
