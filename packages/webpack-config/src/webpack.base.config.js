@@ -11,7 +11,7 @@ const { BundleAnalyzerPlugin } = BundleAnalyzerPluginImport;
 
 dotenv.config();
 
-const LEADING_SLASH_REGEXT = /^\//;
+const LEADING_SLASH_REGEX = /^\//;
 
 /**
  * Get Webpack base config.
@@ -21,12 +21,13 @@ const LEADING_SLASH_REGEXT = /^\//;
  */
 export default async function getWebpackBaseConfig(config) {
   const isDev = process.env.NODE_ENV !== 'production';
-  const src = commonDir(config.src);
+  const src = path.resolve(config.context, commonDir(config.src));
 
   const entry = Object.fromEntries(
     config.src.flatMap((entryGlob) => {
-      return glob.sync(entryGlob, { cwd: config.context }).map((file) => {
-        return [file.replace(src, '').replace(path.extname(file), ''), file];
+      return glob.sync(entryGlob, { cwd: config.context, absolute: true }).map((file) => {
+        const name = file.replace(src, '').replace(path.extname(file), '').replace(LEADING_SLASH_REGEX, '');
+        return [name, file];
       });
     })
   );
