@@ -64,7 +64,7 @@
   "dependencies": {
     "@babel/plugin-transform-runtime": "^7.21.4",
     "@babel/preset-env": "^7.21.4",
-    "@rspack/core": "^0.1.0",
+    "@rspack/core": "^0.1.2",
     "@soda/friendly-errors-webpack-plugin": "^1.8.1",
     "autoprefixer": "^10.4.14",
     "babel-loader": "^9.1.2",
@@ -86,7 +86,6 @@
     "hot-accept-webpack-plugin": "^4.0.2",
     "html-webpack-harddisk-plugin": "^2.0.0",
     "html-webpack-plugin": "^5.5.0",
-    "yaml-loader": "^0.8.0",
     "lodash.merge": "^4.6.2",
     "mini-css-extract-plugin": "^2.7.5",
     "param-case": "^3.0.4",
@@ -110,6 +109,7 @@
     "webpack-merge": "^5.8.0",
     "webpack-module-hot-accept": "^1.0.5",
     "webpack-remove-empty-scripts": "^1.0.1",
-    "webpackbar": "^5.0.2"
+    "webpackbar": "^5.0.2",
+    "yaml-loader": "^0.8.0"
   }
 }
