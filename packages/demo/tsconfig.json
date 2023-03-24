@@ -1,6 +1,18 @@
 {
   "compilerOptions": {
-    "isolatedModules": true
+    "module": "esnext",
+    "noEmit": true,
+    "checkJs": true,
+    "strict": false,
+    "noImplicitThis": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "lib": ["DOM", "ESNext"],
+    "target": "ES2020",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "resolvePackageJsonExports": true,
+    "resolvePackageJsonImports": true
   },
   "include": [
     "src/js/**/*.js",

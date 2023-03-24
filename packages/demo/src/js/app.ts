@@ -21,7 +21,7 @@ class App extends Base {
     components: {
       Cursor,
       // eslint-disable-next-line import/extensions
-      // Component: () => import('./components/Component.js'),
+      Component: () => import('./components/Component.ts'),
     },
   };
 
