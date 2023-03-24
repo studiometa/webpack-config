@@ -1,6 +1,9 @@
 {
   "root": true,
   "extends": ["@studiometa/eslint-config"],
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
   "rules": {
     "import/extensions": ["error", "always", { "ignorePackages": false }],
     "import/no-extraneous-dependencies": "off",
