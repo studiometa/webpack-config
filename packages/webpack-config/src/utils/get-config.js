@@ -47,13 +47,15 @@ export default async function getConfig({ analyze = false, target = [] } = {}) {
         return;
       }
 
-      console.log(`Using the "${preset.name}" preset.`);
+      const start = performance.now();
       // eslint-disable-next-line no-await-in-loop
       await preset.handler(config, {
         extendBrowsersync,
         extendWebpack,
         isDev: process.env.NODE_ENV !== 'production',
       });
+      const duration = performance.now() - start;
+      console.log(`Using the "${preset.name}" preset (${duration.toFixed(3)}ms)`);
     }
   }
 
