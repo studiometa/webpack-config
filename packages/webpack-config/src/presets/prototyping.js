@@ -1,11 +1,12 @@
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import HtmlWebpackHarddiskPlugin from 'html-webpack-harddisk-plugin';
+// import HtmlWebpackPlugin from 'html-webpack-plugin';
+import rspackPluginHtml from '@rspack/plugin-html';
+// import HtmlWebpackHarddiskPlugin from 'html-webpack-harddisk-plugin';
 import FileManagerPlugin from 'filemanager-webpack-plugin';
 import fs from 'fs';
 import glob from 'glob';
 import path from 'path';
 import merge from 'lodash.merge';
-import twigPreset from './twig.js';
+import TwigModule from 'twig';
 import tailwindcssPreset from './tailwindcss.js';
 import hash from './hash.js';
 import Html from '../utils/Html.js';
@@ -14,6 +15,8 @@ const LEADING_SLASH_REGEX = /^\//;
 const TWIG_FILE_REGEX = /\.twig$/;
 const TWIG_TAG_END_HTML_ELEMENT_REGEX = /^end_html_element/;
 const TWIG_TAG_HTML_ELEMENT_REGEX = /^html_element\s+(.+?)(?:\s+|$)(?:with\s+([\S\s]+?))?$/;
+
+const { default: HtmlWebpackPlugin } = rspackPluginHtml;
 
 /**
  * Prototyping preset.
@@ -65,7 +68,9 @@ export default function prototyping(options) {
         },
       };
 
-      opts.twig.extend = (Twig) => {
+      const { twig } = TwigModule;
+      TwigModule.cache(true);
+      TwigModule.extend((Twig) => {
         extendTwig(Twig);
 
         Twig.exports.extendTag({
@@ -139,25 +144,33 @@ export default function prototyping(options) {
           }
           return new Twig.Template(params);
         });
-      };
+      });
 
-      const plugins = glob
-        .sync('**/*.twig', {
-          cwd: pageContext,
-          absolute: true,
-        })
-        .map(
-          (file) =>
-            new HtmlWebpackPlugin({
-              ...opts.html,
-              template: path.resolve(file),
-              filename: file
-                .replace(pageContext, '')
-                .replace(TWIG_FILE_REGEX, '.html')
-                .replace(LEADING_SLASH_REGEX, ''),
-              alwaysWriteToDisk: true,
-            })
-        );
+      const tplContext = path.resolve(config.context, 'src/templates/pages');
+      const plugins = glob.sync('**/*.twig', { cwd: tplContext, absolute: true }).map((file) => {
+        return new HtmlWebpackPlugin({
+          ...opts.html,
+          template: file,
+          templateCompiler: {
+            async compile(content, { filename }) {
+              console.time('twig:compile');
+              const tpl = twig({
+                ...opts.twig,
+                path: filename,
+                async: false,
+              });
+              const rendered = tpl.render({});
+              console.timeEnd('twig:compile');
+              return `function template() { return \`${rendered}\`; }\ntemplate`;
+            },
+          },
+          filename: file
+            .replace(tplContext, '')
+            .replace(LEADING_SLASH_REGEX, '')
+            .replace(/\.twig$/, '.html'),
+          alwaysWriteToDisk: true,
+        });
+      });
 
       if (!isDev && fs.existsSync(path.resolve('./public'))) {
         plugins.push(
@@ -172,8 +185,6 @@ export default function prototyping(options) {
         );
       }
 
-      const { handler: twigPresetHandler } = twigPreset(opts.twig);
-      await twigPresetHandler(config, { extendWebpack, extendBrowsersync, isDev });
       const { handler: tailwindcssPresetHandler } = tailwindcssPreset(opts.tailwindcss);
       await tailwindcssPresetHandler(config, { extendWebpack, extendBrowsersync, isDev });
 
@@ -194,9 +205,9 @@ export default function prototyping(options) {
 
       await extendWebpack(config, async (webpackConfig) => {
         webpackConfig.plugins = [...webpackConfig.plugins, ...plugins];
-        if (isDev) {
-          webpackConfig.plugins.push(new HtmlWebpackHarddiskPlugin());
-        }
+        // if (isDev) {
+        //   webpackConfig.plugins.push(new HtmlWebpackHarddiskPlugin());
+        // }
       });
     },
   };

@@ -1,5 +1,13 @@
 import { defineConfig } from '@studiometa/webpack-config';
-import { prototyping, tailwindcss, yaml, eslint, stylelint, https, hash } from '@studiometa/webpack-config/presets';
+import {
+  prototyping,
+  tailwindcss,
+  yaml,
+  eslint,
+  stylelint,
+  https,
+  hash,
+} from '@studiometa/webpack-config/presets';
 // import vue from '@studiometa/webpack-config-preset-vue-3';
 
 export default defineConfig({
@@ -8,9 +16,8 @@ export default defineConfig({
   presets: [
     // (isDev) => (isDev ? null : eslint({ fix: false })),
     // (isDev) => (isDev ? null : stylelint({ fix: false })),
-    // prototyping({ ts: true }),
-    tailwindcss(),
-    yaml(),
+    prototyping({ ts: true }),
+    // yaml(),
     // vue(),
     https(),
     {
