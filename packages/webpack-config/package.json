@@ -49,6 +49,7 @@
     "@studiometa/eslint-config": "^3.1.1",
     "@studiometa/prettier-config": "^2.1.1",
     "@types/browser-sync": "^2.27.0",
+    "@types/minimatch": "^5.1.2",
     "eslint": "^8.36.0",
     "prettier": "^2.8.7",
     "stylelint": "^13.13.1"
