@@ -19,13 +19,13 @@ Up
     <button type="button" class="counter__btn" @click="count = count - 1">
 Down
 </button>
-    <input class="counter__input" :value="count" readonly >
+    <input class="counter__input" :value="count" readonly />
 
-    <hr >
+    <hr />
     <vue-icon />
 
     <div class="vue-icon-bg m-10 p-10" />
-    <hr >
+    <hr />
   </div>
 </template>
 
