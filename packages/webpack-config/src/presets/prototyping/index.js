@@ -5,9 +5,11 @@ import fs from 'fs';
 import glob from 'glob';
 import path from 'path';
 import merge from 'lodash.merge';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import minimatch from 'minimatch';
 import { collect } from 'collect.js';
 import twigPreset from '../twig.js';
+import markdown from '../markdown.js';
 import tailwindcssPreset from '../tailwindcss.js';
 import yamlPreset from '../yaml.js';
 import hash from '../hash.js';
@@ -365,7 +367,7 @@ export default function prototyping(options) {
         meta: html.userOptions.templateParameters,
       }));
 
-      if (!isDev && fs.existsSync(path.resolve('./public'))) {
+      if (!isDev && fs.existsSync(path.resolve(config.context, './public'))) {
         plugins.push(
           // Public assets
           new FileManagerPlugin({
@@ -378,19 +380,25 @@ export default function prototyping(options) {
         );
       }
 
+      const presetHandlerOptions = { extendWebpack, extendBrowsersync, isDev };
+
+      const { handler: markdownHandler } = markdown(opts.markdown);
+      await markdownHandler(config, presetHandlerOptions);
+
       const { handler: twigPresetHandler } = twigPreset(opts.twig);
-      await twigPresetHandler(config, { extendWebpack, extendBrowsersync, isDev });
+      await twigPresetHandler(config, presetHandlerOptions);
+
       const { handler: tailwindcssPresetHandler } = tailwindcssPreset(opts.tailwindcss);
-      await tailwindcssPresetHandler(config, { extendWebpack, extendBrowsersync, isDev });
+      await tailwindcssPresetHandler(config, presetHandlerOptions);
+
       const { handler: yamlPresetHandler } = yamlPreset(opts.yaml);
-      await yamlPresetHandler(config, { extendWebpack, extendBrowsersync, isDev });
+      await yamlPresetHandler(config, presetHandlerOptions);
 
       config.src = [
         opts.ts ? './src/js/app.ts' : './src/js/app.js',
         './src/css/**/[!_]*.scss',
         ...(config.src ?? []),
       ];
-      config.dist = config.dist ?? './dist';
       config.public = config.public ?? '/';
       config.server = config.server ?? ['dist', 'public'];
       config.watch = ['./dist/**/*.html', ...(config.watch ?? [])];
