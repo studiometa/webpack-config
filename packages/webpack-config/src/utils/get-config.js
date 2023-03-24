@@ -22,6 +22,7 @@ export default async function getConfig({ analyze = false, target = [] } = {}) {
   }
 
   const { default: config } = await import(configPath);
+  const isDev = process.env.NODE_ENV !== 'production';
 
   if (analyze) {
     config.analyze = true;
@@ -41,10 +42,20 @@ export default async function getConfig({ analyze = false, target = [] } = {}) {
     console.log('Applying presets...');
 
     // eslint-disable-next-line no-restricted-syntax
-    for (const preset of config.presets) {
+    for (let preset of config.presets) {
+      if (typeof preset === 'function') {
+        preset = preset(isDev);
+      }
+
+      if (!preset) {
+        // eslint-disable-next-line no-continue
+        continue;
+      }
+
       if (!preset.name && typeof preset.handler !== 'function') {
         console.log('Preset misconfigured.', preset);
-        return;
+        // eslint-disable-next-line no-continue
+        continue;
       }
 
       const start = performance.now();
@@ -52,7 +63,7 @@ export default async function getConfig({ analyze = false, target = [] } = {}) {
       await preset.handler(config, {
         extendBrowsersync,
         extendWebpack,
-        isDev: process.env.NODE_ENV !== 'production',
+        isDev,
       });
       const duration = performance.now() - start;
       console.log(`Using the "${preset.name}" preset (${duration.toFixed(3)}ms)`);
