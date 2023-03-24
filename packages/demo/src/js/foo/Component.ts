@@ -11,7 +11,7 @@ interface ComponentInterface extends BaseTypeParameter {
 }
 
 export default class Component<T extends BaseTypeParameter = BaseTypeParameter> extends Base<
-T & ComponentInterface
+  T & ComponentInterface
 > {
   /**
    * Config.

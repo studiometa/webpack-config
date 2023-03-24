@@ -10,6 +10,9 @@
     "no-unused-vars": "off",
     "import/no-duplicates": ["error", {"considerQueryString": true}],
     "no-console": "off",
-    "require-jsdoc": "off"
+    "require-jsdoc": "off",
+    "@typescript-eslint/indent": "off",
+    "vue/singleline-html-element-content-newline": "off",
+    "vue/html-self-closing": "off"
   }
 }
