@@ -1,5 +1,4 @@
 import ESLintPlugin from 'eslint-webpack-plugin';
-import commonDir from 'common-dir';
 
 /**
  * ESLint plugin preset.
@@ -13,7 +12,7 @@ export default function eslint(options = {}) {
       await extendWebpack(config, async (webpackConfig) => {
         webpackConfig.plugins.push(
           new ESLintPlugin({
-            context: commonDir(config.src),
+            context: config.context,
             extensions: ['js', 'vue', 'ts'],
             fix: true,
             failOnError: !isDev,
