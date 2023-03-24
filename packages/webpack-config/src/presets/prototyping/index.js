@@ -15,10 +15,13 @@ import Html from '../../utils/Html.js';
 
 const dirname = path.dirname(new URL(import.meta.url).pathname);
 
-const LEADING_SLASH_REGEX = /^\//;
 const TWIG_FILE_REGEX = /\.twig$/;
 const TWIG_TAG_END_HTML_ELEMENT_REGEX = /^end_html_element/;
 const TWIG_TAG_HTML_ELEMENT_REGEX = /^html_element\s+(.+?)(?:\s+|$)(?:with\s+([\S\s]+?))?$/;
+
+const HTML_INDEX_REGEX = /\/index\.html$/;
+const TEMPLATE_FILE_REGEX = /\.(twig|js|ts|md)$/;
+const DYNAMIC_ROUTE_REGEX = /\[([^\]]*)\]/g;
 
 /**
  * Prototyping preset.
@@ -89,7 +92,7 @@ export default function prototyping(options) {
 
         // Try to get data from JS, TS or YAML file
         const dataLoaderPaths = ['.ts', '.js', '.yml'].map((extension) =>
-          path.join(resourceDir, resourceFilename.replace(/\.twig$/, extension))
+          path.join(resourceDir, resourceFilename.replace(TWIG_FILE_REGEX, extension))
         );
         const dataLoaderPath =
           query.get('data') ??
@@ -108,7 +111,7 @@ export default function prototyping(options) {
         // Try to get content from MD file
         const contentLoaderPath =
           query.get('content') ??
-          path.join(resourceDir, resourceFilename.replace(/\.twig$/, '.md'));
+          path.join(resourceDir, resourceFilename.replace(TWIG_FILE_REGEX, '.md'));
 
         if (fs.existsSync(contentLoaderPath)) {
           context.addDependency(contentLoaderPath);
@@ -245,40 +248,36 @@ export default function prototyping(options) {
       // - ./src/pages/about.md
       // The following file will be generated:
       // - dist/about.html, rendered with the content of about.md and the template of [single.twig]
-      const pageRoot = path.resolve('./src/templates/pages');
-      const dynamicRouteRegex = /\[([^\]]*)\]/g;
-      const twigExtensionRegex = /\.twig$/;
-      const indexHtmlRegex = /\/index\.html$/;
-      const templateExtensionsRegex = /\.(twig|js|ts|md)$/;
+      const pageRoot = path.resolve(config.context, './src/templates/pages');
 
       const twigTemplates = glob.sync('**/*.twig', { cwd: pageRoot });
       const twigTemplatesWithoutExtension = new Set(
-        twigTemplates.map((twigTemplate) => twigTemplate.replace(twigExtensionRegex, ''))
+        twigTemplates.map((twigTemplate) => twigTemplate.replace(TWIG_FILE_REGEX, ''))
       );
       const jsTemplates = new Set(
         glob
           .sync('**/*.js', { cwd: pageRoot })
-          .map((filepath) => filepath.replace(templateExtensionsRegex, ''))
+          .map((filepath) => filepath.replace(TEMPLATE_FILE_REGEX, ''))
       );
       const tsTemplates = new Set(
         glob
           .sync('**/*.ts', { cwd: pageRoot })
-          .map((filepath) => filepath.replace(templateExtensionsRegex, ''))
+          .map((filepath) => filepath.replace(TEMPLATE_FILE_REGEX, ''))
       );
       const markdownTemplates = new Set(
         glob
           .sync('**/*.md', { cwd: pageRoot })
-          .map((filepath) => filepath.replace(templateExtensionsRegex, ''))
+          .map((filepath) => filepath.replace(TEMPLATE_FILE_REGEX, ''))
       );
 
       const plugins = twigTemplates.flatMap((file) => {
-        const dynamicMatches = file.match(dynamicRouteRegex);
+        const dynamicMatches = file.match(DYNAMIC_ROUTE_REGEX);
         const templatePath = path.resolve(path.join(pageRoot, file));
         if (!dynamicMatches) {
           const stats = fs.statSync(templatePath);
-          const filename = file.replace(twigExtensionRegex, '.html');
+          const filename = file.replace(TWIG_FILE_REGEX, '.html');
           const params = new URLSearchParams({
-            href: `/${filename}`.replace(indexHtmlRegex, '/'),
+            href: `/${filename}`.replace(HTML_INDEX_REGEX, '/'),
           });
           return new HtmlWebpackPlugin({
             ...opts.html,
@@ -296,28 +295,28 @@ export default function prototyping(options) {
         }
 
         const dynamicFilesGlob = file
-          .replace(dynamicRouteRegex, '*')
-          .replace(twigExtensionRegex, '.{md,js,ts}');
+          .replace(DYNAMIC_ROUTE_REGEX, '*')
+          .replace(TWIG_FILE_REGEX, '.{md,js,ts}');
         const dynamicFiles = new Set(
           glob
             .sync(dynamicFilesGlob, { cwd: pageRoot })
             .filter((maybeFile) => {
-              const maybeFileWithoutExtension = maybeFile.replace(templateExtensionsRegex, '');
+              const maybeFileWithoutExtension = maybeFile.replace(TEMPLATE_FILE_REGEX, '');
               return !twigTemplatesWithoutExtension.has(maybeFileWithoutExtension);
             })
-            .map((dynamicFile) => dynamicFile.replace(templateExtensionsRegex, ''))
+            .map((dynamicFile) => dynamicFile.replace(TEMPLATE_FILE_REGEX, ''))
         );
 
         const fileParamsRegex = new RegExp(
-          file.replace(twigExtensionRegex, '').replace(dynamicRouteRegex, '(?<$1>.*)')
+          file.replace(TWIG_FILE_REGEX, '').replace(DYNAMIC_ROUTE_REGEX, '(?<$1>.*)')
         );
 
         // Add dynamic folders
         if (file.endsWith('index.twig')) {
-          const dynamicFoldersGlob = `${path.dirname(file).replace(dynamicRouteRegex, '*')}/`;
+          const dynamicFoldersGlob = `${path.dirname(file).replace(DYNAMIC_ROUTE_REGEX, '*')}/`;
           const dynamicFolders = glob.sync(dynamicFoldersGlob, { cwd: pageRoot });
           dynamicFolders.forEach((dynamicFolder) => {
-            if (!dynamicRouteRegex.test(dynamicFolder)) {
+            if (!DYNAMIC_ROUTE_REGEX.test(dynamicFolder)) {
               dynamicFiles.add(path.join(dynamicFolder, 'index'));
             }
           });
@@ -344,7 +343,7 @@ export default function prototyping(options) {
 
           const stats = fs.statSync(params.get('content') ?? params.get('data') ?? templatePath);
           const filename = `${dynamicFile}.html`;
-          params.set('href', `/${filename}`.replace(indexHtmlRegex, '/'));
+          params.set('href', `/${filename}`.replace(HTML_INDEX_REGEX, '/'));
           return new HtmlWebpackPlugin({
             ...opts.html,
             template: `${templatePath}?${params}`,
