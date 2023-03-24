@@ -31,12 +31,20 @@ async function build(config, name) {
 }
 
 export default async (options = {}) => {
-  process.env.NODE_ENV = 'development';
+  process.env.NODE_ENV = 'watch';
   process.env.BABEL_ENV = 'modern';
 
   const config = await getConfig(options);
   const webpackConfig = await getWebpackConfig(config, { isModern: true });
   webpackConfig.watch = true;
+  webpackConfig.optimization.minimize = false;
+  webpackConfig.mode = 'development';
+  webpackConfig.stats = {
+    all: false,
+    assets: true,
+    colors: true,
+    excludeAssets: [/\.map$/, /^(assets-)?manifest\.(js|json)$/],
+  };
 
   await build(webpackConfig, 'modern');
 };
