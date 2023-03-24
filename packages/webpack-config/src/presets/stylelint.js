@@ -1,4 +1,5 @@
 import StylelintPlugin from 'stylelint-webpack-plugin';
+import commonDir from 'common-dir';
 
 /**
  * StyleLint plugin preset.
@@ -12,7 +13,7 @@ export default function stylelint(options = {}) {
       await extendWebpack(config, async (webpackConfig) => {
         webpackConfig.plugins.push(
           new StylelintPlugin({
-            context: config.context,
+            context: commonDir(config.src),
             files: ['**/*.s?(a|c)ss', '**/*.vue'],
             fix: true,
             allowEmptyInput: true,
