@@ -13,12 +13,8 @@
 
 <template>
   <div class="counter">
-    <button type="button" class="counter__btn" @click="count = count + 1">
-Up
-</button>
-    <button type="button" class="counter__btn" @click="count = count - 1">
-Down
-</button>
+    <button type="button" class="counter__btn" @click="count = count + 1">Up</button>
+    <button type="button" class="counter__btn" @click="count = count - 1">Down</button>
     <input class="counter__input" :value="count" readonly />
 
     <hr />
