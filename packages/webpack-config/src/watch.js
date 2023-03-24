@@ -1,6 +1,5 @@
 import { cwd } from 'process';
 import webpack from 'webpack';
-import FriendlyErrorsWebpackPlugin from '@soda/friendly-errors-webpack-plugin';
 import getConfig from './utils/get-config.js';
 import getWebpackConfig from './webpack.prod.config.js';
 
@@ -39,30 +38,5 @@ export default async (options = {}) => {
   const webpackConfig = await getWebpackConfig(config, { isModern: true });
   webpackConfig.watch = true;
 
-  const webpackBar = webpackConfig.plugins.find(
-    (plugin) => plugin.constructor.name === 'WebpackBarPlugin'
-  );
-
-  let webpackBarHasRunOnce = false;
-  const [fancyReporter] = webpackBar.reporters;
-  webpackBar.reporters = [
-    {
-      progress: (...args) => {
-        if (webpackBarHasRunOnce) {
-          return;
-        }
-        fancyReporter.progress(...args);
-      },
-      done: () => {
-        webpackBarHasRunOnce = true;
-      },
-    },
-  ];
-
-  webpackConfig.plugins.push(
-    new FriendlyErrorsWebpackPlugin({
-      clearConsole: true,
-    })
-  );
   await build(webpackConfig, 'modern');
 };
