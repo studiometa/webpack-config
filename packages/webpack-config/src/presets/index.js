@@ -8,3 +8,4 @@ export { default as twig } from './twig.js';
 export { default as withContentHash } from './hash.js';
 export { default as hash } from './hash.js';
 export { default as yaml } from './yaml.js';
+export { default as markdown } from './markdown.js';
