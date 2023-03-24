@@ -41,6 +41,8 @@ export default async (options = {}) => {
   webpackConfig.mode = 'development';
   webpackConfig.stats = {
     all: false,
+    errors: true,
+    warnings: true,
     assets: true,
     colors: true,
     excludeAssets: [/\.map$/, /^(assets-)?manifest\.(js|json)$/],
