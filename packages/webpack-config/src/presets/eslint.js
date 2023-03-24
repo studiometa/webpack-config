@@ -1,3 +1,5 @@
+import path from 'node:path';
+import process from 'node:process';
 import ESLintPlugin from 'eslint-webpack-plugin';
 import commonDir from 'common-dir';
 
@@ -17,6 +19,8 @@ export default function eslint(options = {}) {
             extensions: ['js', 'vue', 'ts'],
             fix: true,
             failOnError: !isDev,
+            cache: true,
+            cacheLocation: path.resolve(process.cwd(), 'node_modules/.cache/'),
             baseConfig: {
               extends: '@studiometa/eslint-config',
               globals: {
