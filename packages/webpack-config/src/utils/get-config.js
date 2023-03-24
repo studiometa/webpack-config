@@ -29,6 +29,14 @@ export default async function getConfig({ analyze = false, target = [] } = {}) {
 
   config.PATH = configPath;
 
+  if (!config.context) {
+    config.context = path.dirname(configPath);
+  }
+
+  if (!path.isAbsolute(config.context)) {
+    config.context = path.resolve(process.cwd(), config.context);
+  }
+
   if (Array.isArray(config.presets) && config.presets.length) {
     console.log('Applying presets...');
 
@@ -40,7 +48,6 @@ export default async function getConfig({ analyze = false, target = [] } = {}) {
       }
 
       console.log(`Using the "${preset.name}" preset.`);
-
       // eslint-disable-next-line no-await-in-loop
       await preset.handler(config, {
         extendBrowsersync,
@@ -48,14 +55,6 @@ export default async function getConfig({ analyze = false, target = [] } = {}) {
         isDev: process.env.NODE_ENV !== 'production',
       });
     }
-  }
-
-  if (!config.context) {
-    config.context = path.dirname(configPath);
-  }
-
-  if (!path.isAbsolute(config.context)) {
-    config.context = path.resolve(process.cwd(), config.context);
   }
 
   // Read from command line args first, then meta.config.js, then set default

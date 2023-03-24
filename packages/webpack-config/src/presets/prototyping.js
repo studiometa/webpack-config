@@ -7,8 +7,13 @@ import path from 'path';
 import merge from 'lodash.merge';
 import twigPreset from './twig.js';
 import tailwindcssPreset from './tailwindcss.js';
-import withContentHash from './withContentHash.js';
+import hash from './hash.js';
 import Html from '../utils/Html.js';
+
+const LEADING_SLASH_REGEX = /^\//;
+const TWIG_FILE_REGEX = /\.twig$/;
+const TWIG_TAG_END_HTML_ELEMENT_REGEX = /^end_html_element/;
+const TWIG_TAG_HTML_ELEMENT_REGEX = /^html_element\s+(.+?)(?:\s+|$)(?:with\s+([\S\s]+?))?$/;
 
 /**
  * Prototyping preset.
@@ -32,11 +37,16 @@ export default function prototyping(options) {
         options
       );
 
-      opts.twig.namespaces = glob.sync('./src/templates/*/').reduce((acc, file) => {
-        const name = path.basename(file);
-        acc[name] = path.resolve(file);
-        return acc;
-      }, opts.twig.namespaces || {});
+      const templateContext = path.resolve(config.context, 'src/templates');
+      const pageContext = path.resolve(templateContext, 'pages');
+
+      opts.twig.namespaces = glob
+        .sync('*', { cwd: templateContext, absolute: true })
+        .reduce((acc, file) => {
+          const name = path.basename(file);
+          acc[name] = path.resolve(file);
+          return acc;
+        }, opts.twig.namespaces || {});
 
       const extendTwig = typeof opts.twig.extend === 'function' ? opts.twig.extend : () => {};
       opts.twig.functions = {
@@ -60,14 +70,14 @@ export default function prototyping(options) {
 
         Twig.exports.extendTag({
           type: 'end_html_element',
-          regex: /^end_html_element/,
+          regex: TWIG_TAG_END_HTML_ELEMENT_REGEX,
           next: [],
           open: false,
         });
 
         Twig.exports.extendTag({
           type: 'html_element',
-          regex: /^html_element\s+(.+?)(?:\s+|$)(?:with\s+([\S\s]+?))?$/,
+          regex: TWIG_TAG_HTML_ELEMENT_REGEX,
           next: ['end_html_element'],
           open: true,
           compile(token) {
@@ -131,15 +141,23 @@ export default function prototyping(options) {
         });
       };
 
-      const plugins = glob.sync('./src/templates/pages/**/*.twig').map(
-        (file) =>
-          new HtmlWebpackPlugin({
-            ...opts.html,
-            template: path.resolve(file),
-            filename: file.replace('./src/templates/pages/', '').replace(/\.twig$/, '.html'),
-            alwaysWriteToDisk: true,
-          })
-      );
+      const plugins = glob
+        .sync('**/*.twig', {
+          cwd: pageContext,
+          absolute: true,
+        })
+        .map(
+          (file) =>
+            new HtmlWebpackPlugin({
+              ...opts.html,
+              template: path.resolve(file),
+              filename: file
+                .replace(pageContext, '')
+                .replace(TWIG_FILE_REGEX, '.html')
+                .replace(LEADING_SLASH_REGEX, ''),
+              alwaysWriteToDisk: true,
+            })
+        );
 
       if (!isDev && fs.existsSync(path.resolve('./public'))) {
         plugins.push(
@@ -171,7 +189,7 @@ export default function prototyping(options) {
       config.mergeCSS = config.mergeCSS ?? true;
       config.target = config.target ?? ['modern'];
 
-      const { handler: withContentHashHandler } = withContentHash(opts.tailwindcss);
+      const { handler: withContentHashHandler } = hash(opts.tailwindcss);
       await withContentHashHandler(config, { extendWebpack, extendBrowsersync, isDev });
 
       await extendWebpack(config, async (webpackConfig) => {

@@ -12,6 +12,7 @@ async function build(config, name) {
   console.log(`Building ${name} bundle in ${config.output.path.replace(cwd(), '.')}...`);
 
   return new Promise((resolve, reject) => {
+    console.time('Built in');
     webpack(config, (err, stats) => {
       if (err) {
         console.error(err.message);
@@ -26,6 +27,7 @@ async function build(config, name) {
         })
       );
       console.log('');
+      console.timeEnd('Built in');
 
       if (stats.hasErrors()) {
         reject(stats);
