@@ -8,7 +8,7 @@ interface ComponentInterface extends BaseTypeParameter {
   $refs: {
     btn: HTMLButtonElement
   }
-};
+}
 
 export default class Component<T extends BaseTypeParameter = BaseTypeParameter> extends Base<T & ComponentInterface> {
   /**
@@ -22,7 +22,7 @@ export default class Component<T extends BaseTypeParameter = BaseTypeParameter> 
   };
 
   mounted() {
-    this.$options.foo;
-    this.$refs.btn;
+    this.$log(this.$options.foo);
+    this.$log(this.$refs.btn);
   }
 }

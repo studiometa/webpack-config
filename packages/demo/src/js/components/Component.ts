@@ -13,8 +13,8 @@ interface ComponentInterface extends BaseProps {
 }
 
 export default class Component<
-  T extends BaseProps = BaseProps
-> extends Base<ComponentInterface> {
+  T extends BaseProps = BaseProps,
+> extends Base<T & ComponentInterface> {
   static config = {
     name: 'Component',
     components: {
