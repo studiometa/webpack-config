@@ -4,13 +4,15 @@ import type { BaseTypeParameter } from '@studiometa/js-toolkit';
 interface ComponentInterface extends BaseTypeParameter {
   $options: {
     foo: boolean;
-  }
+  };
   $refs: {
-    btn: HTMLButtonElement
-  }
+    btn: HTMLButtonElement;
+  };
 }
 
-export default class Component<T extends BaseTypeParameter = BaseTypeParameter> extends Base<T & ComponentInterface> {
+export default class Component<T extends BaseTypeParameter = BaseTypeParameter> extends Base<
+T & ComponentInterface
+> {
   /**
    * Config.
    */

@@ -1,7 +1,7 @@
 <template>
   <div class="vue-component">
-    I am a Vue component.
-  </div>
+I am a Vue component.
+</div>
 </template>
 
 <style lang="scss">
