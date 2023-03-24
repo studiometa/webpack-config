@@ -16,6 +16,8 @@ const { BundleAnalyzerPlugin } = BundleAnalyzerPluginImport;
 
 dotenv.config();
 
+const LEADING_SLASH_REGEXT = /^\//;
+
 /**
  * Get Webpack base config.
  * @param   {import('./index').MetaConfig} config
@@ -25,7 +27,18 @@ dotenv.config();
 export default async function getWebpackBaseConfig(config, options = {}) {
   const isDev = process.env.NODE_ENV !== 'production';
   const { isModern, isLegacy } = { isModern: false, isLegacy: false, ...options };
-  const src = commonDir(config.src);
+  const src = path.resolve(config.context, commonDir(config.src));
+
+  const entry = Object.fromEntries(
+    config.src.flatMap((entryGlob) => {
+      return glob.sync(entryGlob, { cwd: config.context, absolute: true }).map((file) => {
+        return [
+          file.replace(src, '').replace(path.extname(file), '').replace(LEADING_SLASH_REGEXT, ''),
+          file,
+        ];
+      });
+    })
+  );
 
   const babel = {
     loader: 'babel-loader',
@@ -54,14 +67,6 @@ export default async function getWebpackBaseConfig(config, options = {}) {
       format: 'esm',
     },
   };
-
-  const entry = Object.fromEntries(
-    config.src.flatMap((entryGlob) => {
-      return glob.sync(entryGlob, { cwd: config.context }).map((file) => {
-        return [file.replace(src, '').replace(path.extname(file), ''), file];
-      });
-    })
-  );
 
   const webpackBaseConfig = {
     context: config.context,
