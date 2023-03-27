@@ -3,11 +3,12 @@
 {% block body %}
   <h1>This is a single post</h1>
   <pre>
-  {{ site.pages.all()|json_encode }}
+  {{ dump(pages().all()) }}
   </pre>
 
-  {% for page in pages().where('meta.template', 'posts/[slug].twig').all() %}
-    <pre>{{ page|json_encode }}</pre>
+  {% for page in pages().where('meta.template', 'notes/[year]/[month]/[day]/[slug].twig').all() %}
+    {{ dump(page) }}
+    {{ dump(page.frontmatter()) }}
   {% endfor %}
 
   dede

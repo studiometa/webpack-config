@@ -1,8 +1,7 @@
-export async function data({ pages }) {
-  console.log(pages('/notes/**/!(index)*.html'));
+export async function data() {
   return {
     head: {
-      title: 'home',
+      title: 'Home',
     },
     foo: ['foo', 'biz'],
     fn() {

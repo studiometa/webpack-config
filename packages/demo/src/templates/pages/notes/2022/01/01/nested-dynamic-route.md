@@ -1,6 +1,13 @@
+---
+title: Hello world nested
+description: Foo bar
+hello:
+  world: [bar, baz]
+---
+
 # This is a nested dynamic route
 
-<div>
+<div class="text-2xl font-bold">
   With some HTML content
 </div>
 
