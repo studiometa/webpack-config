@@ -2,6 +2,9 @@ const path = require('node:path');
 const Twig = require('twig');
 const { getOptions } = require('loader-utils');
 
+const SOURCE_REGEX = /source\s*\(\s*['"]\s*(\.[^'"]+)['"]\s*\)/g;
+const PATH_SEPARATOR_REGEX = /([/\\]+)$/;
+
 /**
  * Normalize namespaces paths.
  * @param   {Record<string, string>} namespaces
@@ -15,11 +18,12 @@ function normalizeNamespaces(namespaces) {
   Object.keys(result).forEach((key) => {
     if (typeof result[key] === 'string') {
       const value = result[key] + path.sep;
-      result[key] = value.replace(/([/\\]+)$/, path.sep);
+      result[key] = value.replace(PATH_SEPARATOR_REGEX, path.sep);
     }
   });
   return result;
 }
+
 
 /**
  * Transform relative paths to absolute paths.
@@ -38,7 +42,7 @@ function relativePathsToAbsolutePathsForSourceFn(str, resourcePath) {
 
   // eslint-disable-next-line no-constant-condition
   while (true) {
-    matches = /source\s*\(\s*['"]\s*(\.[^'"]+)['"]\s*\)/g.exec(result);
+    matches = SOURCE_REGEX.exec(result);
     if (matches === null) {
       break;
     }
@@ -61,8 +65,8 @@ function relativePathsToAbsolutePathsForSourceFn(str, resourcePath) {
  * @returns {void}
  */
 function loader(source) {
+  this.cacheable();
   const callback = this.async();
-
   // eslint-disable-next-line no-param-reassign
   source = relativePathsToAbsolutePathsForSourceFn(source, this.resourcePath);
 
@@ -72,7 +76,7 @@ function loader(source) {
     const options = {
       path: templateFile,
       data: source,
-      async: false,
+      async: true,
       debug: Boolean(query.debug || false),
       trace: Boolean(query.trace || false),
       allowInlineIncludes: Boolean(query.allowInlineIncludes || false),
@@ -80,9 +84,7 @@ function loader(source) {
       namespaces: normalizeNamespaces(query.namespaces),
     };
 
-    if (query.cache !== true) {
-      Twig.cache(false);
-    }
+    Twig.cache(true);
 
     if (query.functions) {
       Object.entries(query.functions).forEach(([name, fn]) => Twig.extendFunction(name, fn));
@@ -115,12 +117,12 @@ function loader(source) {
 
     const template = Twig.twig(options);
 
-    const render = (data) => {
+    const render = async (data) => {
       if (typeof data !== 'object') {
         callback(new Error('data parameter should return an object'));
         return;
       }
-      const output = template.render(data);
+      const output = await template.renderAsync(data);
       registry.forEach(this.addDependency);
       Twig.extend((TwigInstance) => {
         // eslint-disable-next-line no-param-reassign

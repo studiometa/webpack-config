@@ -34,7 +34,6 @@ export default function prototyping(options) {
   return {
     name: 'prototyping',
     async handler(config, { extendWebpack, extendBrowsersync, isDev }) {
-      const twigContext = {};
       const opts = merge(
         {
           ts: false,
@@ -49,17 +48,17 @@ export default function prototyping(options) {
         options
       );
 
+      let webpackContext;
+      let pages;
       opts.twig.data = async (context) => {
+        webpackContext = context;
         const resourceDir = path.dirname(context.resourcePath);
         const resourceFilename = path.basename(context.resourcePath);
         const query = new URLSearchParams(context.resourceQuery);
 
-        const href = query.get('href');
-        const page = twigContext.pages.firstWhere('meta.href', href);
-
         let globalContext = {};
         if (typeof options?.twig?.data === 'function') {
-          globalContext = await options.twig.data(twigContext);
+          globalContext = await options.twig.data(globalContext);
         } else if (typeof options?.twig?.data === 'string') {
           const dataPath = path.resolve(options.twig.data);
           context.addDependency(dataPath);
@@ -67,30 +66,10 @@ export default function prototyping(options) {
           globalContext =
             dataPath.endsWith('.yml') || dataPath.endsWith('.yaml')
               ? loader
-              : await loader.data(twigContext);
+              : await loader.data(globalContext);
         } else if (options?.twig?.data) {
           globalContext = options.twig.data;
         }
-
-        const localContext = {
-          ...globalContext,
-          // eslint-disable-next-line camelcase
-          is_dev: isDev,
-          site: {
-            ...twigContext,
-            page,
-          },
-          pages(q) {
-            if (!q) {
-              return twigContext.pages;
-            }
-
-            return twigContext.pages.filter((p) => {
-              return minimatch(p.href, q);
-            });
-          },
-          content: '',
-        };
 
         // Try to get data from JS, TS or YAML file
         const dataLoaderPaths = ['.ts', '.js', '.yml'].map((extension) =>
@@ -100,29 +79,23 @@ export default function prototyping(options) {
           query.get('data') ??
           dataLoaderPaths.find((potentialDataLoaderPath) => fs.existsSync(potentialDataLoaderPath));
 
-        let data;
+        let data = {};
         if (dataLoaderPath) {
           context.addDependency(dataLoaderPath);
           const loader = await context.importModule(dataLoaderPath);
           data =
             dataLoaderPath.endsWith('.yml') || dataLoaderPath.endsWith('.yaml')
               ? loader
-              : await loader.data(localContext);
+              : await loader.data(globalContext);
         }
 
-        // Try to get content from MD file
-        const contentLoaderPath =
-          query.get('content') ??
-          path.join(resourceDir, resourceFilename.replace(TWIG_FILE_REGEX, '.md'));
-
-        if (fs.existsSync(contentLoaderPath)) {
-          context.addDependency(contentLoaderPath);
-          const loader = await context.importModule(contentLoaderPath);
-          // Markdown is treated as raw for now
-          localContext.content = loader;
-        }
-
-        return { ...data, ...localContext };
+        return {
+          ...globalContext,
+          ...data,
+          page() {
+            return pages.firstWhere('meta.href', query.get('href'));
+          },
+        };
       };
 
       opts.twig.namespaces = glob.sync('./src/templates/*/').reduce((acc, file) => {
@@ -159,6 +132,22 @@ export default function prototyping(options) {
         // eslint-disable-next-line camelcase
         merge_html_attributes(attributes = {}, defaultAttributes = {}, requiredAttributes = {}) {
           return Html.mergeAttributes(attributes, defaultAttributes, requiredAttributes);
+        },
+        dump(...args) {
+          return args.map((arg) => `<pre>${JSON.stringify(arg, null, 2)}</pre>`).join('\n');
+        },
+        pages(q) {
+          if (!q) {
+            return pages;
+          }
+
+          return pages.filter((p) => {
+            return minimatch(p.href, q);
+          });
+        },
+        // eslint-disable-next-line camelcase
+        is_dev() {
+          return isDev;
         },
       };
 
@@ -283,10 +272,13 @@ export default function prototyping(options) {
           });
           return new HtmlWebpackPlugin({
             ...opts.html,
+            cache: true,
             template: `${templatePath}?${params}`,
             templateParameters: {
-              updatedAt: stats.mtime,
-              createdAt: stats.birthtime,
+              // eslint-disable-next-line camelcase
+              updated_at: stats.mtime,
+              // eslint-disable-next-line camelcase
+              created_at: stats.birthtime,
               template: file,
               ...Object.fromEntries(params.entries()),
               params: {},
@@ -348,10 +340,13 @@ export default function prototyping(options) {
           params.set('href', `/${filename}`.replace(HTML_INDEX_REGEX, '/'));
           return new HtmlWebpackPlugin({
             ...opts.html,
+            cache: true,
             template: `${templatePath}?${params}`,
             templateParameters: {
-              createdAt: stats.birthtime,
-              updatedAt: stats.mtime,
+              // eslint-disable-next-line camelcase
+              created_at: stats.birthtime,
+              // eslint-disable-next-line camelcase
+              updated_at: stats.mtime,
               template: file,
               ...Object.fromEntries(params.entries()),
               params: JSON.parse(JSON.stringify(matches.groups)),
@@ -362,10 +357,28 @@ export default function prototyping(options) {
         });
       });
 
-      twigContext.pages = collect(plugins).map((html) => ({
-        href: html.userOptions.templateParameters.href,
-        meta: html.userOptions.templateParameters,
-      }));
+      pages = collect(plugins)
+        .map((plugin) => plugin.userOptions.templateParameters)
+        .map((params) => ({
+          href: params.href,
+          meta: params,
+          async content() {
+            if (params.content) {
+              webpackContext.addDependency(params.content);
+              const content = await webpackContext.importModule(params.content);
+              return content;
+            }
+            return '<!-- no content -->';
+          },
+          async frontmatter() {
+            if (params.content) {
+              webpackContext.addDependency(`${params.content}?frontmatter`);
+              return webpackContext.importModule(`${params.content}?frontmatter`);
+            }
+
+            return {};
+          },
+        }));
 
       if (!isDev && fs.existsSync(path.resolve(config.context, './public'))) {
         plugins.push(
