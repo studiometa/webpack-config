@@ -24,7 +24,6 @@ function normalizeNamespaces(namespaces) {
   return result;
 }
 
-
 /**
  * Transform relative paths to absolute paths.
  * @param   {string} str

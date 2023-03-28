@@ -48,17 +48,51 @@ export default function prototyping(options) {
         options
       );
 
-      let webpackContext;
       let pages;
       opts.twig.data = async (context) => {
-        webpackContext = context;
         const resourceDir = path.dirname(context.resourcePath);
         const resourceFilename = path.basename(context.resourcePath);
         const query = new URLSearchParams(context.resourceQuery);
 
+        const localPages = pages.map((page) => ({
+          ...page,
+          async content() {
+            if (page.meta.content) {
+              context.addDependency(page.meta.content);
+              const content = await context.importModule(page.meta.content);
+              return content;
+            }
+            return '<!-- no content -->';
+          },
+          async frontmatter() {
+            if (page.meta.content) {
+              const modulePath = `${page.meta.content}?frontmatter`;
+              context.addDependency(modulePath);
+              return context.importModule(modulePath);
+            }
+
+            return {};
+          },
+        }));
+
+        const localContext = {
+          pages(q) {
+            if (!q) {
+              return localPages;
+            }
+
+            return localPages.filter((p) => {
+              return minimatch(p.href, q);
+            });
+          },
+          page() {
+            return localPages.firstWhere('meta.href', query.get('href'));
+          },
+        };
+
         let globalContext = {};
         if (typeof options?.twig?.data === 'function') {
-          globalContext = await options.twig.data(globalContext);
+          globalContext = await options.twig.data({ ...localContext });
         } else if (typeof options?.twig?.data === 'string') {
           const dataPath = path.resolve(options.twig.data);
           context.addDependency(dataPath);
@@ -86,15 +120,13 @@ export default function prototyping(options) {
           data =
             dataLoaderPath.endsWith('.yml') || dataLoaderPath.endsWith('.yaml')
               ? loader
-              : await loader.data(globalContext);
+              : await loader.data({ ...globalContext, ...localContext });
         }
 
         return {
           ...globalContext,
           ...data,
-          page() {
-            return pages.firstWhere('meta.href', query.get('href'));
-          },
+          ...localContext,
         };
       };
 
@@ -135,15 +167,6 @@ export default function prototyping(options) {
         },
         dump(...args) {
           return args.map((arg) => `<pre>${JSON.stringify(arg, null, 2)}</pre>`).join('\n');
-        },
-        pages(q) {
-          if (!q) {
-            return pages;
-          }
-
-          return pages.filter((p) => {
-            return minimatch(p.href, q);
-          });
         },
         // eslint-disable-next-line camelcase
         is_dev() {
@@ -362,22 +385,6 @@ export default function prototyping(options) {
         .map((params) => ({
           href: params.href,
           meta: params,
-          async content() {
-            if (params.content) {
-              webpackContext.addDependency(params.content);
-              const content = await webpackContext.importModule(params.content);
-              return content;
-            }
-            return '<!-- no content -->';
-          },
-          async frontmatter() {
-            if (params.content) {
-              webpackContext.addDependency(`${params.content}?frontmatter`);
-              return webpackContext.importModule(`${params.content}?frontmatter`);
-            }
-
-            return {};
-          },
         }));
 
       if (!isDev && fs.existsSync(path.resolve(config.context, './public'))) {
