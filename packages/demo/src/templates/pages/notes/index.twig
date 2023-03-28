@@ -2,5 +2,16 @@
 
 {% block body %}
   <h1>Notes index</h1>
-  {{ dump(_context) }}
+  {% for year, notes in pages('/notes/**/!(index).html').groupBy('meta.params.year').all() %}
+    <h2 class="text-xl font-bold">{{ year }}</h2>
+    <ul>
+      {% for note in notes.all() %}
+        <li>
+          <a href="{{ note.href }}">
+            {{ note.frontmatter().title }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
 {% endblock %}

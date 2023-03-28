@@ -4,5 +4,8 @@
 
 {% block body %}
   {{ page().content() }}
+  {{ dump(bar) }}
+  <hr>
   {{ dump(page().frontmatter()) }}
+  <hr>
 {% endblock %}
