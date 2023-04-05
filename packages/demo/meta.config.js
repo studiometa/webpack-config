@@ -8,12 +8,12 @@ export default defineConfig({
     (isDev) => (isDev ? null : stylelint({ fix: false })),
     prototyping({ ts: true }),
     vue(),
-    (isDev) => isDev ? https() : null,
+    (isDev) => (isDev ? https() : null),
     {
       name: 'foo',
       handler: (metaConfig, { extendWebpack }) =>
         extendWebpack(metaConfig, async (webpackConfig) => {
-          webpackConfig.optimization.minimize = false;
+          // webpackConfig.optimization.minimize = false;
         }),
     },
   ],
