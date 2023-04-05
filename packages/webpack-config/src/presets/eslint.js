@@ -20,7 +20,7 @@ export default function eslint(options = {}) {
             fix: true,
             failOnError: !isDev,
             cache: true,
-            cacheLocation: path.resolve(process.cwd(), 'node_modules/.cache/'),
+            cacheLocation: path.resolve(process.cwd(), 'node_modules/.cache/eslint'),
             baseConfig: {
               extends: '@studiometa/eslint-config',
               globals: {

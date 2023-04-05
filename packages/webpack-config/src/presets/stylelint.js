@@ -19,7 +19,7 @@ export default function stylelint(options = {}) {
             files: ['**/*.s?(a|c)ss', '**/*.vue'],
             fix: true,
             cache: true,
-            cacheLocation: path.resolve(process.cwd(), 'node_modules/.cache/'),
+            cacheLocation: path.resolve(process.cwd(), 'node_modules/.cache/stylelint'),
             allowEmptyInput: true,
             failOnError: !isDev,
             configOverride: { extends: '@studiometa/stylelint-config' },
