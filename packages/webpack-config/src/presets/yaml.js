@@ -19,7 +19,6 @@ export default function yaml(options = {}) {
       await extendWebpack(config, async (webpackConfig) => {
         webpackConfig.module.rules.push({
           test: /\.ya?ml$/,
-          resourceQuery: /^(?!.*raw).*$/,
           use: [
             {
               loader: 'yaml-loader',
