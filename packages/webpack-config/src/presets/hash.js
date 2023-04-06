@@ -11,7 +11,8 @@ export default function hash() {
       }
 
       await extendWebpack(config, async (webpackConfig) => {
-        webpackConfig.output.filename = '[name].[contenthash].js';
+        webpackConfig.output.filename = '[name].[contenthash][ext]';
+        webpackConfig.output.cssChunkFilename = '[name].[contenthash][ext]';
         const ExtractCSSPlugin = webpackConfig.plugins.find(
           (plugin) => plugin.constructor.name === 'MiniCssExtractPlugin'
         );
