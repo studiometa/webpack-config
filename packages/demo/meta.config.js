@@ -17,7 +17,7 @@ export default defineConfig({
     // (isDev) => (isDev ? null : eslint({ fix: false })),
     // (isDev) => (isDev ? null : stylelint({ fix: false })),
     prototyping({ ts: true }),
-    // yaml(),
+    yaml(),
     // vue(),
     https(),
     {
