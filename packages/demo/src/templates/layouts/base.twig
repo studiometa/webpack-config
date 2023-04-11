@@ -1,13 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Demo</title>
-  </head>
-  <body class="p-13">
-    {% block body %}
-      No content.
-    {% endblock %}
-  </body>
-</html>
+{% extends '@pkg-layouts/default.twig' %}
+
+{% block footer %}
+  {# <h2>Navigation</h2> #}
+  <ul>
+    {% for page in pages().all() %}
+      <li><a href="{{ page.href }}">{{ page.href }}</a></li>
+    {% endfor %}
+  </ul>
+
+  {{ dump(page()) }}
+{% endblock %}

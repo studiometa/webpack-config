@@ -77,6 +77,7 @@ export default async function dev(options = {}) {
 
   bundler.hooks.afterDone.tap('@studiometa/webpack-config', (stats) => {
     if (stats.hasErrors()) {
+      console.log(...stats.compilation.errors);
       return;
     }
     console.log(

@@ -1,0 +1,11 @@
+{% extends '@layouts/base.twig' %}
+
+{% set head = head|default({})|merge(page().frontmatter()) %}
+
+{% block body %}
+  {{ page().content() }}
+  {{ dump(bar) }}
+  <hr>
+  {{ dump(page().frontmatter()) }}
+  <hr>
+{% endblock %}

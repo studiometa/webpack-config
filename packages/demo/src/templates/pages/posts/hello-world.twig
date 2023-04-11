@@ -1,0 +1,15 @@
+{% extends '@layouts/base.twig' %}
+
+{% block body %}
+  <h1>This is a single post</h1>
+  <pre>
+  {{ dump(pages().all()) }}
+  </pre>
+
+  {% for page in pages().where('meta.template', 'notes/[year]/[month]/[day]/[slug].twig').all() %}
+    {{ dump(page) }}
+    {{ dump(page.frontmatter()) }}
+  {% endfor %}
+
+  dede
+{% endblock %}

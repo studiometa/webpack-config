@@ -38,6 +38,10 @@ export default async function getConfig({ analyze = false, target = [] } = {}) {
     config.context = path.resolve(process.cwd(), config.context);
   }
 
+  if (!config.dist) {
+    config.dist = path.resolve(config.context, './dist');
+  }
+
   if (Array.isArray(config.presets) && config.presets.length) {
     console.log('Applying presets...');
 
