@@ -1,6 +1,5 @@
 import { cwd } from 'process';
 import webpack from 'webpack';
-import FriendlyErrorsWebpackPlugin from '@soda/friendly-errors-webpack-plugin';
 import getConfig from './utils/get-config.js';
 import getWebpackConfig from './webpack.prod.config.js';
 
@@ -32,37 +31,22 @@ async function build(config, name) {
 }
 
 export default async (options = {}) => {
-  process.env.NODE_ENV = 'development';
+  process.env.NODE_ENV = 'watch';
   process.env.BABEL_ENV = 'modern';
 
   const config = await getConfig(options);
   const webpackConfig = await getWebpackConfig(config, { isModern: true });
   webpackConfig.watch = true;
+  webpackConfig.optimization.minimize = false;
+  webpackConfig.mode = 'development';
+  webpackConfig.stats = {
+    all: false,
+    errors: true,
+    warnings: true,
+    assets: true,
+    colors: true,
+    excludeAssets: [/\.map$/, /^(assets-)?manifest\.(js|json)$/],
+  };
 
-  const webpackBar = webpackConfig.plugins.find(
-    (plugin) => plugin.constructor.name === 'WebpackBarPlugin'
-  );
-
-  let webpackBarHasRunOnce = false;
-  const [fancyReporter] = webpackBar.reporters;
-  webpackBar.reporters = [
-    {
-      progress: (...args) => {
-        if (webpackBarHasRunOnce) {
-          return;
-        }
-        fancyReporter.progress(...args);
-      },
-      done: () => {
-        webpackBarHasRunOnce = true;
-      },
-    },
-  ];
-
-  webpackConfig.plugins.push(
-    new FriendlyErrorsWebpackPlugin({
-      clearConsole: true,
-    })
-  );
   await build(webpackConfig, 'modern');
 };

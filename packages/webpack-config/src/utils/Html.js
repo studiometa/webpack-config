@@ -5,6 +5,7 @@
  * @license https://github.com/studiometa/twig-toolkit/blob/master/LICENSE
  */
 import { paramCase } from 'param-case';
+import { escape } from 'html-escaper';
 
 /**
  * @typdef {string | Record<string, boolean> | Record<number, Classes>} Classes
@@ -122,10 +123,33 @@ export default class Html {
         }
       }
 
-      renderedAttributes.push(`${key}='${value}'`);
+      renderedAttributes.push(`${key}="${escape(value)}"`);
     }
 
     return renderedAttributes.join(' ');
+  }
+
+  /**
+   * Merge HTML attributes with sane defaults.
+   *
+   * @param   {Record<string, any>} [attributes]
+   * @param   {Record<string, any>} defaultAttributes
+   * @param   {Record<string, any>} requiredAttributes
+   * @returns {Record<string, any>}
+   */
+  static mergeAttributes(attributes = {}, defaultAttributes = {}, requiredAttributes = {}) {
+    // Merge `class` attributes before the others
+    requiredAttributes.class = [
+      attributes.class ?? defaultAttributes.class ?? '',
+      requiredAttributes.class ?? '',
+    ].filter(Boolean);
+
+    // Remove the `class` attribute if empty
+    if (requiredAttributes.class.length < 1) {
+      delete requiredAttributes.class;
+    }
+
+    return { ...defaultAttributes, ...attributes, ...requiredAttributes };
   }
 
   /**

@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/multi-word-component-names -->
 <script setup>
   import { ref, watch } from 'vue';
   // eslint-disable-next-line import/no-unresolved
@@ -12,19 +13,15 @@
 
 <template>
   <div class="counter">
-    <button class="counter__btn" @click="count = count + 1">
-      Up
-    </button>
-    <button class="counter__btn" @click="count = count - 1">
-      Down
-    </button>
-    <input class="counter__input" :value="count" readonly>
+    <button type="button" class="counter__btn" @click="count = count + 1">Up</button>
+    <button type="button" class="counter__btn" @click="count = count - 1">Down</button>
+    <input class="counter__input" :value="count" readonly />
 
-    <hr>
+    <hr />
     <vue-icon />
 
     <div class="vue-icon-bg m-10 p-10" />
-    <hr>
+    <hr />
   </div>
 </template>
 

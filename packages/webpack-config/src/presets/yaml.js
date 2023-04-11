@@ -1,5 +1,7 @@
 import merge from 'lodash.merge';
 
+let isUsed = false;
+
 /**
  * YAML loader preset.
  * @param   {any} options
@@ -16,6 +18,11 @@ export default function yaml(options = {}) {
   return {
     name: 'yaml',
     async handler(config, { extendWebpack }) {
+      if (isUsed) {
+        return;
+      }
+
+      isUsed = true;
       await extendWebpack(config, async (webpackConfig) => {
         webpackConfig.module.rules.push({
           test: /\.ya?ml$/,

@@ -1,0 +1,35 @@
+{% set head = head|default({}) %}
+
+<!DOCTYPE html>
+<html {{ html_attributes(html_attr ?? null) }}>
+  <head>
+    {% block head_before %}{% endblock %}
+    {% block head %}
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>{{ head.title ?? '@studiometa/webpack-config' }}</title>
+      {% if head.description %}
+        <meta name="description" content="{{ head.description }}">
+      {% endif %}
+      {% for meta in head.meta ?? [] %}
+        <meta {{ html_attributes(meta) }}>
+      {% endfor %}
+      {% for link in head.link ?? [] %}
+        <link {{ html_attributes(link) }}>
+      {% endfor %}
+      {% block head %}{% endblock %}
+    {% endblock %}
+    {% block head_after %}{% endblock %}
+  </head>
+  <body {{ html_attributes(body_attr ?? null) }}>
+    {% block header_before %}{% endblock %}
+    {% block header %}{% endblock %}
+    {% block header_after %}{% endblock %}
+    {% block body_before %}{% endblock %}
+    {% block body %}{% endblock %}
+    {% block body_after %}{% endblock %}
+    {% block footer_before %}{% endblock %}
+    {% block footer %}{% endblock %}
+    {% block footer_after %}{% endblock %}
+  </body>
+</html>

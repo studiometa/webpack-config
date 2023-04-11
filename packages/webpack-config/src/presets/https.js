@@ -13,8 +13,9 @@ function createCertificates() {
     console.log('mkcert not found, skipping creating SSL certificates.');
     return { cert: null, key: null };
   }
+
   const cachePath = path.join(
-    path.dirname(process.env.npm_package_json),
+    process.env.PWD,
     'node_modules/.cache/@studiometa/webpack-config/certificates/'
   );
 

@@ -1,3 +1,5 @@
+import path from 'node:path';
+import process from 'node:process';
 import StylelintPlugin from 'stylelint-webpack-plugin';
 import commonDir from 'common-dir';
 
@@ -16,6 +18,8 @@ export default function stylelint(options = {}) {
             context: commonDir(config.src),
             files: ['**/*.s?(a|c)ss', '**/*.vue'],
             fix: true,
+            cache: true,
+            cacheLocation: path.resolve(process.cwd(), 'node_modules/.cache/stylelint'),
             allowEmptyInput: true,
             failOnError: !isDev,
             configOverride: { extends: '@studiometa/stylelint-config' },

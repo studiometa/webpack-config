@@ -5,8 +5,10 @@ import getWebpackDevConfig from './webpack.dev.config.js';
 /**
  * Create a configuration.
  *
- * @param  {MetaConfig} config
- * @returns {MetaConfig}
+ * @deprecated Use `defineConfig` instead.
+ * @template  {import('./index').MetaConfig} T
+ * @param  {T} config
+ * @returns {T}
  */
 export function createConfig(config) {
   return config;
@@ -14,7 +16,8 @@ export function createConfig(config) {
 
 /**
  * Define the configuration.
- * @template {MetaConfig} T
+ *
+ * @template {import('./index').MetaConfig} T
  * @param   {T} config
  * @returns {T}
  */

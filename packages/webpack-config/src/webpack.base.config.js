@@ -1,6 +1,6 @@
-import path from 'path';
+import path from 'node:path';
 import WebpackBar from 'webpackbar';
-import entry from 'webpack-glob-entry';
+import glob from 'glob';
 import RemoveEmptyScriptsPlugin from 'webpack-remove-empty-scripts';
 import webpack from 'webpack';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
@@ -16,6 +16,8 @@ const { BundleAnalyzerPlugin } = BundleAnalyzerPluginImport;
 
 dotenv.config();
 
+const LEADING_SLASH_REGEXT = /^\//;
+
 /**
  * Get Webpack base config.
  * @param   {import('./index').MetaConfig} config
@@ -25,7 +27,18 @@ dotenv.config();
 export default async function getWebpackBaseConfig(config, options = {}) {
   const isDev = process.env.NODE_ENV !== 'production';
   const { isModern, isLegacy } = { isModern: false, isLegacy: false, ...options };
-  const src = commonDir(config.src);
+  const src = path.resolve(config.context, commonDir(config.src));
+
+  const entry = Object.fromEntries(
+    config.src.flatMap((entryGlob) => {
+      return glob.sync(entryGlob, { cwd: config.context, absolute: true }).map((file) => {
+        return [
+          file.replace(src, '').replace(path.extname(file), '').replace(LEADING_SLASH_REGEXT, ''),
+          file,
+        ];
+      });
+    })
+  );
 
   const babel = {
     loader: 'babel-loader',
@@ -50,21 +63,19 @@ export default async function getWebpackBaseConfig(config, options = {}) {
     loader: 'esbuild-loader',
     options: {
       loader: 'ts',
-      target: isDev ? 'es2020' : 'es2015',
+      target: isDev ? 'es2022' : 'es2020',
       format: 'esm',
     },
   };
 
   const webpackBaseConfig = {
-    entry: entry((filePath) => {
-      const extname = path.extname(filePath);
-      return filePath.replace(src, '').replace(extname, '');
-    }, ...config.src),
+    context: config.context,
+    entry,
     devtool: 'source-map',
     target: ['web', isModern ? 'es6' : 'es5'],
     output: {
       path: path.resolve(
-        path.dirname(config.PATH),
+        config.context,
         config.dist,
         config.modern && config.legacy && isLegacy ? '__legacy__' : ''
       ),
@@ -120,6 +131,10 @@ export default async function getWebpackBaseConfig(config, options = {}) {
       rules: [
         {
           resourceQuery: /raw/,
+          type: 'asset/source',
+        },
+        {
+          test: /\.md?/,
           type: 'asset/source',
         },
         {

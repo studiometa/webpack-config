@@ -1,20 +1,20 @@
 import { Base } from '@studiometa/js-toolkit';
-import type { BaseTypeParameter } from '@studiometa/js-toolkit';
+import type { BaseProps } from '@studiometa/js-toolkit';
 import './Component.scss';
 import type ComponentFoo from '../foo/Component.js';
 
-interface ComponentInterface extends BaseTypeParameter {
+interface ComponentInterface extends BaseProps {
   $children: {
-    ComponentFoo: Promise<ComponentFoo>;
+    ComponentFoo: Promise<ComponentFoo>[];
   };
   $refs: {
     btn: HTMLButtonElement;
   };
 }
 
-export default class Component<
-  T extends BaseTypeParameter = BaseTypeParameter
-> extends Base<ComponentInterface> {
+export default class Component<T extends BaseProps = BaseProps> extends Base<
+  T & ComponentInterface
+> {
   static config = {
     name: 'Component',
     components: {
@@ -23,7 +23,7 @@ export default class Component<
   };
 
   async mounted() {
-    // const foo = await this.$children.ComponentFoo[0];
-    // console.log(foo.$options.foo, foo.$refs.btn);
+    const foo = await this.$children.ComponentFoo[0];
+    console.log(foo.$options.foo, foo.$refs.btn);
   }
 }

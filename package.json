@@ -1,6 +1,6 @@
 {
   "name": "@studiometa/webpack-config-root",
-  "version": "4.1.2",
+  "version": "4.2.0",
   "private": true,
   "type": "commonjs",
   "workspaces": [
@@ -15,9 +15,9 @@
     "postversion": "node scripts/update-composer-version.mjs"
   },
   "devDependencies": {
-    "@studiometa/eslint-config": "^3.0.5",
+    "@studiometa/eslint-config": "^3.1.1",
     "@studiometa/prettier-config": "^2.1.1",
-    "eslint": "^8.25.0",
-    "prettier": "^2.7.1"
+    "eslint": "^8.36.0",
+    "prettier": "^2.8.7"
   }
 }
