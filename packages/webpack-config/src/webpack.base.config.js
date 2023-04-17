@@ -138,6 +138,10 @@ export default async function getWebpackBaseConfig(config, options = {}) {
           type: 'asset/source',
         },
         {
+          test: /\.mjs$/,
+          type: 'javascript/esm',
+        },
+        {
           test: /\.m?(j|t)s$/,
           // Exclude all but packages from the `@studiometa/` namespace
           exclude: [/node_modules[\\/](?!@studiometa[\\/]).*/],
