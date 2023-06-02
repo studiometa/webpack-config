@@ -84,7 +84,7 @@
     "find-up": "^6.3.0",
     "front-matter-loader": "^2.0.0",
     "get-port": "^6.1.2",
-    "glob": "^9.3.5",
+    "glob": "^10.2.6",
     "hot-accept-webpack-plugin": "^4.0.2",
     "html-escaper": "^3.0.3",
     "html-webpack-harddisk-plugin": "^2.0.0",

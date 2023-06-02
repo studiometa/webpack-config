@@ -1,6 +1,6 @@
 import path from 'node:path';
 import WebpackBar from 'webpackbar';
-import glob from 'glob';
+import * as glob from 'glob';
 import RemoveEmptyScriptsPlugin from 'webpack-remove-empty-scripts';
 import webpack from 'webpack';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';

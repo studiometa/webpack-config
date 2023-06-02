@@ -2,7 +2,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin';
 import HtmlWebpackHarddiskPlugin from 'html-webpack-harddisk-plugin';
 import FileManagerPlugin from 'filemanager-webpack-plugin';
 import fs from 'fs';
-import glob from 'glob';
+import * as glob from 'glob';
 import path from 'path';
 import merge from 'lodash.merge';
 // eslint-disable-next-line import/no-extraneous-dependencies
