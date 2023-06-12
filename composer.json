@@ -1,6 +1,6 @@
 {
   "name": "studiometa/webpack-config",
-  "version": "2.4.5",
+  "version": "4.2.6",
   "description": "PHP Helpers for @studiometa/webpack-config",
   "type": "library",
   "require": {
