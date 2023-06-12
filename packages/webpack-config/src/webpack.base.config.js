@@ -1,20 +1,18 @@
 import path from 'node:path';
+import 'dotenv-expand/config.js';
 import WebpackBar from 'webpackbar';
-import glob from 'glob';
+import * as glob from 'glob';
 import RemoveEmptyScriptsPlugin from 'webpack-remove-empty-scripts';
 import webpack from 'webpack';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import BundleAnalyzerPluginImport from 'webpack-bundle-analyzer';
 import TerserPlugin from 'terser-webpack-plugin';
 import commonDir from 'common-dir';
-import dotenv from 'dotenv';
 import WebpackAssetsManifest from 'webpack-assets-manifest';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 
 const { DefinePlugin } = webpack;
 const { BundleAnalyzerPlugin } = BundleAnalyzerPluginImport;
-
-dotenv.config();
 
 const LEADING_SLASH_REGEXT = /^\//;
 
