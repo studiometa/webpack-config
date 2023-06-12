@@ -18,8 +18,8 @@ export default function twig(options = {}) {
       await extendWebpack(config, async (webpackConfig) => {
         webpackConfig.module.rules.push({
           test: /\.twig$/,
+          type: 'asset/source',
           use: [
-            'raw-loader',
             {
               loader,
               options: opts,
