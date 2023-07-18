@@ -9,7 +9,7 @@ import { minimatch } from 'minimatch';
 import { collect } from 'collect.js';
 import { twig as twigPreset, tailwindcss as tailwindcssPreset, yaml as yamlPreset, hash } from '@studiometa/webpack-config/presets';
 import markdown from '@studiometa/webpack-config-preset-markdown';
-import Html from '../../utils/Html.js';
+import Html from './utils/Html.js';
 
 const dirname = path.dirname(new URL(import.meta.url).pathname);
 
