@@ -5,7 +5,7 @@ import HtmlWebpackHarddiskPlugin from 'html-webpack-harddisk-plugin';
 import FileManagerPlugin from 'filemanager-webpack-plugin';
 import * as glob from 'glob';
 import merge from 'lodash.merge';
-import minimatch from 'minimatch';
+import { minimatch } from 'minimatch';
 import { collect } from 'collect.js';
 import { twig as twigPreset, tailwindcss as tailwindcssPreset, yaml as yamlPreset, hash } from '@studiometa/webpack-config/presets';
 import markdown from '@studiometa/webpack-config-preset-markdown';
