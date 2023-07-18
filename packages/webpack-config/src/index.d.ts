@@ -127,4 +127,4 @@ declare function createConfig(config: MetaConfig): MetaConfig;
  */
 declare function getWebpackConfig(options: { mode?: 'production'|'development' }): WebpackConfig;
 
-export { createConfig, getWebpackConfig };
+export { createConfig, getWebpackConfig, Preset };
