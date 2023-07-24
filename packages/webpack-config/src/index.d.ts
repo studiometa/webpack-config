@@ -13,10 +13,6 @@ interface CacheGroupsContext {
 
 export interface MetaConfig {
   /**
-   * Toggle the modern build.
-   */
-  target?: 'modern'|'legacy'|Array<'modern'|'legacy'>;
-  /**
    * A list of glob for files to consider as entries.
    */
   src?: string[];

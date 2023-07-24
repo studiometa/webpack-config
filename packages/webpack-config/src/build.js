@@ -39,18 +39,7 @@ async function build(config, name) {
 }
 
 export default async (options = {}) => {
-  process.env.NODE_ENV = 'production';
   const config = await getConfig(options);
-
-  if (config.modern) {
-    process.env.BABEL_ENV = 'modern';
-    const modern = await getWebpackConfig(config, { isModern: true });
-    await build(modern, 'modern');
-  }
-
-  if (config.legacy) {
-    process.env.BABEL_ENV = 'legacy';
-    const legacy = await getWebpackConfig(config, { isLegacy: true });
-    await build(legacy, 'legacy');
-  }
+  const webpackConfig = await getWebpackConfig(config);
+  await build(webpackConfig, 'modern');
 };

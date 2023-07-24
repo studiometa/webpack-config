@@ -30,13 +30,11 @@ export function defineConfig(config) {
  *
  * @param {Object} options
  * @param {'production'|'development'} [options.mode]
- * @param {'modern'|'legacy'} [options.target]
  * @returns {import('webpack').Configuration}
  */
-export function getWebpackConfig({ mode = process.env.NODE_ENV, target = 'legacy' } = {}) {
+export function getWebpackConfig({ mode = process.env.NODE_ENV } = {}) {
   const config = getMetaConfig({ target: [target] });
-  const options = { isModern: target === 'modern', isLegacy: target === 'legacy' };
   return mode === 'production'
-    ? getWebpackProdConfig(config, options)
+    ? getWebpackProdConfig(config)
     : getWebpackDevConfig(config);
 }

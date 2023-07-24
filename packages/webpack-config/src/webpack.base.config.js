@@ -19,12 +19,10 @@ const LEADING_SLASH_REGEXT = /^\//;
 /**
  * Get Webpack base config.
  * @param   {import('./index').MetaConfig} config
- * @param   {{ isModern?: boolean, isLegacy?: boolean }} [options]
  * @returns {import('webpack').Configuration}
  */
-export default async function getWebpackBaseConfig(config, options = {}) {
+export default async function getWebpackBaseConfig(config) {
   const isDev = process.env.NODE_ENV !== 'production';
-  const { isModern, isLegacy } = { isModern: false, isLegacy: false, ...options };
   const src = path.resolve(config.context, commonDir(config.src));
 
   const entry = Object.fromEntries(
@@ -35,83 +33,44 @@ export default async function getWebpackBaseConfig(config, options = {}) {
           file,
         ];
       });
-    })
+    }),
   );
-
-  const babel = {
-    loader: 'babel-loader',
-    options: {
-      cacheDirectory: true,
-      rootMode: 'upward-optional',
-      plugins: ['@babel/plugin-transform-runtime'],
-      presets: [
-        [
-          '@babel/preset-env',
-          {
-            targets: '> 0.2%, last 4 versions, not dead',
-            useBuiltIns: 'usage',
-            corejs: '3.11',
-          },
-        ],
-      ],
-    },
-  };
-
-  const esbuild = {
-    loader: 'esbuild-loader',
-    options: {
-      loader: 'ts',
-      target: isDev ? 'es2022' : 'es2020',
-      format: 'esm',
-    },
-  };
 
   const webpackBaseConfig = {
     context: config.context,
     entry,
     devtool: 'source-map',
-    target: ['web', isModern ? 'es6' : 'es5'],
+    target: ['web', 'es6'],
     output: {
       path: path.resolve(
         config.context,
         config.dist,
-        config.modern && config.legacy && isLegacy ? '__legacy__' : ''
       ),
-      publicPath: config.public
-        ? path.join(config.public, config.modern && config.legacy && isLegacy ? '__legacy__' : '')
-        : 'auto',
+      publicPath: config.public ?? 'auto',
       pathinfo: false,
       filename: `[name].js`,
       chunkFilename: isDev ? '[name].js' : '[name].[contenthash].js',
       sourceMapFilename: '[file].map',
       clean: true,
-      uniqueName: process.env.BABEL_ENV,
-      module: isModern || isDev,
-      // Do not consider scripts to be type="module"
-      scriptType: false,
       environment: {
         // The environment supports arrow functions ('() => { ... }').
-        arrowFunction: isModern || isDev,
+        arrowFunction: true,
         // The environment supports const and let for variable declarations.
-        const: isModern || isDev,
+        const: true,
         // The environment supports destructuring ('{ a, b } = obj').
-        destructuring: isModern || isDev,
+        destructuring: true,
         // The environment supports an async import() function to import EcmaScript modules.
-        dynamicImport: isModern || isDev,
+        dynamicImport: true,
         // The environment supports 'for of' iteration ('for (const x of array) { ... }').
-        forOf: isModern || isDev,
-        // The environment supports ECMAScript Module syntax to import ECMAScript modules (import ... from '...').
-        module: isModern || isDev,
+        forOf: true,
       },
     },
     experiments: {
-      outputModule: isModern || isDev,
       backCompat: false,
       futureDefaults: false,
     },
     cache: {
       type: 'filesystem',
-      name: `${process.env.NODE_ENV}-${process.env.BABEL_ENV ?? 'default'}`,
     },
     stats: {
       all: false,
@@ -144,8 +103,14 @@ export default async function getWebpackBaseConfig(config, options = {}) {
           // Exclude all but packages from the `@studiometa/` namespace
           exclude: [/node_modules[\\/](?!@studiometa[\\/]).*/],
           type: 'javascript/auto',
-          // eslint-disable-next-line no-nested-ternary
-          use: isDev || isModern ? [esbuild] : [babel, esbuild],
+          use: {
+            loader: 'esbuild-loader',
+            options: {
+              loader: 'ts',
+              target: isDev ? 'es2022' : 'es2020',
+              format: 'esm',
+            },
+          },
         },
         {
           test: /\.(png|jpe?g|gif|webp)$/i,
@@ -221,9 +186,6 @@ export default async function getWebpackBaseConfig(config, options = {}) {
           parallel: true,
           extractComments: true,
           minify: TerserPlugin.esbuildMinify,
-          terserOptions: {
-            module: isModern,
-          },
         }),
         new CssMinimizerPlugin({
           minify: CssMinimizerPlugin.esbuildMinify,
@@ -318,12 +280,12 @@ export default async function getWebpackBaseConfig(config, options = {}) {
       new BundleAnalyzerPlugin({
         analyzerMode: isDev ? 'server' : 'static',
         excludeAssets: /hot-update/,
-      })
+      }),
     );
   }
 
   if (config.webpack && typeof config.webpack === 'function') {
-    await config.webpack(webpackBaseConfig, isDev, { isModern, isLegacy });
+    await config.webpack(webpackBaseConfig, isDev);
   }
 
   return webpackBaseConfig;

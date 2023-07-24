@@ -22,7 +22,7 @@ async function build(config, name) {
         stats.toString({
           ...config.stats,
           colors: true,
-        })
+        }),
       );
       console.log('');
       resolve(stats);
@@ -31,11 +31,8 @@ async function build(config, name) {
 }
 
 export default async (options = {}) => {
-  process.env.NODE_ENV = 'watch';
-  process.env.BABEL_ENV = 'modern';
-
   const config = await getConfig(options);
-  const webpackConfig = await getWebpackConfig(config, { isModern: true });
+  const webpackConfig = await getWebpackConfig(config);
   webpackConfig.watch = true;
   webpackConfig.optimization.minimize = false;
   webpackConfig.mode = 'development';
