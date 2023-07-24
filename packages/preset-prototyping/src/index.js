@@ -40,6 +40,7 @@ export default function prototyping(options) {
             scriptLoading: 'defer',
           },
           yaml: {},
+          markdown: {},
         },
         options
       );
