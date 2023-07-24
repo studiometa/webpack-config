@@ -7,14 +7,12 @@
   "types": "src/index.d.ts",
   "exports": {
     ".": {
-      "import": "./src/index.js",
-      "require": "./src/index.cjs",
-      "types": "./src/index.d.ts"
+      "types": "./src/index.d.ts",
+      "import": "./src/index.js"
     },
     "./presets": {
-      "import": "./src/presets/index.js",
-      "require": "./src/presets/index.cjs",
-      "types": "./src/presets/index.d.ts"
+      "types": "./src/presets/index.d.ts",
+      "import": "./src/presets/index.js"
     }
   },
   "bin": {
