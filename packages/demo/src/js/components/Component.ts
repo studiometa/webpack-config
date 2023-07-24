@@ -24,6 +24,6 @@ export default class Component<T extends BaseProps = BaseProps> extends Base<
 
   async mounted() {
     const foo = await this.$children.ComponentFoo[0];
-    console.log(foo.$options.foo, foo.$refs.btn);
+    console.log(foo?.$options.foo, foo?.$refs.btn);
   }
 }
