@@ -4,7 +4,6 @@ import WebpackBar from 'webpackbar';
 import * as glob from 'glob';
 import RemoveEmptyScriptsPlugin from 'webpack-remove-empty-scripts';
 import webpack from 'webpack';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import BundleAnalyzerPluginImport from 'webpack-bundle-analyzer';
 import TerserPlugin from 'terser-webpack-plugin';
 import commonDir from 'common-dir';
@@ -64,6 +63,7 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
       },
     },
     experiments: {
+      css: true,
       backCompat: false,
       futureDefaults: false,
     },
@@ -109,6 +109,42 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
               format: 'esm',
             },
           },
+        },
+        {
+          test: /\.s(a|c)ss$/,
+          type: 'css/global',
+          use: [
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  plugins: ['autoprefixer'],
+                },
+              },
+            },
+            'resolve-url-loader',
+            {
+              loader: 'sass-loader',
+              options: {
+                sassOptions: config.sassOptions || {},
+                sourceMap: true,
+              },
+            },
+          ],
+        },
+        {
+          test: /\.css$/i,
+          type: 'css/global',
+          use: [
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  plugins: ['autoprefixer'],
+                },
+              },
+            },
+          ],
         },
         {
           test: /\.(png|jpe?g|gif|webp)$/i,
@@ -165,10 +201,6 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
     plugins: [
       new WebpackBar(),
       new RemoveEmptyScriptsPlugin(),
-      new MiniCssExtractPlugin({
-        filename: '[name].css',
-        chunkFilename: isDev ? '[name].css' : '[name].[contenthash].css',
-      }),
       new DefinePlugin({
         __DEV__: JSON.stringify(isDev),
       }),
@@ -205,37 +237,10 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
     },
   };
 
-  const defaultCssRule = {
-    test: /\.(sa|sc|c)ss$/,
-    use: [
-      {
-        loader: MiniCssExtractPlugin.loader,
-      },
-      { loader: 'css-loader', options: { url: { filter: (url) => !url.startsWith('/') } } },
-      {
-        loader: 'postcss-loader',
-        options: {
-          postcssOptions: {
-            plugins: ['autoprefixer'],
-          },
-        },
-      },
-      'resolve-url-loader',
-      {
-        loader: 'sass-loader',
-        options: {
-          sassOptions: config.sassOptions || {},
-          sourceMap: true,
-        },
-      },
-    ],
-  };
-
   if (config.mergeCSS) {
-    webpackBaseConfig.module.rules.push(defaultCssRule);
     const stylesCacheGroup = {
       name: 'styles',
-      type: 'css/mini-extract',
+      test: /\.css$/,
       chunks: 'initial',
       enforce: true,
     };
@@ -245,32 +250,6 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
     }
 
     webpackBaseConfig.optimization.splitChunks.cacheGroups.styles = stylesCacheGroup;
-  } else {
-    defaultCssRule.test = /(?<!\.vue)\.(sa|sc|c)ss$/;
-    const vueCssRule = {
-      test: /\.vue\.(sa|sc|c)ss$/,
-      use: [
-        'style-loader',
-        { loader: 'css-loader', options: { url: { filter: (url) => !url.startsWith('/') } } },
-        {
-          loader: 'postcss-loader',
-          options: {
-            postcssOptions: {
-              plugins: isDev ? ['postcss-preset-env'] : ['postcss-preset-env', 'autoprefixer'],
-            },
-          },
-        },
-        'resolve-url-loader',
-        {
-          loader: 'sass-loader',
-          options: {
-            sassOptions: config.sassOptions || {},
-            sourceMap: true,
-          },
-        },
-      ],
-    };
-    webpackBaseConfig.module.rules.push(defaultCssRule, vueCssRule);
   }
 
   if (config.analyze) {

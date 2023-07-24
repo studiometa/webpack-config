@@ -414,6 +414,7 @@ export default function prototyping(options) {
       config.src = [
         opts.ts ? './src/js/app.ts' : './src/js/app.js',
         './src/css/**/[!_]*.scss',
+        './src/css/**/[!_]*.css',
         ...(config.src ?? []),
       ];
       config.public = config.public ?? '/';
