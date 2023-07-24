@@ -19,10 +19,11 @@ const LEADING_SLASH_REGEXT = /^\//;
 /**
  * Get Webpack base config.
  * @param   {import('./index').MetaConfig} config
+ * @param   {{ mode?: 'development'|'production' }} [options]
  * @returns {import('webpack').Configuration}
  */
-export default async function getWebpackBaseConfig(config) {
-  const isDev = process.env.NODE_ENV !== 'production';
+export default async function getWebpackBaseConfig(config, { mode = 'production' } = {}) {
+  const isDev = mode !== 'production';
   const src = path.resolve(config.context, commonDir(config.src));
 
   const entry = Object.fromEntries(
@@ -42,10 +43,7 @@ export default async function getWebpackBaseConfig(config) {
     devtool: 'source-map',
     target: ['web', 'es6'],
     output: {
-      path: path.resolve(
-        config.context,
-        config.dist,
-      ),
+      path: path.resolve(config.context, config.dist),
       publicPath: config.public ?? 'auto',
       pathinfo: false,
       filename: `[name].js`,

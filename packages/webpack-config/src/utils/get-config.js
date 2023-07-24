@@ -6,10 +6,10 @@ import extendWebpack from './extend-webpack-config.js';
 /**
  * Get config from meta.config.js file.
  *
- * @param   {{ analyze: boolean }} [options] CLI Options.
+ * @param   {{ analyze: boolean, mode: 'development'|'production' }} [options] CLI Options.
  * @returns {import('../index').MetaConfig}
  */
-export default async function getConfig({ analyze = false } = {}) {
+export default async function getConfig({ analyze = false, mode = 'production' } = {}) {
   const configPath = await findUp(['meta.config.js', 'meta.config.mjs']);
 
   if (!configPath) {
@@ -22,7 +22,7 @@ export default async function getConfig({ analyze = false } = {}) {
   }
 
   const { default: config } = await import(configPath);
-  const isDev = process.env.NODE_ENV !== 'production';
+  const isDev = mode !== 'production';
 
   if (analyze) {
     config.analyze = true;

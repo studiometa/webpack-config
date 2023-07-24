@@ -4,42 +4,34 @@ import getConfig from './utils/get-config.js';
 import getWebpackConfig from './webpack.prod.config.js';
 
 /**
- * Build a given Webpack config.
- * @param {WebpackConfig} config The Weback configuration object.
- * @param {string} name The name of the build.
+ * Bundle for production.
+ * @param   {{ analyze?: boolean, mode?: 'development'|'production' }} [options]
+ * @returns {Promise<void>}
  */
-async function build(config, name) {
-  console.log(`Building ${name} bundle in ${config.output.path.replace(cwd(), '.')}...`);
-
-  return new Promise((resolve, reject) => {
-    console.time('Built in');
-    webpack(config, (err, stats) => {
-      if (err) {
-        console.error(err.message);
-        reject(err);
-        return;
-      }
-
-      console.log(
-        stats.toString({
-          ...config.stats,
-          colors: true,
-        })
-      );
-      console.log('');
-      console.timeEnd('Built in');
-
-      if (stats.hasErrors()) {
-        reject(stats);
-      } else {
-        resolve(stats);
-      }
-    });
-  });
-}
-
 export default async (options = {}) => {
   const config = await getConfig(options);
   const webpackConfig = await getWebpackConfig(config);
-  await build(webpackConfig, 'modern');
+  console.log(`Building bundle in ${webpackConfig.output.path.replace(cwd(), '.')}...`);
+
+  console.time('Built in');
+  webpack(webpackConfig, (err, stats) => {
+    if (err) {
+      console.error(err.message);
+      process.exit(1);
+      return;
+    }
+
+    console.log(
+      stats.toString({
+        ...webpackConfig.stats,
+        colors: true,
+      }),
+    );
+    console.log('');
+    console.timeEnd('Built in');
+
+    if (stats.hasErrors()) {
+      process.exit(1);
+    }
+  });
 };
