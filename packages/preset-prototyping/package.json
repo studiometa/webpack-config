@@ -1,0 +1,43 @@
+{
+  "name": "@studiometa/webpack-config-preset-prototyping",
+  "version": "4.2.6",
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/studiometa/webpack-config.git"
+  },
+  "keywords": [
+    "webpack",
+    "configuration",
+    "config",
+    "prototyping",
+    "twig",
+    "tailwindcss",
+    "tailwind"
+  ],
+  "author": "Studio Meta <agence@studiometa.fr> (https://www.studiometa.fr)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/studiometa/webpack-config/issues"
+  },
+  "engines": {
+    "node": "^14.13.1 || >=16.0.0"
+  },
+  "homepage": "https://github.com/studiometa/webpack-config#readme",
+  "dependencies": {
+    "@studiometa/webpack-config-preset-markdown": "file:../preset-markdown",
+    "collect.js": "^4.36.1",
+    "filemanager-webpack-plugin": "^8.0.0",
+    "glob": "^10.3.3",
+    "html-escaper": "^3.0.3",
+    "html-webpack-harddisk-plugin": "^2.0.0",
+    "html-webpack-plugin": "^5.5.3",
+    "lodash.merge": "^4.6.2",
+    "minimatch": "^9.0.3",
+    "param-case": "^3.0.4"
+  }
+}

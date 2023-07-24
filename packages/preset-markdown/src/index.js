@@ -4,11 +4,11 @@ import RemarkHTML from 'remark-html';
 let isUsed = false;
 
 /**
- * YAML loader preset.
+ * Markdown loader preset.
  *
  * @see     https://github.com/webpack-contrib/remark-loader
  * @param   {any} [options]
- * @returns {import('./index').Preset}
+ * @returns {import('@studiometa/webpack-config').Preset}
  */
 export default function markdown(options = {}) {
   const opts = merge(

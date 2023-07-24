@@ -1,0 +1,37 @@
+{
+  "name": "@studiometa/webpack-config-preset-markdown",
+  "version": "4.2.6",
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/studiometa/webpack-config.git"
+  },
+  "keywords": [
+    "webpack",
+    "configuration",
+    "config",
+    "prototyping",
+    "twig",
+    "tailwindcss",
+    "tailwind"
+  ],
+  "author": "Studio Meta <agence@studiometa.fr> (https://www.studiometa.fr)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/studiometa/webpack-config/issues"
+  },
+  "engines": {
+    "node": "^14.13.1 || >=16.0.0"
+  },
+  "homepage": "https://github.com/studiometa/webpack-config#readme",
+  "dependencies": {
+    "front-matter-loader": "^2.0.0",
+    "remark": "^14.0.3",
+    "remark-html": "^15.0.2",
+    "remark-loader": "^5.0.0"
+  }
+}
