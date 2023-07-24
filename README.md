@@ -137,7 +137,6 @@ export default defineConfig({
     stylelint(), // use the `stylelint` preset
     twig(), // use the `twig` preset
     tailwindcss(), // use the `tailwindcss` preset,
-    prototyping(), // use the `prototyping` preset
     yaml(), // use the `yaml` preset,
     vue(), // use the Vue 3 preset,
     hash(), // use the content hash preset
@@ -197,7 +196,6 @@ Presets can be used to extend the CLI configuration elegantly. The following pre
 - [`stylelint`](#stylelint)
 - [`twig`](#twig)
 - [`tailwindcss`](#tailwindcss)
-- [`prototyping`](#prototyping)
 - [`yaml`](#yaml)
 - [`vue`](#vue)
 - [`hash`](#hash)
@@ -386,50 +384,6 @@ export default defineConfig({
     }),
   ],
 });
-```
-
-### `prototyping`
-
-Add the [`twig`](#twig) and [`tailwindcss`](#tailwindcss) presets as well as default values for the project's structure.
-
-#### Options
-
-- `ts` (`boolean`): use `app.ts` as entry point instead of `app.js`
-- `twig` (`Object`): options for the [`twig` preset](#twig)
-- `tailwindcss` (`Object`): options for the [`tailwindcss` preset](#tailwindcss)
-- `html` (`Object`): options for the [`html-webpack-plugin` plugin](https://github.com/jantimon/html-webpack-plugin#options)
-
-#### Examples
-
-Use it in your `meta.config.js` file:
-
-```js
-import { defineConfig } from '@studiometa/webpack-config';
-import { prototyping } from '@studiometa/webpack-config/presets';
-
-export default defineConfig({
-  presets: [prototyping()],
-});
-```
-
-And set up your project with the following folder structure:
-
-```
-meta.config.js
-package.json
-public/ --> public assets, served from `/`
-...
-src/
-  css/ --> css files
-    app.scss
-  js/ --> js files
-    app.js
-  templates/
-    components/ --> component files, aliased to `@components`
-    layouts/ --> layout files, aliased to `@layout`
-    foo/ --> random files, aliased to `@foo`
-    pages/
-      index.twig
 ```
 
 ### `yaml`
