@@ -38,4 +38,8 @@
     background-image: url('../svg/icon.svg');
     background-size: cover;
   }
+
+  .vue-icon-bg-bis {
+    background-image: url('/svg/icon.svg');
+  }
 </style>

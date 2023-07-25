@@ -10,10 +10,11 @@ import commonDir from 'common-dir';
 import WebpackAssetsManifest from 'webpack-assets-manifest';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 
-const { DefinePlugin } = webpack;
+const { DefinePlugin, ExternalsPlugin } = webpack;
 const { BundleAnalyzerPlugin } = BundleAnalyzerPluginImport;
 
-const LEADING_SLASH_REGEXT = /^\//;
+const LEADING_SLASH_REGEXP = /^\//;
+const CSS_FILE_REGEXP = /\.(sa|sc|c)ss$/;
 
 /**
  * Get Webpack base config.
@@ -29,7 +30,7 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
     config.src.flatMap((entryGlob) => {
       return glob.sync(entryGlob, { cwd: config.context, absolute: true }).map((file) => {
         return [
-          file.replace(src, '').replace(path.extname(file), '').replace(LEADING_SLASH_REGEXT, ''),
+          file.replace(src, '').replace(path.extname(file), '').replace(LEADING_SLASH_REGEXP, ''),
           file,
         ];
       });
@@ -215,6 +216,21 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
         entrypoints: true,
         entrypointsUseAssets: true,
       }),
+      // Do not resolve URL starting with `/` in Sass and CSS files
+      new ExternalsPlugin(
+        'module',
+        ({ context, request, dependencyType, contextInfo }, callback) => {
+          if (
+            dependencyType === 'url' &&
+            request.startsWith('/') &&
+            CSS_FILE_REGEXP.test(contextInfo.issuer)
+          ) {
+            return callback(null, `asset ${request}`);
+          }
+
+          callback();
+        },
+      ),
     ],
     optimization: {
       minimizer: [
