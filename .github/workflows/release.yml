@@ -18,39 +18,19 @@ jobs:
 
       - run: npm i
 
-      - name: 'Publish @studiometa/webpack-config'
+      - name: 'Publish packages'
         run: |
-          cd packages/webpack-config
           VERSION=${GITHUB_REF/refs\/tags\//}
           TAG='latest'
           if [[ $VERSION =~ 'alpha' || $VERSION =~ 'beta' ]]; then
             TAG='next'
           fi
-          npm publish --tag $TAG
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-
-      - name: 'Publish @studiometa/webpack-config-preset-vue-2'
-        run: |
-          cd packages/preset-vue-2
-          VERSION=${GITHUB_REF/refs\/tags\//}
-          TAG='latest'
-          if [[ $VERSION =~ 'alpha' || $VERSION =~ 'beta' ]]; then
-            TAG='next'
-          fi
-          npm publish --tag $TAG
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-
-      - name: 'Publish @studiometa/webpack-config-preset-vue-3'
-        run: |
-          cd packages/preset-vue-3
-          VERSION=${GITHUB_REF/refs\/tags\//}
-          TAG='latest'
-          if [[ $VERSION =~ 'alpha' || $VERSION =~ 'beta' ]]; then
-            TAG='next'
-          fi
-          npm publish --tag $TAG
+          npm publish --tag $TAG \
+            --workspace @studiometa/webpack-config \
+            --workspace @studiometa/webpack-config-preset-markdown \
+            --workspace @studiometa/webpack-config-preset-prototyping \
+            --workspace @studiometa/webpack-config-preset-vue-2 \
+            --workspace @studiometa/webpack-config-preset-vue-3
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 

@@ -1,5 +1,5 @@
 {
-  "name": "@studiometa/webpack-config-preset-vue-2",
+  "name": "@studiometa/webpack-config-preset-prototyping",
   "version": "5.0.0",
   "publishConfig": {
     "access": "public"
@@ -14,8 +14,10 @@
     "webpack",
     "configuration",
     "config",
-    "vue",
-    "vue2"
+    "prototyping",
+    "twig",
+    "tailwindcss",
+    "tailwind"
   ],
   "author": "Studio Meta <agence@studiometa.fr> (https://www.studiometa.fr)",
   "license": "MIT",
@@ -27,11 +29,19 @@
   },
   "homepage": "https://github.com/studiometa/webpack-config#readme",
   "scripts": {
-    "prepublishOnly": "node scripts/add-peer-dependencies.js"
+    "prepublishOnly": "node scripts/update-workspace-dependency.js"
   },
   "dependencies": {
-    "vue-loader": "^15.10.1",
-    "vue-svg-loader": "^0.16.0",
-    "vue-template-compiler": "^2.7.14"
+    "@studiometa/webpack-config-preset-markdown": "file:../preset-markdown",
+    "collect.js": "^4.36.1",
+    "filemanager-webpack-plugin": "^8.0.0",
+    "glob": "^10.3.3",
+    "html-escaper": "^3.0.3",
+    "html-webpack-harddisk-plugin": "^2.0.0",
+    "html-webpack-plugin": "^5.5.3",
+    "lodash.merge": "^4.6.2",
+    "minimatch": "^9.0.3",
+    "param-case": "^3.0.4",
+    "twig": "^1.16.0"
   }
 }

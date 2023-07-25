@@ -6,10 +6,10 @@ import extendWebpack from './extend-webpack-config.js';
 /**
  * Get config from meta.config.js file.
  *
- * @param   {{ analyze: boolean, target: Array<'modern'|'legacy'> }} [options] CLI Options.
+ * @param   {{ analyze: boolean, mode: 'development'|'production' }} [options] CLI Options.
  * @returns {import('../index').MetaConfig}
  */
-export default async function getConfig({ analyze = false, target = [] } = {}) {
+export default async function getConfig({ analyze = false, mode = 'production' } = {}) {
   const configPath = await findUp(['meta.config.js', 'meta.config.mjs']);
 
   if (!configPath) {
@@ -22,7 +22,7 @@ export default async function getConfig({ analyze = false, target = [] } = {}) {
   }
 
   const { default: config } = await import(configPath);
-  const isDev = process.env.NODE_ENV !== 'production';
+  const isDev = mode !== 'production';
 
   if (analyze) {
     config.analyze = true;
@@ -71,34 +71,6 @@ export default async function getConfig({ analyze = false, target = [] } = {}) {
       });
       const duration = performance.now() - start;
       console.log(`Using the "${preset.name}" preset (${duration.toFixed(3)}ms)`);
-    }
-  }
-
-  // Read from command line args first, then meta.config.js, then set default
-  if (Array.isArray(target) && target.length) {
-    config.modern = target.includes('modern');
-    config.legacy = target.includes('legacy');
-  } else if (config.target) {
-    const targetConfig = Array.isArray(config.target) ? config.target : [config.target];
-    config.modern = targetConfig.includes('modern');
-    config.legacy = targetConfig.includes('legacy');
-  } else {
-    // Default to only modern build.
-    config.modern = true;
-    config.legacy = false;
-  }
-
-  if (process.env.NODE_ENV === 'production') {
-    if (!config.modern && !config.legacy) {
-      throw new Error('Can not disable both legacy and modern bundles.');
-    }
-
-    if (config.modern && config.legacy) {
-      console.log('Building modern and legacy bundles.');
-    } else if (config.modern && !config.legacy) {
-      console.log('Building modern bundle.');
-    } else {
-      console.log('Building legacy bundle.');
     }
   }
 

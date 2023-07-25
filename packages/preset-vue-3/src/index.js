@@ -13,6 +13,7 @@ export default function vue() {
           loader: 'vue-loader',
           options: {
             reactivityTransform: true,
+            experimentalInlineMatchResource: true,
           },
         };
 

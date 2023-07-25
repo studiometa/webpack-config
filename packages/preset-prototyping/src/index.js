@@ -1,19 +1,18 @@
+import fs from 'node:fs';
+import path from 'node:path';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import HtmlWebpackHarddiskPlugin from 'html-webpack-harddisk-plugin';
 import FileManagerPlugin from 'filemanager-webpack-plugin';
-import fs from 'fs';
 import * as glob from 'glob';
-import path from 'path';
 import merge from 'lodash.merge';
-// eslint-disable-next-line import/no-extraneous-dependencies
-import minimatch from 'minimatch';
+import { minimatch } from 'minimatch';
 import { collect } from 'collect.js';
-import twigPreset from '../twig.js';
-import markdown from '../markdown.js';
-import tailwindcssPreset from '../tailwindcss.js';
-import yamlPreset from '../yaml.js';
-import hash from '../hash.js';
-import Html from '../../utils/Html.js';
+import { tailwindcss as tailwindcssPreset, yaml as yamlPreset, hash } from '@studiometa/webpack-config/presets';
+import markdown from '@studiometa/webpack-config-preset-markdown';
+import twigPreset from './presets/twig.js';
+import Html from './utils/Html.js';
+
+export { twigPreset as twig };
 
 const dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -44,6 +43,7 @@ export default function prototyping(options) {
             scriptLoading: 'defer',
           },
           yaml: {},
+          markdown: {},
         },
         options
       );
@@ -417,6 +417,7 @@ export default function prototyping(options) {
       config.src = [
         opts.ts ? './src/js/app.ts' : './src/js/app.js',
         './src/css/**/[!_]*.scss',
+        './src/css/**/[!_]*.css',
         ...(config.src ?? []),
       ];
       config.public = config.public ?? '/';

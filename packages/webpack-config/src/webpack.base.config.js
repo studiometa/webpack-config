@@ -4,7 +4,6 @@ import WebpackBar from 'webpackbar';
 import * as glob from 'glob';
 import RemoveEmptyScriptsPlugin from 'webpack-remove-empty-scripts';
 import webpack from 'webpack';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import BundleAnalyzerPluginImport from 'webpack-bundle-analyzer';
 import TerserPlugin from 'terser-webpack-plugin';
 import commonDir from 'common-dir';
@@ -19,12 +18,11 @@ const LEADING_SLASH_REGEXT = /^\//;
 /**
  * Get Webpack base config.
  * @param   {import('./index').MetaConfig} config
- * @param   {{ isModern?: boolean, isLegacy?: boolean }} [options]
+ * @param   {{ mode?: 'development'|'production' }} [options]
  * @returns {import('webpack').Configuration}
  */
-export default async function getWebpackBaseConfig(config, options = {}) {
-  const isDev = process.env.NODE_ENV !== 'production';
-  const { isModern, isLegacy } = { isModern: false, isLegacy: false, ...options };
+export default async function getWebpackBaseConfig(config, { mode = 'production' } = {}) {
+  const isDev = mode !== 'production';
   const src = path.resolve(config.context, commonDir(config.src));
 
   const entry = Object.fromEntries(
@@ -35,83 +33,42 @@ export default async function getWebpackBaseConfig(config, options = {}) {
           file,
         ];
       });
-    })
+    }),
   );
-
-  const babel = {
-    loader: 'babel-loader',
-    options: {
-      cacheDirectory: true,
-      rootMode: 'upward-optional',
-      plugins: ['@babel/plugin-transform-runtime'],
-      presets: [
-        [
-          '@babel/preset-env',
-          {
-            targets: '> 0.2%, last 4 versions, not dead',
-            useBuiltIns: 'usage',
-            corejs: '3.11',
-          },
-        ],
-      ],
-    },
-  };
-
-  const esbuild = {
-    loader: 'esbuild-loader',
-    options: {
-      loader: 'ts',
-      target: isDev ? 'es2022' : 'es2020',
-      format: 'esm',
-    },
-  };
 
   const webpackBaseConfig = {
     context: config.context,
     entry,
     devtool: 'source-map',
-    target: ['web', isModern ? 'es6' : 'es5'],
+    target: ['web', 'es6'],
     output: {
-      path: path.resolve(
-        config.context,
-        config.dist,
-        config.modern && config.legacy && isLegacy ? '__legacy__' : ''
-      ),
-      publicPath: config.public
-        ? path.join(config.public, config.modern && config.legacy && isLegacy ? '__legacy__' : '')
-        : 'auto',
+      path: path.resolve(config.context, config.dist),
+      publicPath: config.public ?? 'auto',
       pathinfo: false,
       filename: `[name].js`,
       chunkFilename: isDev ? '[name].js' : '[name].[contenthash].js',
       sourceMapFilename: '[file].map',
       clean: true,
-      uniqueName: process.env.BABEL_ENV,
-      module: isModern || isDev,
-      // Do not consider scripts to be type="module"
-      scriptType: false,
       environment: {
         // The environment supports arrow functions ('() => { ... }').
-        arrowFunction: isModern || isDev,
+        arrowFunction: true,
         // The environment supports const and let for variable declarations.
-        const: isModern || isDev,
+        const: true,
         // The environment supports destructuring ('{ a, b } = obj').
-        destructuring: isModern || isDev,
+        destructuring: true,
         // The environment supports an async import() function to import EcmaScript modules.
-        dynamicImport: isModern || isDev,
+        dynamicImport: true,
         // The environment supports 'for of' iteration ('for (const x of array) { ... }').
-        forOf: isModern || isDev,
-        // The environment supports ECMAScript Module syntax to import ECMAScript modules (import ... from '...').
-        module: isModern || isDev,
+        forOf: true,
       },
     },
     experiments: {
-      outputModule: isModern || isDev,
+      css: true,
       backCompat: false,
       futureDefaults: false,
     },
     cache: {
       type: 'filesystem',
-      name: `${process.env.NODE_ENV}-${process.env.BABEL_ENV ?? 'default'}`,
     },
     stats: {
       all: false,
@@ -144,8 +101,56 @@ export default async function getWebpackBaseConfig(config, options = {}) {
           // Exclude all but packages from the `@studiometa/` namespace
           exclude: [/node_modules[\\/](?!@studiometa[\\/]).*/],
           type: 'javascript/auto',
-          // eslint-disable-next-line no-nested-ternary
-          use: isDev || isModern ? [esbuild] : [babel, esbuild],
+          use: {
+            loader: 'esbuild-loader',
+            options: {
+              loader: 'ts',
+              target: isDev ? 'es2022' : 'es2020',
+              format: 'esm',
+            },
+          },
+        },
+        {
+          test: /\.css$/i,
+          type: 'css/global',
+          use: [
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  plugins: ['autoprefixer'],
+                },
+              },
+            },
+          ],
+        },
+        {
+          test: /\.s(a|c)ss$/i,
+          type: 'css/global',
+          use: [
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  plugins: ['autoprefixer'],
+                },
+              },
+            },
+            'resolve-url-loader',
+            {
+              loader: 'sass-loader',
+              options: {
+                sassOptions: {
+                  ...(config.sassOptions ?? {}),
+                  // This fix a strange bug where `url()` are not resolved
+                  // by Webpack when the output is set to `compressed` in
+                  // production mode.
+                  outputStyle: 'expanded',
+                },
+                sourceMap: true,
+              },
+            },
+          ],
         },
         {
           test: /\.(png|jpe?g|gif|webp)$/i,
@@ -202,10 +207,6 @@ export default async function getWebpackBaseConfig(config, options = {}) {
     plugins: [
       new WebpackBar(),
       new RemoveEmptyScriptsPlugin(),
-      new MiniCssExtractPlugin({
-        filename: '[name].css',
-        chunkFilename: isDev ? '[name].css' : '[name].[contenthash].css',
-      }),
       new DefinePlugin({
         __DEV__: JSON.stringify(isDev),
       }),
@@ -221,9 +222,6 @@ export default async function getWebpackBaseConfig(config, options = {}) {
           parallel: true,
           extractComments: true,
           minify: TerserPlugin.esbuildMinify,
-          terserOptions: {
-            module: isModern,
-          },
         }),
         new CssMinimizerPlugin({
           minify: CssMinimizerPlugin.esbuildMinify,
@@ -245,72 +243,24 @@ export default async function getWebpackBaseConfig(config, options = {}) {
     },
   };
 
-  const defaultCssRule = {
-    test: /\.(sa|sc|c)ss$/,
-    use: [
-      {
-        loader: MiniCssExtractPlugin.loader,
-      },
-      { loader: 'css-loader', options: { url: { filter: (url) => !url.startsWith('/') } } },
-      {
-        loader: 'postcss-loader',
-        options: {
-          postcssOptions: {
-            plugins: ['autoprefixer'],
-          },
-        },
-      },
-      'resolve-url-loader',
-      {
-        loader: 'sass-loader',
-        options: {
-          sassOptions: config.sassOptions || {},
-          sourceMap: true,
-        },
-      },
-    ],
-  };
-
   if (config.mergeCSS) {
-    webpackBaseConfig.module.rules.push(defaultCssRule);
-    const stylesCacheGroup = {
+    webpackBaseConfig.optimization.splitChunks.cacheGroups.styles = {
       name: 'styles',
-      type: 'css/mini-extract',
       chunks: 'initial',
-      enforce: true,
-    };
+      test(mod, chunks) {
+        const isCSS = mod.type === 'css/global';
 
-    if (typeof config.mergeCSS === 'function' || config.mergeCSS.constructor.name === 'RegExp') {
-      stylesCacheGroup.test = config.mergeCSS;
-    }
+        if (typeof config.mergeCSS === 'function') {
+          return isCSS && config.mergeCSS(mod, chunks);
+        }
 
-    webpackBaseConfig.optimization.splitChunks.cacheGroups.styles = stylesCacheGroup;
-  } else {
-    defaultCssRule.test = /(?<!\.vue)\.(sa|sc|c)ss$/;
-    const vueCssRule = {
-      test: /\.vue\.(sa|sc|c)ss$/,
-      use: [
-        'style-loader',
-        { loader: 'css-loader', options: { url: { filter: (url) => !url.startsWith('/') } } },
-        {
-          loader: 'postcss-loader',
-          options: {
-            postcssOptions: {
-              plugins: isDev ? ['postcss-preset-env'] : ['postcss-preset-env', 'autoprefixer'],
-            },
-          },
-        },
-        'resolve-url-loader',
-        {
-          loader: 'sass-loader',
-          options: {
-            sassOptions: config.sassOptions || {},
-            sourceMap: true,
-          },
-        },
-      ],
+        if (config.mergeCSS instanceof RegExp) {
+          return isCSS && config.mergeCSS.test(mod.resource);
+        }
+
+        return isCSS;
+      },
     };
-    webpackBaseConfig.module.rules.push(defaultCssRule, vueCssRule);
   }
 
   if (config.analyze) {
@@ -318,12 +268,12 @@ export default async function getWebpackBaseConfig(config, options = {}) {
       new BundleAnalyzerPlugin({
         analyzerMode: isDev ? 'server' : 'static',
         excludeAssets: /hot-update/,
-      })
+      }),
     );
   }
 
   if (config.webpack && typeof config.webpack === 'function') {
-    await config.webpack(webpackBaseConfig, isDev, { isModern, isLegacy });
+    await config.webpack(webpackBaseConfig, isDev);
   }
 
   return webpackBaseConfig;
