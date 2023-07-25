@@ -45,7 +45,6 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
     output: {
       path: path.resolve(config.context, config.dist),
       publicPath: config.public ?? 'auto',
-      pathinfo: false,
       filename: `[name].js`,
       chunkFilename: isDev ? '[name].js' : '[name].[contenthash].js',
       sourceMapFilename: '[file].map',
@@ -69,7 +68,6 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
       errors: true,
       errorDetails: true,
       performance: true,
-      excludeAssets: isDev ? [/\.map$/, /hot-update/, /^manifest\.(js|json)$/] : [/\.map$/],
     },
     module: {
       rules: [
