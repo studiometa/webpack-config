@@ -1,4 +1,4 @@
-import webpackMerge from 'webpack-merge';
+import * as webpackMerge from 'webpack-merge';
 import getWebpackConfig from './webpack.base.config.js';
 
 /**
@@ -10,7 +10,7 @@ export default async function getWebpackDevConfig(config) {
   const baseConfig = await getWebpackConfig(config, { mode: 'development' });
   const devConfig = webpackMerge.merge(baseConfig, {
     mode: 'development',
-    devtool: 'cheap-source-map',
+    devtool: 'eval-cheap-source-map',
     devServer: {
       overlay: true,
       allowedHosts: [process.env.APP_HOST || process.env.APP_HOSTNAME],

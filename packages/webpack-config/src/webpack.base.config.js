@@ -10,10 +10,11 @@ import commonDir from 'common-dir';
 import WebpackAssetsManifest from 'webpack-assets-manifest';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 
-const { DefinePlugin } = webpack;
+const { DefinePlugin, ExternalsPlugin } = webpack;
 const { BundleAnalyzerPlugin } = BundleAnalyzerPluginImport;
 
-const LEADING_SLASH_REGEXT = /^\//;
+const LEADING_SLASH_REGEXP = /^\//;
+const CSS_FILE_REGEXP = /\.(sa|sc|c)ss$/;
 
 /**
  * Get Webpack base config.
@@ -29,7 +30,7 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
     config.src.flatMap((entryGlob) => {
       return glob.sync(entryGlob, { cwd: config.context, absolute: true }).map((file) => {
         return [
-          file.replace(src, '').replace(path.extname(file), '').replace(LEADING_SLASH_REGEXT, ''),
+          file.replace(src, '').replace(path.extname(file), '').replace(LEADING_SLASH_REGEXP, ''),
           file,
         ];
       });
@@ -40,27 +41,14 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
     context: config.context,
     entry,
     devtool: 'source-map',
-    target: ['web', 'es6'],
+    target: 'browserslist:> 0.2%, last 4 versions, not dead',
     output: {
       path: path.resolve(config.context, config.dist),
       publicPath: config.public ?? 'auto',
-      pathinfo: false,
       filename: `[name].js`,
       chunkFilename: isDev ? '[name].js' : '[name].[contenthash].js',
       sourceMapFilename: '[file].map',
       clean: true,
-      environment: {
-        // The environment supports arrow functions ('() => { ... }').
-        arrowFunction: true,
-        // The environment supports const and let for variable declarations.
-        const: true,
-        // The environment supports destructuring ('{ a, b } = obj').
-        destructuring: true,
-        // The environment supports an async import() function to import EcmaScript modules.
-        dynamicImport: true,
-        // The environment supports 'for of' iteration ('for (const x of array) { ... }').
-        forOf: true,
-      },
     },
     experiments: {
       css: true,
@@ -80,7 +68,6 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
       errors: true,
       errorDetails: true,
       performance: true,
-      excludeAssets: isDev ? [/\.map$/, /hot-update/, /^manifest\.(js|json)$/] : [/\.map$/],
     },
     module: {
       rules: [
@@ -215,6 +202,21 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
         entrypoints: true,
         entrypointsUseAssets: true,
       }),
+      // Do not resolve URL starting with `/` in Sass and CSS files
+      new ExternalsPlugin(
+        'module',
+        ({ context, request, dependencyType, contextInfo }, callback) => {
+          if (
+            dependencyType === 'url' &&
+            request.startsWith('/') &&
+            CSS_FILE_REGEXP.test(contextInfo.issuer)
+          ) {
+            return callback(null, `asset ${request}`);
+          }
+
+          callback();
+        },
+      ),
     ],
     optimization: {
       minimizer: [
