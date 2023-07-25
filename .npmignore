@@ -1,7 +1,6 @@
 /demo/
 *.sublime-*
 .editorconfig
-.babelrc.js
 .eslintrc.js
 .prettierrc.js
 readme.md

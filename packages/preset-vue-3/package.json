@@ -1,6 +1,6 @@
 {
   "name": "@studiometa/webpack-config-preset-vue-3",
-  "version": "4.2.6",
+  "version": "5.0.0",
   "publishConfig": {
     "access": "public"
   },
@@ -30,8 +30,8 @@
     "vue": "^3.2.37"
   },
   "dependencies": {
-    "@vue/compiler-sfc": "^3.2.47",
-    "vue-loader": "^17.0.1",
+    "@vue/compiler-sfc": "^3.3.4",
+    "vue-loader": "^17.2.2",
     "vue-svg-loader": "^0.17.0-beta.2"
   }
 }

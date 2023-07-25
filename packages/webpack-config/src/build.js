@@ -4,53 +4,42 @@ import getConfig from './utils/get-config.js';
 import getWebpackConfig from './webpack.prod.config.js';
 
 /**
- * Build a given Webpack config.
- * @param {WebpackConfig} config The Weback configuration object.
- * @param {string} name The name of the build.
+ * Bundle for production.
+ * @param   {{ analyze?: boolean, mode?: 'development'|'production' }} [options]
+ * @returns {Promise<void>}
  */
-async function build(config, name) {
-  console.log(`Building ${name} bundle in ${config.output.path.replace(cwd(), '.')}...`);
-
-  return new Promise((resolve, reject) => {
-    console.time('Built in');
-    webpack(config, (err, stats) => {
-      if (err) {
-        console.error(err.message);
-        reject(err);
-        return;
-      }
-
-      console.log(
-        stats.toString({
-          ...config.stats,
-          colors: true,
-        })
-      );
-      console.log('');
-      console.timeEnd('Built in');
-
-      if (stats.hasErrors()) {
-        reject(stats);
-      } else {
-        resolve(stats);
-      }
-    });
-  });
-}
-
 export default async (options = {}) => {
-  process.env.NODE_ENV = 'production';
+  const start = performance.now();
   const config = await getConfig(options);
+  const webpackConfig = await getWebpackConfig(config);
+  console.log(`Compiling assets to ${webpackConfig.output.path.replace(cwd(), '.')}...`);
 
-  if (config.modern) {
-    process.env.BABEL_ENV = 'modern';
-    const modern = await getWebpackConfig(config, { isModern: true });
-    await build(modern, 'modern');
-  }
+  webpack(webpackConfig, (err, stats) => {
+    if (err) {
+      console.error(err.message);
+      process.exit(1);
+      return;
+    }
 
-  if (config.legacy) {
-    process.env.BABEL_ENV = 'legacy';
-    const legacy = await getWebpackConfig(config, { isLegacy: true });
-    await build(legacy, 'legacy');
-  }
+    console.log(
+      stats.toString({
+        ...webpackConfig.stats,
+        colors: true,
+      }),
+    );
+    console.log('');
+
+    let duration = performance.now() - start;
+    let unit = 'ms';
+
+    if (duration >= 1000) {
+      duration /= 1000;
+      unit = 's';
+    }
+    console.log(`Compiled in ${duration.toFixed(2)}${unit}`);
+
+    if (stats.hasErrors()) {
+      process.exit(1);
+    }
+  });
 };

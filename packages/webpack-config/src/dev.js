@@ -13,9 +13,7 @@ import getServer from './utils/get-browsersync.js';
  * @returns {Promise<void>}
  */
 export default async function dev(options = {}) {
-  process.env.NODE_ENV = 'development';
-
-  const config = await getConfig(options);
+  const config = await getConfig({ ...options, mode: 'development' });
   const webpackConfig = await getWebpackConfig(config);
   const server = await getServer(config);
 

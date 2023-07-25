@@ -7,9 +7,12 @@ import * as glob from 'glob';
 import merge from 'lodash.merge';
 import { minimatch } from 'minimatch';
 import { collect } from 'collect.js';
-import { twig as twigPreset, tailwindcss as tailwindcssPreset, yaml as yamlPreset, hash } from '@studiometa/webpack-config/presets';
+import { tailwindcss as tailwindcssPreset, yaml as yamlPreset, hash } from '@studiometa/webpack-config/presets';
 import markdown from '@studiometa/webpack-config-preset-markdown';
+import twigPreset from './presets/twig.js';
 import Html from './utils/Html.js';
+
+export { twigPreset as twig };
 
 const dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -414,6 +417,7 @@ export default function prototyping(options) {
       config.src = [
         opts.ts ? './src/js/app.ts' : './src/js/app.js',
         './src/css/**/[!_]*.scss',
+        './src/css/**/[!_]*.css',
         ...(config.src ?? []),
       ];
       config.public = config.public ?? '/';

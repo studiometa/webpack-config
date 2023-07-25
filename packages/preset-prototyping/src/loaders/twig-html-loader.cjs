@@ -1,6 +1,5 @@
 const path = require('node:path');
 const Twig = require('twig');
-const { getOptions } = require('loader-utils');
 
 const SOURCE_REGEX = /source\s*\(\s*['"]\s*(\.[^'"]+)['"]\s*\)/g;
 const PATH_SEPARATOR_REGEX = /([/\\]+)$/;
@@ -70,7 +69,7 @@ function loader(source) {
   source = relativePathsToAbsolutePathsForSourceFn(source, this.resourcePath);
 
   try {
-    const query = getOptions(this) || {};
+    const query = this.getOptions() || {};
     const templateFile = require.resolve(this.resourcePath);
     const options = {
       path: templateFile,

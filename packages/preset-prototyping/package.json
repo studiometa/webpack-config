@@ -1,6 +1,6 @@
 {
   "name": "@studiometa/webpack-config-preset-prototyping",
-  "version": "4.2.6",
+  "version": "5.0.0",
   "publishConfig": {
     "access": "public"
   },
@@ -28,6 +28,9 @@
     "node": "^14.13.1 || >=16.0.0"
   },
   "homepage": "https://github.com/studiometa/webpack-config#readme",
+  "scripts": {
+    "prepublishOnly": "node scripts/update-workspace-dependency.js"
+  },
   "dependencies": {
     "@studiometa/webpack-config-preset-markdown": "file:../preset-markdown",
     "collect.js": "^4.36.1",
@@ -38,6 +41,7 @@
     "html-webpack-plugin": "^5.5.3",
     "lodash.merge": "^4.6.2",
     "minimatch": "^9.0.3",
-    "param-case": "^3.0.4"
+    "param-case": "^3.0.4",
+    "twig": "^1.16.0"
   }
 }
