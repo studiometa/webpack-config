@@ -136,6 +136,7 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
                 },
               },
             },
+            'resolve-url-loader',
             {
               loader: 'sass-loader',
               options: {
