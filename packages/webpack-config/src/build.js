@@ -1,4 +1,4 @@
-import { cwd } from 'process';
+import { cwd } from 'node:process';
 import webpack from 'webpack';
 import getConfig from './utils/get-config.js';
 import getWebpackConfig from './webpack.prod.config.js';
@@ -16,7 +16,7 @@ export default async (options = {}) => {
 
   webpack(webpackConfig, (err, stats) => {
     if (err) {
-      console.error(err.message);
+      console.error(err);
       process.exit(1);
       return;
     }
