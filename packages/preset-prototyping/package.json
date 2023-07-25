@@ -28,6 +28,9 @@
     "node": "^14.13.1 || >=16.0.0"
   },
   "homepage": "https://github.com/studiometa/webpack-config#readme",
+  "scripts": {
+    "prepublishOnly": "node scripts/update-workspace-dependency.js"
+  },
   "dependencies": {
     "@studiometa/webpack-config-preset-markdown": "file:../preset-markdown",
     "collect.js": "^4.36.1",
