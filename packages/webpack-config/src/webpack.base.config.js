@@ -111,28 +111,6 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
           },
         },
         {
-          test: /\.s(a|c)ss$/,
-          type: 'css/global',
-          use: [
-            {
-              loader: 'postcss-loader',
-              options: {
-                postcssOptions: {
-                  plugins: ['autoprefixer'],
-                },
-              },
-            },
-            'resolve-url-loader',
-            {
-              loader: 'sass-loader',
-              options: {
-                sassOptions: config.sassOptions || {},
-                sourceMap: true,
-              },
-            },
-          ],
-        },
-        {
           test: /\.css$/i,
           type: 'css/global',
           use: [
@@ -142,6 +120,33 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
                 postcssOptions: {
                   plugins: ['autoprefixer'],
                 },
+              },
+            },
+          ],
+        },
+        {
+          test: /\.s(a|c)ss$/i,
+          type: 'css/global',
+          use: [
+            {
+              loader: 'postcss-loader',
+              options: {
+                postcssOptions: {
+                  plugins: ['autoprefixer'],
+                },
+              },
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sassOptions: {
+                  ...(config.sassOptions ?? {}),
+                  // This fix a strange bug where `url()` are not resolved
+                  // by Webpack when the output is set to `compressed` in
+                  // production mode.
+                  outputStyle: 'expanded',
+                },
+                sourceMap: true,
               },
             },
           ],
@@ -238,18 +243,23 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
   };
 
   if (config.mergeCSS) {
-    const stylesCacheGroup = {
+    webpackBaseConfig.optimization.splitChunks.cacheGroups.styles = {
       name: 'styles',
-      test: /\.css$/,
       chunks: 'initial',
-      enforce: true,
+      test(mod, chunks) {
+        const isCSS = mod.type === 'css/global';
+
+        if (typeof config.mergeCSS === 'function') {
+          return isCSS && config.mergeCSS(mod, chunks);
+        }
+
+        if (config.mergeCSS instanceof RegExp) {
+          return isCSS && config.mergeCSS.test(mod.resource);
+        }
+
+        return isCSS;
+      },
     };
-
-    if (typeof config.mergeCSS === 'function' || config.mergeCSS.constructor.name === 'RegExp') {
-      stylesCacheGroup.test = config.mergeCSS;
-    }
-
-    webpackBaseConfig.optimization.splitChunks.cacheGroups.styles = stylesCacheGroup;
   }
 
   if (config.analyze) {
