@@ -41,7 +41,7 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
     context: config.context,
     entry,
     devtool: 'source-map',
-    target: ['web', 'es6'],
+    target: 'browserslist:> 0.2%, last 4 versions, not dead',
     output: {
       path: path.resolve(config.context, config.dist),
       publicPath: config.public ?? 'auto',
@@ -50,18 +50,6 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
       chunkFilename: isDev ? '[name].js' : '[name].[contenthash].js',
       sourceMapFilename: '[file].map',
       clean: true,
-      environment: {
-        // The environment supports arrow functions ('() => { ... }').
-        arrowFunction: true,
-        // The environment supports const and let for variable declarations.
-        const: true,
-        // The environment supports destructuring ('{ a, b } = obj').
-        destructuring: true,
-        // The environment supports an async import() function to import EcmaScript modules.
-        dynamicImport: true,
-        // The environment supports 'for of' iteration ('for (const x of array) { ... }').
-        forOf: true,
-      },
     },
     experiments: {
       css: true,
