@@ -1,1 +1,5 @@
 @import 'tailwindcss/base';
+
+.foo {
+  background-image: url('../svg/icon.svg');
+}
