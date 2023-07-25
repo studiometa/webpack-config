@@ -1,4 +1,4 @@
-import { cwd } from 'process';
+import { cwd } from 'node:process';
 import webpack from 'webpack';
 import getConfig from './utils/get-config.js';
 import getWebpackConfig from './webpack.prod.config.js';
