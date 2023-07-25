@@ -9,11 +9,11 @@ import getWebpackConfig from './webpack.prod.config.js';
  * @returns {Promise<void>}
  */
 export default async (options = {}) => {
+  const start = performance.now();
   const config = await getConfig(options);
   const webpackConfig = await getWebpackConfig(config);
-  console.log(`Building bundle in ${webpackConfig.output.path.replace(cwd(), '.')}...`);
+  console.log(`Compiling assets to ${webpackConfig.output.path.replace(cwd(), '.')}...`);
 
-  console.time('Built in');
   webpack(webpackConfig, (err, stats) => {
     if (err) {
       console.error(err.message);
@@ -28,7 +28,15 @@ export default async (options = {}) => {
       }),
     );
     console.log('');
-    console.timeEnd('Built in');
+
+    let duration = performance.now() - start;
+    let unit = 'ms';
+
+    if (duration >= 1000) {
+      duration /= 1000;
+      unit = 's';
+    }
+    console.log(`Compiled in ${duration.toFixed(2)}${unit}`);
 
     if (stats.hasErrors()) {
       process.exit(1);
