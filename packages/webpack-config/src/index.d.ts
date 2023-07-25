@@ -116,11 +116,11 @@ export interface MetaConfig {
 /**
  * Generate a configuration object for the meta CLI.
  */
-declare function createConfig(config: MetaConfig): MetaConfig;
+declare function defineConfig(config: MetaConfig): MetaConfig;
 
 /**
  * Get the generated Webpack configuration.
  */
 declare function getWebpackConfig(options: { mode?: 'production'|'development' }): WebpackConfig;
 
-export { createConfig, getWebpackConfig, Preset };
+export { defineConfig, getWebpackConfig, Preset };

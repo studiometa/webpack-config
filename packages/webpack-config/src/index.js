@@ -1,19 +1,6 @@
 import getMetaConfig from './utils/get-config.js';
 import getWebpackProdConfig from './webpack.prod.config.js';
 import getWebpackDevConfig from './webpack.dev.config.js';
-
-/**
- * Create a configuration.
- *
- * @deprecated Use `defineConfig` instead.
- * @template  {import('./index').MetaConfig} T
- * @param  {T} config
- * @returns {T}
- */
-export function createConfig(config) {
-  return config;
-}
-
 /**
  * Define the configuration.
  *
