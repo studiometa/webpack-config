@@ -4,7 +4,7 @@ import { VueLoaderPlugin } from 'vue-loader';
  * Vue preset.
  * @returns {import('./index').Preset}
  */
-export default function vue() {
+export function vue() {
   return {
     name: 'vue',
     async handler(config, { extendWebpack }) {
@@ -28,3 +28,5 @@ export default function vue() {
     },
   };
 }
+
+export default vue;

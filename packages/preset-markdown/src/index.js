@@ -10,7 +10,7 @@ let isUsed = false;
  * @param   {any} [options]
  * @returns {import('@studiometa/webpack-config').Preset}
  */
-export default function markdown(options = {}) {
+export function markdown(options = {}) {
   const opts = merge(
     {
       remarkOptions: {
@@ -61,3 +61,5 @@ export default function markdown(options = {}) {
     },
   };
 }
+
+export default markdown;
