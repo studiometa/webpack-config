@@ -20,12 +20,10 @@ And load the preset in the `meta.config.js` file:
 
 ```js
 import { defineConfig } from '@studiometa/webpack-config';
-import prototyping from '@studiometa/webpack-config-preset-prototyping';
+import { prototyping } from '@studiometa/webpack-config-preset-prototyping';
 
 export default defineConfig({
-  presets: [
-    prototyping(),
-  ],
+  presets: [prototyping()],
   // ...
 });
 ```

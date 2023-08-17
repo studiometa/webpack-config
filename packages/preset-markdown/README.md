@@ -16,13 +16,10 @@ And load the preset in the `meta.config.js` file:
 
 ```js
 import { defineConfig } from '@studiometa/webpack-config';
-import markdown from '@studiometa/webpack-config-preset-markdown';
+import { markdown } from '@studiometa/webpack-config-preset-markdown';
 
 export default defineConfig({
-  presets: [
-    markdown(),
-  ],
+  presets: [markdown()],
   // ...
 });
 ```
-
