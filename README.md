@@ -20,7 +20,7 @@ Create a `meta.config.js` file at the root of yout project:
 // meta.config.mjs
 import { defineConfig } from '@studiometa/webpack-config';
 import { twig, yaml, tailwindcss, prototyping, eslint, stylelint, hash, https } from '@studiometa/webpack-config/presets';
-import vue from '@studiometa/webpack-config-preset-vue-3';
+import { vue } from '@studiometa/webpack-config-preset-vue-3';
 
 export default defineConfig({
   src: [
@@ -258,9 +258,11 @@ import { defineConfig } from '@studiometa/webpack-config';
 import { eslint } from '@studiometa/webpack-config/presets';
 
 export default defineConfig({
-  presets: [eslint({
-    fix: false,
-  })],
+  presets: [
+    eslint({
+      fix: false,
+    }),
+  ],
 });
 ```
 
@@ -292,9 +294,11 @@ import { defineConfig } from '@studiometa/webpack-config';
 import { stylelint } from '@studiometa/webpack-config/presets';
 
 export default defineConfig({
-  presets: [stylelint({
-    fix: false,
-  })],
+  presets: [
+    stylelint({
+      fix: false,
+    }),
+  ],
 });
 ```
 

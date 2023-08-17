@@ -29,7 +29,7 @@ const DYNAMIC_ROUTE_REGEX = /\[([^\]]*)\]/g;
  * @param   {{ tailwindcss?: any, twig?: any, html?: any }} options
  * @returns {import('./index').Preset}
  */
-export default function prototyping(options) {
+export function prototyping(options) {
   return {
     name: 'prototyping',
     async handler(config, { extendWebpack, extendBrowsersync, isDev }) {
@@ -438,3 +438,5 @@ export default function prototyping(options) {
     },
   };
 }
+
+export default prototyping;

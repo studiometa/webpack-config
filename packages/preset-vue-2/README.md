@@ -17,12 +17,10 @@ And load the preset in the `meta.config.js` file:
 
 ```js
 import { defineConfig } from '@studiometa/webpack-config';
-import vue from '@studiometa/webpack-config-preset-vue-2';
+import { vue } from '@studiometa/webpack-config-preset-vue-2';
 
 export default defineConfig({
-  presets: [
-    vue(),
-  ],
+  presets: [vue()],
   // ...
 });
 ```
