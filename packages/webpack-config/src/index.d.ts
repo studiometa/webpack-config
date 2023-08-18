@@ -1,4 +1,37 @@
-import { Configuration as WebpackConfig, ChunkGraph, Module, ModuleGraph } from 'webpack';
+import {
+  Configuration as WebpackConfig,
+  ChunkGraph,
+  Module,
+  ModuleGraph,
+  AutomaticPrefetchPlugin as WebpackAutomaticPrefetchPlugin,
+  BannerPlugin as WebpackBannerPlugin,
+  CleanPlugin as WebpackCleanPlugin,
+  ContextExclusionPlugin as WebpackContextExclusionPlugin,
+  ContextReplacementPlugin as WebpackContextReplacementPlugin,
+  DefinePlugin as WebpackDefinePlugin,
+  DelegatedPlugin as WebpackDelegatedPlugin,
+  DllPlugin as WebpackDllPlugin,
+  DllReferencePlugin as WebpackDllReferencePlugin,
+  DynamicEntryPlugin as WebpackDynamicEntryPlugin,
+  EntryOptionPlugin as WebpackEntryOptionPlugin,
+  EntryPlugin as WebpackEntryPlugin,
+  EnvironmentPlugin as WebpackEnvironmentPlugin,
+  EvalDevToolModulePlugin as WebpackEvalDevToolModulePlugin,
+  EvalSourceMapDevToolPlugin as WebpackEvalSourceMapDevToolPlugin,
+  ExternalsPlugin as WebpackExternalsPlugin,
+  HotModuleReplacementPlugin as WebpackHotModuleReplacementPlugin,
+  IgnorePlugin as WebpackIgnorePlugin,
+  LibManifestPlugin as WebpackLibManifestPlugin,
+  LoaderOptionsPlugin as WebpackLoaderOptionsPlugin,
+  LoaderTargetPlugin as WebpackLoaderTargetPlugin,
+  NoEmitOnErrorsPlugin as WebpackNoEmitOnErrorsPlugin,
+  NormalModuleReplacementPlugin as WebpackNormalModuleReplacementPlugin,
+  PrefetchPlugin as WebpackPrefetchPlugin,
+  ProgressPlugin as WebpackProgressPlugin,
+  ProvidePlugin as WebpackProvidePlugin,
+  SourceMapDevToolPlugin as WebpackSourceMapDevToolPlugin,
+  WatchIgnorePlugin as WebpackWatchIgnorePlugin,
+} from 'webpack';
 import {
   ServerOptions,
   Options as BrowsersyncOptions,
@@ -98,7 +131,12 @@ export interface MetaConfig {
     | string
     | [
         string,
-        (event: string, file: string, bs: BrowserSyncInstance, bsConfig: BrowsersyncOptions) => void
+        (
+          event: string,
+          file: string,
+          bs: BrowserSyncInstance,
+          bsConfig: BrowsersyncOptions,
+        ) => void,
       ]
   >;
   /**
@@ -121,6 +159,38 @@ declare function defineConfig(config: MetaConfig): MetaConfig;
 /**
  * Get the generated Webpack configuration.
  */
-declare function getWebpackConfig(options: { mode?: 'production'|'development' }): WebpackConfig;
+declare function getWebpackConfig(options: { mode?: 'production' | 'development' }): WebpackConfig;
 
-export { defineConfig, getWebpackConfig, Preset };
+export {
+  defineConfig,
+  getWebpackConfig,
+  Preset,
+  WebpackAutomaticPrefetchPlugin,
+  WebpackBannerPlugin,
+  WebpackCleanPlugin,
+  WebpackContextExclusionPlugin,
+  WebpackContextReplacementPlugin,
+  WebpackDefinePlugin,
+  WebpackDelegatedPlugin,
+  WebpackDllPlugin,
+  WebpackDllReferencePlugin,
+  WebpackDynamicEntryPlugin,
+  WebpackEntryOptionPlugin,
+  WebpackEntryPlugin,
+  WebpackEnvironmentPlugin,
+  WebpackEvalDevToolModulePlugin,
+  WebpackEvalSourceMapDevToolPlugin,
+  WebpackExternalsPlugin,
+  WebpackHotModuleReplacementPlugin,
+  WebpackIgnorePlugin,
+  WebpackLibManifestPlugin,
+  WebpackLoaderOptionsPlugin,
+  WebpackLoaderTargetPlugin,
+  WebpackNoEmitOnErrorsPlugin,
+  WebpackNormalModuleReplacementPlugin,
+  WebpackPrefetchPlugin,
+  WebpackProgressPlugin,
+  WebpackProvidePlugin,
+  WebpackSourceMapDevToolPlugin,
+  WebpackWatchIgnorePlugin,
+};
