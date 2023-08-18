@@ -1,6 +1,42 @@
+import webpack from 'webpack';
 import getMetaConfig from './utils/get-config.js';
 import getWebpackProdConfig from './webpack.prod.config.js';
 import getWebpackDevConfig from './webpack.dev.config.js';
+
+const {
+  AutomaticPrefetchPlugin: WebpackAutomaticPrefetchPlugin,
+  BannerPlugin: WebpackBannerPlugin,
+  CleanPlugin: WebpackCleanPlugin,
+  ContextExclusionPlugin: WebpackContextExclusionPlugin,
+  ContextReplacementPlugin: WebpackContextReplacementPlugin,
+  DefinePlugin: WebpackDefinePlugin,
+  DelegatedPlugin: WebpackDelegatedPlugin,
+  DllPlugin: WebpackDllPlugin,
+  DllReferencePlugin: WebpackDllReferencePlugin,
+  DynamicEntryPlugin: WebpackDynamicEntryPlugin,
+  EntryOptionPlugin: WebpackEntryOptionPlugin,
+  EntryPlugin: WebpackEntryPlugin,
+  EnvironmentPlugin: WebpackEnvironmentPlugin,
+  EvalDevToolModulePlugin: WebpackEvalDevToolModulePlugin,
+  EvalSourceMapDevToolPlugin: WebpackEvalSourceMapDevToolPlugin,
+  ExternalsPlugin: WebpackExternalsPlugin,
+  HotModuleReplacementPlugin: WebpackHotModuleReplacementPlugin,
+  IgnorePlugin: WebpackIgnorePlugin,
+  JavascriptModulesPlugin: WebpackJavascriptModulesPlugin,
+  LibManifestPlugin: WebpackLibManifestPlugin,
+  LibraryTemplatePlugin: WebpackLibraryTemplatePlugin,
+  LoaderOptionsPlugin: WebpackLoaderOptionsPlugin,
+  LoaderTargetPlugin: WebpackLoaderTargetPlugin,
+  NoEmitOnErrorsPlugin: WebpackNoEmitOnErrorsPlugin,
+  NormalModuleReplacementPlugin: WebpackNormalModuleReplacementPlugin,
+  PrefetchPlugin: WebpackPrefetchPlugin,
+  ProgressPlugin: WebpackProgressPlugin,
+  ProvidePlugin: WebpackProvidePlugin,
+  SingleEntryPlugin: WebpackSingleEntryPlugin,
+  SourceMapDevToolPlugin: WebpackSourceMapDevToolPlugin,
+  WatchIgnorePlugin: WebpackWatchIgnorePlugin,
+} = webpack;
+
 /**
  * Define the configuration.
  *
@@ -21,7 +57,39 @@ export function defineConfig(config) {
  */
 export function getWebpackConfig({ mode = process.env.NODE_ENV } = {}) {
   const config = getMetaConfig({ target: [target] });
-  return mode === 'production'
-    ? getWebpackProdConfig(config)
-    : getWebpackDevConfig(config);
+  return mode === 'production' ? getWebpackProdConfig(config) : getWebpackDevConfig(config);
 }
+
+export {
+  WebpackAutomaticPrefetchPlugin,
+  WebpackBannerPlugin,
+  WebpackCleanPlugin,
+  WebpackContextExclusionPlugin,
+  WebpackContextReplacementPlugin,
+  WebpackDefinePlugin,
+  WebpackDelegatedPlugin,
+  WebpackDllPlugin,
+  WebpackDllReferencePlugin,
+  WebpackDynamicEntryPlugin,
+  WebpackEntryOptionPlugin,
+  WebpackEntryPlugin,
+  WebpackEnvironmentPlugin,
+  WebpackEvalDevToolModulePlugin,
+  WebpackEvalSourceMapDevToolPlugin,
+  WebpackExternalsPlugin,
+  WebpackHotModuleReplacementPlugin,
+  WebpackIgnorePlugin,
+  WebpackJavascriptModulesPlugin,
+  WebpackLibManifestPlugin,
+  WebpackLibraryTemplatePlugin,
+  WebpackLoaderOptionsPlugin,
+  WebpackLoaderTargetPlugin,
+  WebpackNoEmitOnErrorsPlugin,
+  WebpackNormalModuleReplacementPlugin,
+  WebpackPrefetchPlugin,
+  WebpackProgressPlugin,
+  WebpackProvidePlugin,
+  WebpackSingleEntryPlugin,
+  WebpackSourceMapDevToolPlugin,
+  WebpackWatchIgnorePlugin,
+};
