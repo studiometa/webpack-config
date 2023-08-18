@@ -2,7 +2,7 @@ import { VueLoaderPlugin } from 'vue-loader';
 
 /**
  * Vue preset.
- * @returns {import('./index').Preset}
+ * @returns {import('@studiometa/webpack-config').Preset}
  */
 export function vue() {
   return {
