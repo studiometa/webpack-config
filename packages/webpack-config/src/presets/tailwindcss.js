@@ -1,7 +1,6 @@
 import merge from 'lodash.merge';
 import { findUpSync } from 'find-up';
 import chalk from 'chalk';
-import createServer from 'tailwind-config-viewer/server/index.js';
 import { createRequire } from 'module';
 import { withTrailingSlash, withoutTrailingSlash, withLeadingSlash } from '../utils/index.js';
 
@@ -27,6 +26,7 @@ export default function tailwindcss(options = {}) {
       );
 
       if (isDev) {
+        const { default: createServer } = await import('tailwind-config-viewer/server/index.js');
         await extendBrowsersync(config, async (bsConfig) => {
           const tailwindConfigViewerServer = createServer({
             tailwindConfigProvider: () =>
