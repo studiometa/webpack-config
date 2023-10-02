@@ -5,7 +5,6 @@ import fs from 'fs';
 import * as glob from 'glob';
 import path from 'path';
 import merge from 'lodash.merge';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import minimatch from 'minimatch';
 import { collect } from 'collect.js';
 import twigPreset from '../twig.js';
