@@ -5,8 +5,8 @@ import { vue } from '@studiometa/webpack-config-preset-vue-3';
 
 export default defineConfig({
   presets: [
-    (isDev) => (isDev ? null : eslint({ fix: false })),
-    (isDev) => (isDev ? null : stylelint({ fix: false })),
+    (isDev) => isDev && eslint({ fix: false }),
+    (isDev) => isDev && stylelint({ fix: false }),
     prototyping({ ts: true }),
     vue(),
     (isDev) => (isDev ? https() : null),

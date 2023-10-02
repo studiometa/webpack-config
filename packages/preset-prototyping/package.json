@@ -1,6 +1,6 @@
 {
   "name": "@studiometa/webpack-config-preset-prototyping",
-  "version": "5.2.1",
+  "version": "5.2.2",
   "publishConfig": {
     "access": "public"
   },
@@ -35,7 +35,7 @@
     "@studiometa/webpack-config-preset-markdown": "file:../preset-markdown",
     "collect.js": "^4.36.1",
     "filemanager-webpack-plugin": "^8.0.0",
-    "glob": "^10.3.3",
+    "glob": "^10.3.5",
     "html-escaper": "^3.0.3",
     "html-webpack-harddisk-plugin": "^2.0.0",
     "html-webpack-plugin": "^5.5.3",

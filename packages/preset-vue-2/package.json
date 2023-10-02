@@ -1,6 +1,6 @@
 {
   "name": "@studiometa/webpack-config-preset-vue-2",
-  "version": "5.2.1",
+  "version": "5.2.2",
   "publishConfig": {
     "access": "public"
   },
@@ -30,7 +30,7 @@
     "prepublishOnly": "node scripts/add-peer-dependencies.js"
   },
   "dependencies": {
-    "vue-loader": "^15.10.1",
+    "vue-loader": "^15.10.2",
     "vue-svg-loader": "^0.16.0",
     "vue-template-compiler": "^2.7.14"
   }
