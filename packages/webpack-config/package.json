@@ -1,6 +1,6 @@
 {
   "name": "@studiometa/webpack-config",
-  "version": "5.2.2",
+  "version": "5.2.3",
   "description": "A basic webpack config",
   "type": "module",
   "main": "src/index.js",
@@ -79,7 +79,7 @@
     "hot-accept-webpack-plugin": "^4.0.2",
     "js-yaml-loader": "^1.2.2",
     "lodash.merge": "^4.6.2",
-    "postcss": "^8.4.30",
+    "postcss": "^8.4.31",
     "postcss-loader": "^7.3.3",
     "postcss-preset-env": "^9.1.4",
     "resolve-url-loader": "^5.0.0",
