@@ -13,10 +13,11 @@ cli
   .command('build', 'Build assets.')
   .option('-a, --analyze', 'Analyze bundle(s).')
   .option('-t, --target <target>', 'Define targets to bundle for: `legacy` or `modern` or both.')
-  .action(async ({ analyze = false, target = [] } = {}) => {
+  .option('--no-minify', 'Disable minification.')
+  .action(async ({ analyze = false, target = [], minify = true } = {}) => {
     const { default: build } = await import('../src/build.js');
     console.log(chalk.green(fullVersion), chalk.white('meta build'), '\n');
-    const options = { analyze, target: Array.isArray(target) ? target : [target] };
+    const options = { minify, analyze, target: Array.isArray(target) ? target : [target] };
     build(options).catch((error) => {
       if (error && !error.compilation) {
         console.log(error);
