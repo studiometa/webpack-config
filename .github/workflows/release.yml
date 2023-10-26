@@ -39,45 +39,13 @@ jobs:
       - name: Prepare the changelog from the tag message
         id: prepare_changelog
         run: |
-          echo "Setting release version to $GITHUB_REF_NAME"
-
           PRERELEASE=false
           # Check release type
-          if [[ $GITHUB_REF_NAME =~ 'alpha' || $GITHUB_REF_NAME =~ 'beta' ]]; then
+          if [[ $GITHUB_REF_NAME =~ 'alpha' || $GITHUB_REF_NAME =~ 'beta' || $GITHUB_REF_NAME =~ 'rc' ]]; then
             echo "This is a prerelease."
             PRERELEASE=true
           fi
           echo "is_prerelease=$PRERELEASE" >> $GITHUB_ENV
-
-          echo "Preparing changelog..."
-          CHANGELOG=$(git show $GITHUB_REF --no-patch --format='' | tail -n+6)
-
-          # Set markdown titles
-          CHANGELOG=${CHANGELOG/Added/## Added}
-          CHANGELOG=${CHANGELOG/Fixed/## Fixed}
-          CHANGELOG=${CHANGELOG/Changed/## Changed}
-          CHANGELOG=${CHANGELOG/Removed/## Removed}
-          CHANGELOG=${CHANGELOG/Deprecated/## Deprecated}
-          CHANGELOG=${CHANGELOG/Security/## Security}
-
-          # Remove PGP signature
-          CHANGELOG="${CHANGELOG%-----BEGIN*}"
-
-          echo "-----------------------------------------"
-          echo "$CHANGELOG"
-
-          # Change linebreaks and other special characters
-          CHANGELOG="${CHANGELOG//'%'/%25}"
-          CHANGELOG="${CHANGELOG//$'\n'/%0A}"
-          CHANGELOG="${CHANGELOG//$'\r'/%0D}"
-
-          echo "-----------------------------------------"
-          echo "Changelog prepared:"
-          echo $CHANGELOG
-
-          echo 'changelog<<EOF' >> $GITHUB_ENV
-          echo $CHANGELOG >> $GITHUB_ENV
-          echo 'EOF' >> $GITHUB_ENV
 
       # @see https://github.com/actions/create-release
       - name: Create Release
@@ -88,6 +56,6 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: v${{ github.ref_name }}
-          body: ${{ env.changelog }}
+          body: Please refer to [CHANGELOG.md](https://github.com/studiometa/webpack-config/blob/${{ github.ref_name }}/CHANGELOG.md) for details.
           draft: false
           prerelease: ${{ env.is_prerelease }}
