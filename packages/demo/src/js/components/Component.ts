@@ -1,7 +1,7 @@
 import { Base } from '@studiometa/js-toolkit';
 import type { BaseProps } from '@studiometa/js-toolkit';
 import './Component.scss';
-import type ComponentFoo from '../foo/Component.js';
+import type ComponentFoo from '@/js/foo/Component.js';
 
 interface ComponentInterface extends BaseProps {
   $children: {
