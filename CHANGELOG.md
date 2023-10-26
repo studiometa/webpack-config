@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
-## [v5.3.0](https://github.com/studiometa/ui/compare/5.2.3..5.3.0) (2023-10-26)
+## [v5.3.0](https://github.com/studiometa/webpack-config/compare/5.2.3..5.3.0) (2023-10-26)
 
 ### Added
 
