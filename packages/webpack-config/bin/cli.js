@@ -1,7 +1,11 @@
 #!/usr/bin/env node
 import cac from 'cac';
 import chalk from 'chalk';
-import { createRequire } from 'module';
+import { cwd } from 'node:process';
+import { symlinkSync, existsSync, readlinkSync, lstatSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { createRequire } from 'node:module';
+import { withTrailingSlash } from '../src/utils/index.js';
 
 const require = createRequire(import.meta.url);
 const { version, name } = require('../package.json');
@@ -41,6 +45,35 @@ cli
     const { default: watch } = await import('../src/watch.js');
     console.log(chalk.green(fullVersion), chalk.white('meta watch'), '\n');
     watch(options);
+  });
+
+cli
+  .command('link <path>', 'Link the given folder to the given alias (default "@").')
+  .option('-a, --alias <name>', 'The alias name')
+  .action(async (path, { alias = '@' }) => {
+    const target = resolve(cwd(), path);
+    const symlink = resolve(cwd(), 'node_modules', alias);
+
+    if (existsSync(symlink)) {
+      const stat = lstatSync(symlink);
+
+      if (!stat.isSymbolicLink()) {
+        console.log(chalk.red(`A folder named "${alias}" already exists, choose another name with the "--link" parameter.`));
+        process.exit(1);
+      }
+
+      const existingSymlink = readlinkSync(symlink);
+      if (existingSymlink !== target) {
+        console.log(chalk.red(`A symlink named "${alias}" already exists, choose another name with the "--link" parameter.`));
+        process.exit(1);
+      } else {
+        console.log(`You can now use "${chalk.green(withTrailingSlash(alias))}" as an alias for the "${chalk.green(withTrailingSlash(path))}" folder.`);
+        return;
+      }
+    }
+
+    symlinkSync(target, symlink);
+    console.log(`You can now use "${chalk.green(withTrailingSlash(alias))}" as an alias for the "${chalk.green(withTrailingSlash(path))}" folder.`);
   });
 
 cli.help();
