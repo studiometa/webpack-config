@@ -22,9 +22,8 @@ export default function stylelint(options = {}) {
             cacheLocation: path.resolve(process.cwd(), 'node_modules/.cache/stylelint'),
             allowEmptyInput: true,
             failOnError: !isDev,
-            configOverride: { extends: '@studiometa/stylelint-config' },
             ...options,
-          })
+          }),
         );
       });
     },
