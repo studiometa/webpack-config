@@ -3,7 +3,7 @@
 namespace Studiometa\WebpackConfig;
 
 use Studiometa\WebpackConfig\Traits\AssetsPath;
-use Tightenco\Collect\Support\Collection;
+use Illuminate\Support\Collection;
 
 class Entry
 {

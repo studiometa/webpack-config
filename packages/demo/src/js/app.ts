@@ -2,7 +2,7 @@ import { Base, createApp } from '@studiometa/js-toolkit';
 import { Cursor } from '@studiometa/ui';
 import { createApp as createVueApp } from 'vue';
 import VueComponent from './VueComponent.vue';
-import config from '@/js/config.yaml';
+import config from '#js/config.yaml';
 import configRaw from './config.yaml?raw';
 
 /**
