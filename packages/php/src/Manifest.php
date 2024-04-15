@@ -4,7 +4,7 @@ namespace Studiometa\WebpackConfig;
 
 use Exception;
 use Studiometa\WebpackConfig\Traits\AssetsPath;
-use Tightenco\Collect\Support\Collection;
+use Illuminate\Support\Collection;
 
 class Manifest
 {
