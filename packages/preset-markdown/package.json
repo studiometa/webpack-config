@@ -25,7 +25,7 @@
     "url": "https://github.com/studiometa/webpack-config/issues"
   },
   "engines": {
-    "node": "^14.13.1 || >=16.0.0"
+    "node": ">=20.11.0"
   },
   "homepage": "https://github.com/studiometa/webpack-config#readme",
   "dependencies": {
