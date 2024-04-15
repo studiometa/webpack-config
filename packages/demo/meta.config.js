@@ -1,10 +1,11 @@
 import { defineConfig } from '@studiometa/webpack-config';
-import { https } from '@studiometa/webpack-config/presets';
+import { stylelint, https } from '@studiometa/webpack-config/presets';
 import { prototyping } from '@studiometa/webpack-config-preset-prototyping';
 import { vue } from '@studiometa/webpack-config-preset-vue-3';
 
 export default defineConfig({
   presets: [
+    (isDev) => isDev && stylelint(),
     prototyping({ ts: true }),
     vue(),
     (isDev) => (isDev ? https() : null),
