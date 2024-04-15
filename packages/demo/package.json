@@ -6,8 +6,7 @@
   "scripts": {
     "dev": "meta dev",
     "watch": "meta watch",
-    "build": "meta build",
-    "postinstall": "meta link src"
+    "build": "meta build"
   },
   "devDependencies": {
     "@studiometa/eslint-config": "^3.1.3",
