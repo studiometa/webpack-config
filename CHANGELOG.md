@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Removed
+
+- ⚠️ Remove the `eslint` preset ([#146](https://github.com/studiometa/pulls/146))
+- ⚠️ Remove the `stylelint` preset ([#146](https://github.com/studiometa/pulls/146))
+
 ### Changed
 
 - Update webpack-config major dependencies ([4d457e0](https://github.com/studiometa/webpack-config/4d457e0))

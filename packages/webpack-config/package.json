@@ -21,10 +21,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "scripts": {
-    "test": "npm run lint",
-    "lint": "eslint ./src"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/studiometa/webpack-config.git"
@@ -59,7 +55,6 @@
     "dotenv-expand": "^11.0.6",
     "esbuild": "^0.20.2",
     "esbuild-loader": "^4.1.0",
-    "eslint-webpack-plugin": "^4.1.0",
     "find-up": "^7.0.0",
     "get-port": "^7.1.0",
     "glob": "^10.3.12",
@@ -72,7 +67,6 @@
     "resolve-url-loader": "^5.0.0",
     "sass": "^1.75.0",
     "sass-loader": "^14.2.0",
-    "stylelint-webpack-plugin": "^5.0.0",
     "tailwind-config-viewer": "^2.0.1",
     "terser-webpack-plugin": "^5.3.10",
     "webpack": "^5.91.0",
