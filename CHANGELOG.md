@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [v6.0.0](https://github.com/studiometa/webpack-config/compare/5.3.0..6.0.0) (2024-04-15)
+
 ### Removed
 
 - ⚠️ Remove the `eslint` preset ([#146](https://github.com/studiometa/webpack-config/pull/146))
