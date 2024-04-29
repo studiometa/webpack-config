@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [v6.0.2](https://github.com/studiometa/webpack-config/compare/6.0.1..6.0.2) (2024-04-29)
+
+### Fixed
+
+- Fix a dependency conflict ([629b170](https://github.com/studiometa/webpack-config/commit/629b170))
+
 ## [v6.0.1](https://github.com/studiometa/webpack-config/compare/6.0.0..6.0.1) (2024-04-15)
 
 ### Removed
