@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [v5.3.1](https://github.com/studiometa/ui/compare/5.3.0..5.3.1) (2024-04-29)
+
+### Fixed
+
+- Fix a dependency conflict ([fcdf8bb](https://github.com/studiometa/webpack-config/commit/fcdf8bb))
+
 ## [v5.3.0](https://github.com/studiometa/ui/compare/5.2.3..5.3.0) (2023-10-26)
 
 ### Added
