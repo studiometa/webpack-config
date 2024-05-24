@@ -37,6 +37,7 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
     }),
   );
 
+  /** @type {import('webpack').Configuration} */
   const webpackBaseConfig = {
     context: config.context,
     entry,
@@ -49,6 +50,7 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
       chunkFilename: isDev ? '[name].js' : '[name].[contenthash].js',
       sourceMapFilename: '[file].map',
       clean: true,
+      cssHeadDataCompression: false,
     },
     experiments: {
       css: true,
