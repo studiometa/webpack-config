@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [v5.3.2](https://github.com/studiometa/ui/compare/5.3.1..5.3.2) (2024-05-24)
+
+### Fixed
+
+- Fix presets import not being resolved by ESLint ([aaf48e6](https://github.com/studiometa/webpack-config/commit/aaf48e6))
+- Fix a bug where modules could not be found ([5d7bdca](https://github.com/studiometa/webpack-config/commit/5d7bdca))
+
 ## [v5.3.1](https://github.com/studiometa/ui/compare/5.3.0..5.3.1) (2024-04-29)
 
 ### Fixed
