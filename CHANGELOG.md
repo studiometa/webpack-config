@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [v6.0.3](https://github.com/studiometa/webpack-config/compare/6.0.2..6.0.3) (2024-05-24)
+
 ### Fixed
 
 - Fix presets import not being resolved by ESLint ([e16e796](https://github.com/studiometa/webpack-config/commit/e16e796))
