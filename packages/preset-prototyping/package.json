@@ -1,6 +1,6 @@
 {
   "name": "@studiometa/webpack-config-preset-prototyping",
-  "version": "5.3.1",
+  "version": "5.3.2",
   "publishConfig": {
     "access": "public"
   },
