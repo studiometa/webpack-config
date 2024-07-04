@@ -13,7 +13,7 @@ export default async function getWebpackDevConfig(config) {
     devtool: 'eval-cheap-source-map',
     devServer: {
       overlay: true,
-      allowedHosts: [process.env.APP_HOST || process.env.APP_HOSTNAME],
+      allowedHosts: [process.env.APP_HOST, process.env.APP_HOSTNAME, process.env.APP_URL],
       injectClient: true,
       injectHot: true,
       compress: true,
