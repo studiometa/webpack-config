@@ -24,3 +24,22 @@ export default defineConfig({
   // ...
 });
 ```
+
+Pass options for the `vue-loader` and `svgo` used by [the `vue-svg-loader`](https://github.com/damianstasik/vue-svg-loader):
+
+```js
+import { defineConfig } from '@studiometa/webpack-config';
+import { vue } from '@studiometa/webpack-config-preset-vue-2';
+
+export default defineConfig({
+  presets: [vue({
+    vue: {
+      productionMode: true,
+    },
+    svgo: {
+      plugins: [{ prefixIds: true }, { removeViewBox: false }],
+    }
+  })],
+  // ...
+});
+```

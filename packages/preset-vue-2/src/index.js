@@ -1,10 +1,21 @@
+import merge from 'lodash.merge';
 import { VueLoaderPlugin } from 'vue-loader';
 
 /**
  * Vue preset.
- * @returns {import('@studiometa/webpack-config').Preset}
+ * @param   {import('./index').VuePresetOptions} [options]
+ * @returns {import('./index').Preset}
  */
-export function vue() {
+export function vue(options = {}) {
+  const opts = merge(options, {
+    vue: {
+      experimentalInlineMatchResource: true,
+    },
+    svgo: {
+      plugins: [{ prefixIds: true }, { removeViewBox: false }],
+    },
+  });
+
   return {
     name: 'vue',
     async handler(config, { extendWebpack }) {
@@ -12,15 +23,22 @@ export function vue() {
         webpackConfig.module.rules.push(
           {
             test: /\.vue$/,
-            use: 'vue-loader',
+            use: [{ loader: 'vue-loader', options: opts.vue }],
           },
           {
             test: /\.svg$/i,
             resourceQuery(input) {
               return input.includes('as-vue-component');
             },
-            use: ['vue-svg-loader'],
-          }
+            use: [
+              {
+                loader: 'vue-svg-loader',
+                options: {
+                  svgo: opts.svgo,
+                },
+              },
+            ],
+          },
         );
 
         webpackConfig.plugins.push(new VueLoaderPlugin());
