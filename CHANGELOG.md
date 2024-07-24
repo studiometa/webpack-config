@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [v6.1.0](https://github.com/studiometa/webpack-config/compare/6.0.3..6.1.0) (2024-07-24)
+
 ### Added
 
 - Add support for options for the Vue 3 preset ([#95](https://github.com/studiometa/webpack-config/pull/95), [63d18d6](https://github.com/studiometa/webpack-config/commits/63d18d6))
