@@ -1,5 +1,6 @@
 import { cwd } from 'node:process';
 import webpack from 'webpack';
+import rspack from '@rspack/core';
 import getConfig from './utils/get-config.js';
 import getWebpackConfig from './webpack.prod.config.js';
 
@@ -14,7 +15,7 @@ export default async (options = {}) => {
   const webpackConfig = await getWebpackConfig(config);
   console.log(`Compiling assets to ${webpackConfig.output.path.replace(cwd(), '.')}...`);
 
-  webpack(webpackConfig, (err, stats) => {
+  rspack(webpackConfig, (err, stats) => {
     if (err) {
       console.error(err);
       process.exit(1);

@@ -23,7 +23,9 @@ export function vue() {
           }
         );
 
-        webpackConfig.plugins.push(new VueLoaderPlugin());
+        webpackConfig.plugins.push(new VueLoaderPlugin({
+          experimentalInlineMatchResource: true,
+        }));
       });
     },
   };

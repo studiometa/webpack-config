@@ -4,13 +4,14 @@ import WebpackBar from 'webpackbar';
 import * as glob from 'glob';
 import RemoveEmptyScriptsPlugin from 'webpack-remove-empty-scripts';
 import webpack from 'webpack';
+import rspack from '@rspack/core';
 import BundleAnalyzerPluginImport from 'webpack-bundle-analyzer';
 import TerserPlugin from 'terser-webpack-plugin';
 import commonDir from 'common-dir';
 import WebpackAssetsManifest from 'webpack-assets-manifest';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 
-const { DefinePlugin, ExternalsPlugin } = webpack;
+const { DefinePlugin, ExternalsPlugin } = rspack;
 const { BundleAnalyzerPlugin } = BundleAnalyzerPluginImport;
 
 const LEADING_SLASH_REGEXP = /^\//;
@@ -42,28 +43,26 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
     context: config.context,
     entry,
     devtool: 'source-map',
-    target: 'browserslist:> 0.2%, last 4 versions, not dead',
+    target: 'web',
     output: {
       path: path.resolve(config.context, config.dist),
-      publicPath: config.public ?? 'auto',
+      // publicPath: config.public ?? 'auto',
       filename: `[name].js`,
       chunkFilename: isDev ? '[name].js' : '[name].[contenthash].js',
       sourceMapFilename: '[file].map',
       clean: true,
-      cssHeadDataCompression: false,
+      // cssHeadDataCompression: false,
     },
     experiments: {
       css: true,
-      backCompat: false,
+      // backCompat: false,
       futureDefaults: false,
     },
-    cache: {
-      type: 'filesystem',
-    },
+    cache: true,
     stats: {
       all: false,
       assets: true,
-      cachedAssets: true,
+      // cachedAssets: true,
       assetsSort: 'name',
       colors: true,
       warnings: true,
@@ -101,7 +100,7 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
         },
         {
           test: /\.css$/i,
-          type: 'css/global',
+          type: 'css/auto',
           use: [
             {
               loader: 'postcss-loader',
@@ -115,7 +114,7 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
         },
         {
           test: /\.s(a|c)ss$/i,
-          type: 'css/global',
+          type: 'css/auto',
           use: [
             {
               loader: 'postcss-loader',
@@ -199,20 +198,22 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
       new DefinePlugin({
         __DEV__: JSON.stringify(isDev),
       }),
-      new WebpackAssetsManifest({
-        writeToDisk: true,
-        entrypoints: true,
-        entrypointsUseAssets: true,
-      }),
+      // new WebpackAssetsManifest({
+      //   writeToDisk: true,
+      //   entrypoints: true,
+      //   entrypointsUseAssets: true,
+      // }),
       // Do not resolve URL starting with `/` in Sass and CSS files
-      new ExternalsPlugin(
+      new webpack.ExternalsPlugin(
         'module',
         ({ context, request, dependencyType, contextInfo }, callback) => {
           if (
             dependencyType === 'url' &&
-            request.startsWith('/') &&
-            CSS_FILE_REGEXP.test(contextInfo.issuer)
+            request.startsWith('/')
           ) {
+            console.log(context, request, dependencyType, contextInfo)
+          process.exit();
+            // CSS_FILE_REGEXP.test(context.issuer);
             return callback(null, `asset ${request}`);
           }
 
@@ -252,7 +253,7 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
       name: 'styles',
       chunks: 'initial',
       test(mod, chunks) {
-        const isCSS = mod.type === 'css/global';
+        const isCSS = mod.type === 'css/auto';
 
         if (typeof config.mergeCSS === 'function') {
           return isCSS && config.mergeCSS(mod, chunks);
