@@ -3,8 +3,8 @@ import { VueLoaderPlugin } from 'vue-loader';
 
 /**
  * Vue preset.
- * @returns {import('./index').Preset}
  * @param   {import('./index').VuePresetOptions} [options]
+ * @returns {import('./index').Preset}
  */
 export function vue(options = {}) {
   const opts = merge(options, {
@@ -38,7 +38,7 @@ export function vue(options = {}) {
                 },
               },
             ],
-          }
+          },
         );
 
         webpackConfig.plugins.push(new VueLoaderPlugin());

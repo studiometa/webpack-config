@@ -7,5 +7,7 @@ export interface VuePresetOptions {
   svgo: OptimizeOptions;
 }
 
+export { Preset }
+
 export function vue(options:VuePresetOptions = {}):Preset;
 export default function vue(options:VuePresetOptions = {}):Preset;
