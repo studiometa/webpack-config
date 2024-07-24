@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [v6.1.0](https://github.com/studiometa/webpack-config/compare/6.0.3..6.1.0) (2024-07-24)
+
+### Added
+
+- Add support for options for the Vue 3 preset ([#95](https://github.com/studiometa/webpack-config/pull/95), [63d18d6](https://github.com/studiometa/webpack-config/commits/63d18d6))
+- Add support for options for the Vue 2 preset ([#95](https://github.com/studiometa/webpack-config/pull/95), [ed94a8f](https://github.com/studiometa/webpack-config/commits/ed94a8f))
+
+### Changed
+
+- Update dependencies ([16ec3c4](https://github.com/studiometa/webpack-config/commits/16ec3c4))
+- Replace sass with sass-embedded ([dfd955c](https://github.com/studiometa/webpack-config/commits/dfd955c))
+- Replace an obsolete dependency ([ece02ae](https://github.com/studiometa/webpack-config/commits/ece02ae))
+- Allow APP_URL for the devServer ([fa2fc39](https://github.com/studiometa/webpack-config/commits/fa2fc39))
+- Enable experimentalInlineMatchResource by default ([#95](https://github.com/studiometa/webpack-config/pull/95), [e5ed559](https://github.com/studiometa/webpack-config/commits/e5ed559))
+
 ## [v6.0.3](https://github.com/studiometa/webpack-config/compare/6.0.2..6.0.3) (2024-05-24)
 
 ### Fixed
@@ -35,7 +50,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 - Update webpack-config major dependencies ([4d457e0](https://github.com/studiometa/webpack-config/4d457e0))
-- Update preset-vue-* dependencies ([0b3855e](https://github.com/studiometa/webpack-config/0b3855e))
+- Update preset-vue-\* dependencies ([0b3855e](https://github.com/studiometa/webpack-config/0b3855e))
 - Update preset-prototyping dependencies ([5c6e5c2](https://github.com/studiometa/webpack-config/5c6e5c2))
 - Update preset-markdown dependencies ([bf606cd](https://github.com/studiometa/webpack-config/bf606cd))
 - Update demo dependencies ([4679a3f](https://github.com/studiometa/webpack-config/4679a3f))

@@ -1,14 +1,13 @@
-/* eslint-disable no-restricted-syntax, no-continue, no-await-in-loop */
 /**
- * @link https://github.com/studiometa/twig-toolkit
+ * @see https://github.com/studiometa/twig-toolkit
  * @copyright Studio Meta
  * @license https://github.com/studiometa/twig-toolkit/blob/master/LICENSE
  */
-import { paramCase } from 'param-case';
+import { kebabCase } from 'change-case';
 import { escape } from 'html-escaper';
 
 /**
- * @typdef {string | Record<string, boolean> | Record<number, Classes>} Classes
+ * @typedef {string | Record<string, boolean> | Record<number, Classes>} Classes
  */
 
 /**
@@ -79,7 +78,7 @@ export default class Html {
       if (key === '_keys' || (typeof value === 'boolean' && !value) || value === '') {
         continue;
       }
-      renderedStyles.push(`${paramCase(key)}: ${value};`);
+      renderedStyles.push(`${kebabCase(key)}: ${value};`);
     }
     return renderedStyles.join(' ');
   }
@@ -102,7 +101,7 @@ export default class Html {
         continue;
       }
 
-      key = paramCase(key);
+      key = kebabCase(key);
       if (typeof value === 'boolean') {
         if (value) {
           renderedAttributes.push(key);

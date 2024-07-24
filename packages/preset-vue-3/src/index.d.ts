@@ -1,5 +1,13 @@
-import { Preset } from '@studiometa/webpack-config';
+import { VueLoaderOptions } from 'vue-loader';
+import { OptimizeOptions } from 'svgo';
+import { Preset } from '@studiometa/webpack-config/presets';
 
-export function vue(): Preset;
+export interface VuePresetOptions {
+  vue: VueLoaderOptions;
+  svgo: OptimizeOptions;
+}
 
-export default vue;
+export { Preset }
+
+export function vue(options:VuePresetOptions = {}):Preset;
+export default function vue(options:VuePresetOptions = {}):Preset;
