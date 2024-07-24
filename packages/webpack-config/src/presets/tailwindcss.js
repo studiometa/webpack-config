@@ -22,7 +22,7 @@ export default function tailwindcss(options = {}) {
           path: require.resolve('tailwindcss', { paths: [configPath] }),
           configViewerPath: '/_tailwind',
         },
-        options
+        options,
       );
 
       if (isDev) {
@@ -30,7 +30,6 @@ export default function tailwindcss(options = {}) {
         await extendBrowsersync(config, async (bsConfig) => {
           const tailwindConfigViewerServer = createServer({
             tailwindConfigProvider: () =>
-              // eslint-disable-next-line import/no-dynamic-require
               require(findUpSync(['tailwind.config.js', 'tailwind.config.cjs'])),
           }).asMiddleware();
 
@@ -44,8 +43,8 @@ export default function tailwindcss(options = {}) {
           bsConfig.infos.push(
             (url) =>
               `Tailwind Viewer runnning at ${chalk.blue(
-                withTrailingSlash(url + opts.configViewerPath)
-              )}`
+                withTrailingSlash(url + opts.configViewerPath),
+              )}`,
           );
         });
       }
@@ -76,7 +75,7 @@ export default function tailwindcss(options = {}) {
           }
 
           const postcssIndex = rule.use.findIndex(
-            (use) => use === 'postcss-loader' || use.loader === 'postcss-loader'
+            (use) => use === 'postcss-loader' || use.loader === 'postcss-loader',
           );
 
           if (postcssIndex > -1) {

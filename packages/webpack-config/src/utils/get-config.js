@@ -1,27 +1,40 @@
-import path from 'node:path';
+import { resolve, dirname, isAbsolute } from 'node:path';
+import { createHash } from 'node:crypto';
+import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { findUp } from 'find-up';
+import esbuild from 'esbuild';
 import extendBrowsersync from './extend-browsersync-config.js';
 import extendWebpack from './extend-webpack-config.js';
 
 /**
  * Get config from meta.config.js file.
- *
  * @param   {{ analyze: boolean, mode: 'development'|'production' }} [options] CLI Options.
  * @returns {import('../index').MetaConfig}
  */
 export default async function getConfig({ analyze = false, mode = 'production' } = {}) {
-  const configPath = await findUp(['meta.config.js', 'meta.config.mjs']);
+  let configPath = await findUp(['meta.config.js', 'meta.config.mjs', 'meta.config.ts']);
 
   if (!configPath) {
     throw new Error(
       [
         'Could not find a config file.',
         'Is there a meta.config.js file up in the folder tree?',
-      ].join('\n')
+      ].join('\n'),
     );
   }
 
-  const { default: config } = await import(configPath);
+  if (configPath.endsWith('.ts')) {
+    const configContent = readFileSync(configPath);
+    const hash = createHash('md5').update(configContent).digest('hex');
+    const result = await esbuild.transform(configContent, {
+      loader: 'ts',
+    });
+    configPath = resolve(dirname(process.env._), `../.cache/meta.config-${hash}.mjs`);
+    mkdirSync(dirname(configPath), { recursive: true });
+    writeFileSync(configPath, result.code);
+  }
+
+  const config = await import(configPath).then((mod) => mod.default);
   const isDev = mode !== 'production';
 
   if (analyze) {
@@ -31,39 +44,35 @@ export default async function getConfig({ analyze = false, mode = 'production' }
   config.PATH = configPath;
 
   if (!config.context) {
-    config.context = path.dirname(configPath);
+    config.context = dirname(configPath);
   }
 
-  if (!path.isAbsolute(config.context)) {
-    config.context = path.resolve(process.cwd(), config.context);
+  if (!isAbsolute(config.context)) {
+    config.context = resolve(process.cwd(), config.context);
   }
 
   if (!config.dist) {
-    config.dist = path.resolve(config.context, './dist');
+    config.dist = resolve(config.context, './dist');
   }
 
   if (Array.isArray(config.presets) && config.presets.length) {
     console.log('Applying presets...');
 
-    // eslint-disable-next-line no-restricted-syntax
     for (let preset of config.presets) {
       if (typeof preset === 'function') {
         preset = preset(isDev);
       }
 
       if (!preset) {
-        // eslint-disable-next-line no-continue
         continue;
       }
 
       if (!preset.name && typeof preset.handler !== 'function') {
         console.log('Preset misconfigured.', preset);
-        // eslint-disable-next-line no-continue
         continue;
       }
 
       const start = performance.now();
-      // eslint-disable-next-line no-await-in-loop
       await preset.handler(config, {
         extendBrowsersync,
         extendWebpack,
