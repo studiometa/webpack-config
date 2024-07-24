@@ -8,7 +8,9 @@ import { VueLoaderPlugin } from 'vue-loader';
  */
 export function vue(options = {}) {
   const opts = merge(options, {
-    vue: {},
+    vue: {
+      experimentalInlineMatchResource: true,
+    },
     svgo: {
       plugins: [{ prefixIds: true }, { removeViewBox: false }],
     },
