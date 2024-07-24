@@ -13,6 +13,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
+- Update dependencies ([16ec3c4](https://github.com/studiometa/webpack-config/commits/16ec3c4))
+- Replace sass with sass-embedded ([dfd955c](https://github.com/studiometa/webpack-config/commits/dfd955c))
+- Replace an obsolete dependency ([ece02ae](https://github.com/studiometa/webpack-config/commits/ece02ae))
+- Allow APP_URL for the devServer ([fa2fc39](https://github.com/studiometa/webpack-config/commits/fa2fc39))
 - Enable experimentalInlineMatchResource by default ([#95](https://github.com/studiometa/webpack-config/pull/95), [e5ed559](https://github.com/studiometa/webpack-config/commits/e5ed559))
 
 ## [v6.0.3](https://github.com/studiometa/webpack-config/compare/6.0.2..6.0.3) (2024-05-24)
