@@ -17,7 +17,7 @@
   "dependencies": {
     "@studiometa/js-toolkit": "^2.12.1",
     "@studiometa/ui": "^0.2.53",
-    "tailwindcss": "3.4.6",
+    "tailwindcss": "3.4.7",
     "vue": "^3.4.33"
   },
   "imports": {
