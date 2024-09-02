@@ -11,13 +11,13 @@ export default defineConfig({
       name: 'foo',
       handler: (metaConfig, { extendWebpack }) =>
         extendWebpack(metaConfig, async (webpackConfig) => {
-          // webpackConfig.optimization.minimize = false;
+          webpackConfig.optimization.minimize = false;
         }),
     },
   ],
   // Exclude the `test.scss` file from the merge
   mergeCSS: /^(?!.*css\/test\.scss).*$/,
   webpack(config) {
-    // config.cache = false;
+    config.cache = false;
   },
 });

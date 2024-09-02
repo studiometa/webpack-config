@@ -42,11 +42,11 @@
   "devDependencies": {
     "@types/browser-sync": "2.29.0",
     "@types/minimatch": "5.1.2",
-    "tailwindcss": "^4.0.0-alpha.20"
+    "tailwindcss": "^4.0.0-alpha.29"
   },
   "dependencies": {
     "@soda/friendly-errors-webpack-plugin": "^1.8.1",
-    "@tailwindcss/postcss": "^4.0.0-alpha.20",
+    "@tailwindcss/postcss": "^4.0.0-alpha.29",
     "ajv": "8.12.0",
     "browser-sync": "^3.0.3",
     "cac": "^6.7.14",
