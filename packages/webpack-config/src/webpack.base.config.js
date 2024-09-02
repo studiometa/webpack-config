@@ -9,6 +9,7 @@ import TerserPlugin from 'terser-webpack-plugin';
 import commonDir from 'common-dir';
 import WebpackAssetsManifest from 'webpack-assets-manifest';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import postcssLightningcss from 'postcss-lightningcss';
 
 const { DefinePlugin, ExternalsPlugin } = webpack;
 const { BundleAnalyzerPlugin } = BundleAnalyzerPluginImport;
@@ -107,7 +108,14 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
               loader: 'postcss-loader',
               options: {
                 postcssOptions: {
-                  plugins: ['autoprefixer'],
+                  plugins: [
+                    postcssLightningcss({
+                      browsers: '>= 1%',
+                      lightningcssOptions: {
+                        minify: false,
+                      },
+                    }),
+                  ],
                 },
               },
             },
@@ -121,7 +129,14 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
               loader: 'postcss-loader',
               options: {
                 postcssOptions: {
-                  plugins: ['autoprefixer'],
+                  plugins: [
+                    postcssLightningcss({
+                      browsers: '>= 1%',
+                      lightningcssOptions: {
+                        minify: false,
+                      },
+                    }),
+                  ],
                 },
               },
             },
@@ -228,7 +243,7 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
           minify: TerserPlugin.esbuildMinify,
         }),
         new CssMinimizerPlugin({
-          minify: CssMinimizerPlugin.esbuildMinify,
+          minify: CssMinimizerPlugin.lightningCssMinify,
         }),
       ],
       runtimeChunk: {
