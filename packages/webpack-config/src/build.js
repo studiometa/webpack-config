@@ -40,6 +40,8 @@ export default async (options = {}) => {
 
     if (stats.hasErrors()) {
       process.exit(1);
+    } else {
+      process.exit();
     }
   });
 };
