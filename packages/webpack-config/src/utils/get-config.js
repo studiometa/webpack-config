@@ -5,7 +5,6 @@ import extendWebpack from './extend-webpack-config.js';
 
 /**
  * Get config from meta.config.js file.
- *
  * @param   {{ analyze: boolean, mode: 'development'|'production' }} [options] CLI Options.
  * @returns {import('../index').MetaConfig}
  */
@@ -17,7 +16,7 @@ export default async function getConfig({ analyze = false, mode = 'production' }
       [
         'Could not find a config file.',
         'Is there a meta.config.js file up in the folder tree?',
-      ].join('\n')
+      ].join('\n'),
     );
   }
 
@@ -45,25 +44,23 @@ export default async function getConfig({ analyze = false, mode = 'production' }
   if (Array.isArray(config.presets) && config.presets.length) {
     console.log('Applying presets...');
 
-    // eslint-disable-next-line no-restricted-syntax
     for (let preset of config.presets) {
       if (typeof preset === 'function') {
         preset = preset(isDev);
       }
 
       if (!preset) {
-        // eslint-disable-next-line no-continue
         continue;
       }
 
       if (!preset.name && typeof preset.handler !== 'function') {
         console.log('Preset misconfigured.', preset);
-        // eslint-disable-next-line no-continue
+
         continue;
       }
 
       const start = performance.now();
-      // eslint-disable-next-line no-await-in-loop
+
       await preset.handler(config, {
         extendBrowsersync,
         extendWebpack,

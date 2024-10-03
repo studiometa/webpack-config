@@ -53,7 +53,7 @@ async function getConfig(metaConfig) {
         const [fileGlob, callback] = glob;
         if (typeof callback !== 'function') {
           throw new Error(
-            'A watch item should implement the following schema: [glob:string, callback:function]'
+            'A watch item should implement the following schema: [glob:string, callback:function]',
           );
         }
         instance.watch(fileGlob, { cwd: metaConfig.context }, (event, file) => {

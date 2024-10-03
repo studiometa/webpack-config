@@ -12,7 +12,7 @@ export default function yaml(options = {}) {
     {
       loaderOptions: {},
     },
-    options
+    options,
   );
 
   return {

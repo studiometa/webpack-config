@@ -148,27 +148,22 @@ export function prototyping(options) {
 
       const extendTwig = typeof opts.twig.extend === 'function' ? opts.twig.extend : () => {};
       opts.twig.functions = {
-        ...(opts?.twig?.functions || {}),
-        // eslint-disable-next-line camelcase
+        ...opts?.twig?.functions,
         html_styles(styles) {
           return Html.renderStyleAttribute(styles);
         },
-        // eslint-disable-next-line camelcase
         html_attributes(attributes) {
           return Html.renderAttributes(attributes);
         },
-        // eslint-disable-next-line camelcase
         html_classes(classes) {
           return Html.renderClass(classes);
         },
-        // eslint-disable-next-line camelcase
         merge_html_attributes(attributes = {}, defaultAttributes = {}, requiredAttributes = {}) {
           return Html.mergeAttributes(attributes, defaultAttributes, requiredAttributes);
         },
         dump(...args) {
           return args.map((arg) => `<pre>${JSON.stringify(arg, null, 2)}</pre>`).join('\n');
         },
-        // eslint-disable-next-line camelcase
         is_dev() {
           return isDev;
         },
@@ -298,9 +293,7 @@ export function prototyping(options) {
             cache: true,
             template: `${templatePath}?${params}`,
             templateParameters: {
-              // eslint-disable-next-line camelcase
               updated_at: stats.mtime,
-              // eslint-disable-next-line camelcase
               created_at: stats.birthtime,
               template: file,
               ...Object.fromEntries(params.entries()),
@@ -366,9 +359,7 @@ export function prototyping(options) {
             cache: true,
             template: `${templatePath}?${params}`,
             templateParameters: {
-              // eslint-disable-next-line camelcase
               created_at: stats.birthtime,
-              // eslint-disable-next-line camelcase
               updated_at: stats.mtime,
               template: file,
               ...Object.fromEntries(params.entries()),

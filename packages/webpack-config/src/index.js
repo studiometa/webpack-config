@@ -38,7 +38,6 @@ const {
 
 /**
  * Define the configuration.
- *
  * @template {import('./index').MetaConfig} T
  * @param   {T} config
  * @returns {T}
@@ -49,13 +48,12 @@ export function defineConfig(config) {
 
 /**
  * Get the generated Webpack configuration.
- *
- * @param {Object} options
+ * @param {object} options
  * @param {'production'|'development'} [options.mode]
  * @returns {import('webpack').Configuration}
  */
 export function getWebpackConfig({ mode = process.env.NODE_ENV } = {}) {
-  const config = getMetaConfig({ target: [target] });
+  const config = getMetaConfig({ mode });
   return mode === 'production' ? getWebpackProdConfig(config) : getWebpackDevConfig(config);
 }
 

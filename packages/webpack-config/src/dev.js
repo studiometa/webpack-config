@@ -18,7 +18,7 @@ export default async function dev(options = {}) {
   const server = await getServer(config);
 
   const webpackBar = webpackConfig.plugins.find(
-    (plugin) => plugin.constructor.name === 'WebpackBarPlugin'
+    (plugin) => plugin.constructor.name === 'WebpackBarPlugin',
   );
 
   let webpackBarHasRunOnce = false;
@@ -68,7 +68,7 @@ export default async function dev(options = {}) {
     Object.entries(webpackConfig.entry).map(([name, value]) => [
       name,
       ['webpack-hot-middleware/client?reload=true', ...(Array.isArray(value) ? value : [value])],
-    ])
+    ]),
   );
 
   const bundler = webpack(webpackConfig);
@@ -84,7 +84,7 @@ export default async function dev(options = {}) {
         assets: true,
         colors: true,
         excludeAssets: [/\.map$/, /hot-update/, /^manifest\.(js|json)$/],
-      })
+      }),
     );
     console.log('');
     console.log('');

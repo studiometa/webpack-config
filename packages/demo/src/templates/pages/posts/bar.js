@@ -1,5 +1,8 @@
 import { data as defaultData } from './[slug].js';
 
+/**
+ *
+ */
 export async function data({ slug } = {}) {
   const mainData = await defaultData({ slug });
   return {
