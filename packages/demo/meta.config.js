@@ -1,5 +1,4 @@
-import { defineConfig } from '@studiometa/webpack-config';
-import { https } from '@studiometa/webpack-config/presets';
+import { defineConfig, https } from '@studiometa/webpack-config';
 import { prototyping } from '@studiometa/webpack-config-preset-prototyping';
 import { vue } from '@studiometa/webpack-config-preset-vue-3';
 

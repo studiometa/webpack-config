@@ -130,7 +130,7 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
               loader: 'sass-loader',
               options: {
                 sassOptions: {
-                  ...(config.sassOptions ?? {}),
+                  ...config.sassOptions,
                   // This fix a strange bug where `url()` are not resolved
                   // by Webpack when the output is set to `compressed` in
                   // production mode.
@@ -205,20 +205,17 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
         entrypointsUseAssets: true,
       }),
       // Do not resolve URL starting with `/` in Sass and CSS files
-      new ExternalsPlugin(
-        'module',
-        ({ context, request, dependencyType, contextInfo }, callback) => {
-          if (
-            dependencyType === 'url' &&
-            request.startsWith('/') &&
-            CSS_FILE_REGEXP.test(contextInfo.issuer)
-          ) {
-            return callback(null, `asset ${request}`);
-          }
+      new ExternalsPlugin('module', ({ request, dependencyType, contextInfo }, callback) => {
+        if (
+          dependencyType === 'url' &&
+          request.startsWith('/') &&
+          CSS_FILE_REGEXP.test(contextInfo.issuer)
+        ) {
+          return callback(null, `asset ${request}`);
+        }
 
-          callback();
-        },
-      ),
+        callback();
+      }),
     ],
     optimization: {
       minimizer: [

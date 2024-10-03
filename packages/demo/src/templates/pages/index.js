@@ -1,3 +1,6 @@
+/**
+ * @returns {Promise<object>}
+ */
 export async function data() {
   return {
     head: {

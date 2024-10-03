@@ -6,7 +6,6 @@
 
 /**
  * Extends the `server` configuration property.
- *
  * @param {MetaConfig} config
  * @param {(config:BrowsersyncOptions, instance:BrowserSyncInstance)=> void} fn
  */

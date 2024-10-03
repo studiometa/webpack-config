@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [v6.2.0](https://github.com/studiometa/webpack-config/compare/6.1.0..6.2.0) (2024-10-03)
+
+### Added
+
+- Export presets from the root package entrypoint ([55ba53d](https://github.com/studiometa/webpack-config/commit/55ba53d))
+- Add types for presets ([ee9bd61](https://github.com/studiometa/webpack-config/commit/ee9bd61))
+
+### Fixed
+
+- Fix build process not exiting sometimes ([5ce8cd9](https://github.com/studiometa/webpack-config/commit/5ce8cd9))
+
+### Changed
+
+- Update prototyping preset dependencies ([ec296d8](https://github.com/studiometa/webpack-config/commit/ec296d8))
+- Update vue-3 preset dependencies ([0fe7887](https://github.com/studiometa/webpack-config/commit/0fe7887))
+- Update main dependencies ([89a37c1](https://github.com/studiometa/webpack-config/commit/89a37c1))
+
 ## [v6.1.0](https://github.com/studiometa/webpack-config/compare/6.0.3..6.1.0) (2024-07-24)
 
 ### Added
