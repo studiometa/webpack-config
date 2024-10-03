@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [v6.2.0](https://github.com/studiometa/webpack-config/compare/6.1.0..6.2.0) (2024-10-03)
+
 ### Added
 
 - Export presets from the root package entrypoint ([55ba53d](https://github.com/studiometa/webpack-config/commit/55ba53d))
