@@ -1,6 +1,6 @@
 /**
  * Test if the given input has a trailing slash.
- * @param {string = ''} input The string to test.
+ * @param {string} [input] The string to test.
  * @returns {boolean}
  */
 export function hasTrailingSlash(input = '') {
@@ -9,7 +9,7 @@ export function hasTrailingSlash(input = '') {
 
 /**
  * Make sure that a string does not end with a trailing slash.
- * @param {string = ''} input The string to test.
+ * @param {string} [input] The string to test.
  * @returns {string} The string without trailing slash.
  */
 export function withoutTrailingSlash(input = '') {
@@ -18,7 +18,7 @@ export function withoutTrailingSlash(input = '') {
 
 /**
  * Make sure the string given ends with a trailing slash.
- * @param  {string = ''} input The string to test.
+ * @param  {string} [input] The string to test.
  * @returns {string} The string with a trailing slash.
  */
 export function withTrailingSlash(input = '') {
@@ -27,7 +27,7 @@ export function withTrailingSlash(input = '') {
 
 /**
  * Test if the given input has a leading slash.
- * @param {string = ''} input The string to test.
+ * @param {string} [input] The string to test.
  * @returns {boolean}
  */
 export function hasLeadingSlash(input = '') {
@@ -36,7 +36,7 @@ export function hasLeadingSlash(input = '') {
 
 /**
  * Make sure the given string does not have a leading slash.
- * @param {string = ''} input The string to test.
+ * @param {string} [input] The string to test.
  * @returns {string} The string without leading slash.
  */
 export function withoutLeadingSlash(input = '') {
@@ -45,8 +45,8 @@ export function withoutLeadingSlash(input = '') {
 
 /**
  * Make sure the given string has a leading slash.
- * @param {string = ''} input The string to test.
- * @param {string} The string with a leading slash.
+ * @param {string} [input] The string to test.
+ * @returns {string} The string with a leading slash.
  */
 export function withLeadingSlash(input = '') {
   return hasLeadingSlash(input) ? input : `/${input}`;

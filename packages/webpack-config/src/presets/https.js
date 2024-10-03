@@ -16,7 +16,7 @@ function createCertificates() {
 
   const cachePath = path.join(
     process.env.PWD,
-    'node_modules/.cache/@studiometa/webpack-config/certificates/'
+    'node_modules/.cache/@studiometa/webpack-config/certificates/',
   );
 
   execSync(`mkdir -p ${cachePath}`);
