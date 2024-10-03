@@ -3,6 +3,8 @@ import getMetaConfig from './utils/get-config.js';
 import getWebpackProdConfig from './webpack.prod.config.js';
 import getWebpackDevConfig from './webpack.dev.config.js';
 
+export * from './presets/index.js';
+
 const {
   AutomaticPrefetchPlugin: WebpackAutomaticPrefetchPlugin,
   BannerPlugin: WebpackBannerPlugin,

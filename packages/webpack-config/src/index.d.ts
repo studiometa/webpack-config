@@ -44,6 +44,8 @@ interface CacheGroupsContext {
   chunkGraph: ChunkGraph;
 }
 
+export * from './presets/index.js';
+
 export interface MetaConfig {
   /**
    * A list of glob for files to consider as entries.
