@@ -36,12 +36,12 @@
     "change-case": "5.4.4",
     "collect.js": "^4.36.1",
     "filemanager-webpack-plugin": "^8.0.0",
-    "glob": "^10.3.12",
+    "glob": "^10.4.5",
     "html-escaper": "^3.0.3",
     "html-webpack-harddisk-plugin": "^2.0.0",
     "html-webpack-plugin": "^5.6.0",
     "lodash.merge": "^4.6.2",
-    "minimatch": "^9.0.4",
+    "minimatch": "^10.0.1",
     "twig": "^1.17.1"
   }
 }
