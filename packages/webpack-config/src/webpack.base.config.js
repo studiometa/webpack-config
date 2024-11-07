@@ -87,15 +87,12 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
         },
         {
           test: /\.m?(j|t)s$/,
-          // Exclude all but packages from the `@studiometa/` namespace
-          exclude: [/node_modules[\\/](?!@studiometa[\\/]).*/],
           type: 'javascript/auto',
           use: {
             loader: 'esbuild-loader',
             options: {
               loader: 'ts',
               target: isDev ? 'es2022' : 'es2020',
-              format: 'esm',
             },
           },
         },
