@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [v6.2.2](https://github.com/studiometa/webpack-config/compare/6.2.1..6.2.2) (2024-11-08)
+
 ### Changed
 
 - Migrate twig-html-loader to ESM ([#174](https://github.com/studiometa/webpack-config/pull/174), [4f43408](https://github.com/studiometa/webpack-config/commit/4f43408))
