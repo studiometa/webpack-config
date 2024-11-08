@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [v6.2.1](https://github.com/studiometa/webpack-config/compare/6.2.0..6.2.1) (2024-11-08)
+
 ### Fixed
 
 - Fix CJS files being incorrectly transformed to ESM ([#172](https://github.com/studiometa/webpack-config/pull/172), [e4cccc2](https://github.com/studiometa/webpack-config/commit/e4cccc2))
