@@ -2,7 +2,7 @@ import merge from 'lodash.merge';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
-const loader = require.resolve('../loaders/twig-html-loader.cjs');
+const loader = require.resolve('../loaders/twig-html-loader.js');
 
 /**
  * Twig preset.

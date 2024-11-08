@@ -1,6 +1,8 @@
-const path = require('node:path');
-const Twig = require('twig');
+import path from 'node:path';
+import { createRequire } from 'node:module';
+import Twig from 'twig';
 
+const require = createRequire(import.meta.url);
 const SOURCE_REGEX = /source\s*\(\s*['"]\s*(\.[^'"]+)['"]\s*\)/g;
 const PATH_SEPARATOR_REGEX = /([/\\]+)$/;
 
@@ -123,7 +125,6 @@ function loader(source) {
       const output = await template.renderAsync(data);
       registry.forEach(this.addDependency);
       Twig.extend((TwigInstance) => {
-        // eslint-disable-next-line no-param-reassign
         TwigInstance.Templates.registry = {};
       });
       callback(null, output);
@@ -145,4 +146,4 @@ function loader(source) {
   }
 }
 
-module.exports = loader;
+export default loader;
