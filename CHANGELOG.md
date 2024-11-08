@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [v6.2.2](https://github.com/studiometa/webpack-config/compare/6.2.1..6.2.2) (2024-11-08)
+
+### Changed
+
+- Migrate twig-html-loader to ESM ([#174](https://github.com/studiometa/webpack-config/pull/174), [4f43408](https://github.com/studiometa/webpack-config/commit/4f43408))
+- Update dependencies ([#174](https://github.com/studiometa/webpack-config/pull/174), [bc6e99b](https://github.com/studiometa/webpack-config/commit/bc6e99b))
+- Update demo dependencies ([#174](https://github.com/studiometa/webpack-config/pull/174), [7c4bf9e](https://github.com/studiometa/webpack-config/commit/7c4bf9e))
+- Update preset-prototyping dependencies ([#174](https://github.com/studiometa/webpack-config/pull/174), [3da5f22](https://github.com/studiometa/webpack-config/commit/3da5f22))
+- Update preset-vue-3 dependencies ([#174](https://github.com/studiometa/webpack-config/pull/174), [21cd4e7](https://github.com/studiometa/webpack-config/commit/21cd4e7))
+
+### Fixed
+
+- Fix Twig loader with webpack >= 5.96.0 ([#174](https://github.com/studiometa/webpack-config/pull/174), [b41fc1e](https://github.com/studiometa/webpack-config/commit/b41fc1e))
+- Fix WebpackBarPlugin detection ([#174](https://github.com/studiometa/webpack-config/pull/174), [58928c8](https://github.com/studiometa/webpack-config/commit/58928c8))
+
 ## [v6.2.1](https://github.com/studiometa/webpack-config/compare/6.2.0..6.2.1) (2024-11-08)
 
 ### Fixed
