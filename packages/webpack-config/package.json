@@ -64,13 +64,13 @@
     "lodash.merge": "^4.6.2",
     "postcss": "^8.4.47",
     "postcss-loader": "^8.1.1",
-    "postcss-preset-env": "^10.0.5",
+    "postcss-preset-env": "^10.0.9",
     "resolve-url-loader": "^5.0.0",
-    "sass-embedded": "^1.79.4",
-    "sass-loader": "^16.0.2",
+    "sass-embedded": "^1.80.6",
+    "sass-loader": "^16.0.3",
     "tailwind-config-viewer": "^2.0.4",
     "terser-webpack-plugin": "^5.3.10",
-    "webpack": "^5.95.0",
+    "webpack": "^5.96.1",
     "webpack-assets-manifest": "^5.2.1",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-dev-middleware": "^7.4.2",
@@ -78,6 +78,6 @@
     "webpack-merge": "^6.0.1",
     "webpack-module-hot-accept": "^1.0.5",
     "webpack-remove-empty-scripts": "^1.0.4",
-    "webpackbar": "^6.0.1"
+    "webpackbar": "^7.0.0"
   }
 }

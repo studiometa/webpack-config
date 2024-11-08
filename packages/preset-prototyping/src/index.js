@@ -7,7 +7,11 @@ import * as glob from 'glob';
 import merge from 'lodash.merge';
 import { minimatch } from 'minimatch';
 import { collect } from 'collect.js';
-import { tailwindcss as tailwindcssPreset, yaml as yamlPreset, hash } from '@studiometa/webpack-config/presets';
+import {
+  tailwindcss as tailwindcssPreset,
+  yaml as yamlPreset,
+  hash,
+} from '@studiometa/webpack-config';
 import markdown from '@studiometa/webpack-config-preset-markdown';
 import twigPreset from './presets/twig.js';
 import Html from './utils/Html.js';
@@ -45,7 +49,7 @@ export function prototyping(options) {
           yaml: {},
           markdown: {},
         },
-        options
+        options,
       );
 
       let pages;
@@ -107,7 +111,7 @@ export function prototyping(options) {
 
         // Try to get data from JS, TS or YAML file
         const dataLoaderPaths = ['.ts', '.js', '.yml'].map((extension) =>
-          path.join(resourceDir, resourceFilename.replace(TWIG_FILE_REGEX, extension))
+          path.join(resourceDir, resourceFilename.replace(TWIG_FILE_REGEX, extension)),
         );
         const dataLoaderPath =
           query.get('data') ??
@@ -224,7 +228,7 @@ export function prototyping(options) {
         Twig.Templates.registerParser('twig', (params) => {
           if (params.id) {
             const namespace = Object.entries(params.options.namespaces).find(([, value]) =>
-              params.id.startsWith(value)
+              params.id.startsWith(value),
             );
             let tpl = params.id;
 
@@ -261,22 +265,22 @@ export function prototyping(options) {
 
       const twigTemplates = glob.sync('**/*.twig', { cwd: pageRoot });
       const twigTemplatesWithoutExtension = new Set(
-        twigTemplates.map((twigTemplate) => twigTemplate.replace(TWIG_FILE_REGEX, ''))
+        twigTemplates.map((twigTemplate) => twigTemplate.replace(TWIG_FILE_REGEX, '')),
       );
       const jsTemplates = new Set(
         glob
           .sync('**/*.js', { cwd: pageRoot })
-          .map((filepath) => filepath.replace(TEMPLATE_FILE_REGEX, ''))
+          .map((filepath) => filepath.replace(TEMPLATE_FILE_REGEX, '')),
       );
       const tsTemplates = new Set(
         glob
           .sync('**/*.ts', { cwd: pageRoot })
-          .map((filepath) => filepath.replace(TEMPLATE_FILE_REGEX, ''))
+          .map((filepath) => filepath.replace(TEMPLATE_FILE_REGEX, '')),
       );
       const markdownTemplates = new Set(
         glob
           .sync('**/*.md', { cwd: pageRoot })
-          .map((filepath) => filepath.replace(TEMPLATE_FILE_REGEX, ''))
+          .map((filepath) => filepath.replace(TEMPLATE_FILE_REGEX, '')),
       );
 
       const plugins = twigTemplates.flatMap((file) => {
@@ -314,11 +318,11 @@ export function prototyping(options) {
               const maybeFileWithoutExtension = maybeFile.replace(TEMPLATE_FILE_REGEX, '');
               return !twigTemplatesWithoutExtension.has(maybeFileWithoutExtension);
             })
-            .map((dynamicFile) => dynamicFile.replace(TEMPLATE_FILE_REGEX, ''))
+            .map((dynamicFile) => dynamicFile.replace(TEMPLATE_FILE_REGEX, '')),
         );
 
         const fileParamsRegex = new RegExp(
-          file.replace(TWIG_FILE_REGEX, '').replace(DYNAMIC_ROUTE_REGEX, '(?<$1>.*)')
+          file.replace(TWIG_FILE_REGEX, '').replace(DYNAMIC_ROUTE_REGEX, '(?<$1>.*)'),
         );
 
         // Add dynamic folders
@@ -387,7 +391,7 @@ export function prototyping(options) {
                 copy: [{ source: './public/', destination: './dist/' }],
               },
             },
-          })
+          }),
         );
       }
 

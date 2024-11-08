@@ -18,11 +18,11 @@ export default async function dev(options = {}) {
   const server = await getServer(config);
 
   const webpackBar = webpackConfig.plugins.find(
-    (plugin) => plugin.constructor.name === 'WebpackBarPlugin',
+    (plugin) => plugin.constructor.name === 'WebpackBarProgressPlugin',
   );
 
   let webpackBarHasRunOnce = false;
-  const [fancyReporter] = webpackBar.reporters;
+  const [fancyReporter] = webpackBar.webpackbar.reporters;
   webpackBar.reporters = [
     {
       progress: (...args) => {

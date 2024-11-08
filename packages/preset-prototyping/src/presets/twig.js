@@ -2,7 +2,7 @@ import merge from 'lodash.merge';
 import { createRequire } from 'node:module';
 
 const require = createRequire(import.meta.url);
-const loader = require.resolve('../loaders/twig-html-loader.cjs');
+const loader = require.resolve('../loaders/twig-html-loader.js');
 
 /**
  * Twig preset.
@@ -18,7 +18,7 @@ export default function twig(options = {}) {
       await extendWebpack(config, async (webpackConfig) => {
         webpackConfig.module.rules.push({
           test: /\.twig$/,
-          type: 'asset/source',
+          type: 'javascript/auto',
           use: [
             {
               loader,
