@@ -18,7 +18,7 @@ export default function twig(options = {}) {
       await extendWebpack(config, async (webpackConfig) => {
         webpackConfig.module.rules.push({
           test: /\.twig$/,
-          type: 'asset/source',
+          type: 'javascript/auto',
           use: [
             {
               loader,
