@@ -403,7 +403,10 @@ export function prototyping(options) {
       const { handler: twigPresetHandler } = twigPreset(opts.twig);
       await twigPresetHandler(config, presetHandlerOptions);
 
-      const { handler: tailwindcssPresetHandler } = tailwindcssPreset(opts.tailwindcss);
+      const { handler: tailwindcssPresetHandler } =
+        typeof opts.tailwindcss === 'function'
+          ? opts.tailwindcss()
+          : tailwindcssPreset(opts.tailwindcss);
       await tailwindcssPresetHandler(config, presetHandlerOptions);
 
       const { handler: yamlPresetHandler } = yamlPreset(opts.yaml);
