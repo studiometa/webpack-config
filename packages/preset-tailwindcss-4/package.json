@@ -1,5 +1,5 @@
 {
-  "name": "@studiometa/webpack-config-preset-vue-2",
+  "name": "@studiometa/webpack-config-preset-tailwindcss-4",
   "version": "6.3.0",
   "publishConfig": {
     "access": "public"
@@ -15,7 +15,7 @@
     "configuration",
     "config",
     "vue",
-    "vue2"
+    "vue3"
   ],
   "author": "Studio Meta <agence@studiometa.fr> (https://www.studiometa.fr)",
   "license": "MIT",
@@ -26,13 +26,10 @@
     "node": ">=20.11.0"
   },
   "homepage": "https://github.com/studiometa/webpack-config#readme",
-  "scripts": {
-    "prepublishOnly": "node scripts/add-peer-dependencies.js"
+  "peerDependencies": {
+    "tailwindcss": "^4.0.0-alpha.29"
   },
   "dependencies": {
-    "lodash.merge": "^4.6.2",
-    "vue-loader": "^15.11.1",
-    "vue-svg-loader": "^0.16.0",
-    "vue-template-compiler": "^2.7.16"
+    "@tailwindcss/postcss": "^4.0.0-alpha.29"
   }
 }

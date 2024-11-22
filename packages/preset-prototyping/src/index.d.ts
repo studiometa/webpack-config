@@ -1,4 +1,4 @@
-import { Preset, TailwindcssOptions, YamlOptions } from '@studiometa/webpack-config/preset';
+import { Preset, TailwindcssOptions, YamlOptions } from '@studiometa/webpack-config';
 import { Options as MarkdownOptions } from '@studiometa/webpack-config-preset-markdown';
 import { Twig } from 'twig';
 
@@ -15,7 +15,7 @@ export type TwigOptions = {
 
 export type Options = {
   ts?: boolean;
-  tailwindcss?: TailwindcssOptions;
+  tailwindcss?: TailwindcssOptions | (() => Preset);
   twig?: TwigOptions;
   html?: any;
   yaml?: YamlOptions;
