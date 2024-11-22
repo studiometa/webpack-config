@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [v6.3.0](https://github.com/studiometa/webpack-config/compare/6.2.2..6.3.0) (2024-11-22)
+
 ### Added
 
 - Add a preset package for Tailwind CSS v4 ([#170](https://github.com/studiometa/webpack-config/pull/170), [3fd8bbd](https://github.com/studiometa/webpack-config/commit/3fd8bbd))
