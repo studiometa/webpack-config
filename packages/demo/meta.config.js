@@ -1,10 +1,11 @@
 import { defineConfig, https } from '@studiometa/webpack-config';
 import { prototyping } from '@studiometa/webpack-config-preset-prototyping';
 import { vue } from '@studiometa/webpack-config-preset-vue-3';
+import { tailwindcss } from '@studiometa/webpack-config-preset-tailwindcss-4';
 
 export default defineConfig({
   presets: [
-    prototyping({ ts: true }),
+    prototyping({ ts: true, tailwindcss: () => tailwindcss() }),
     vue(),
     (isDev) => (isDev ? https() : null),
     {
