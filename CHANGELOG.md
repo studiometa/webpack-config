@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [v6.3.2](https://github.com/studiometa/webpack-config/compare/6.3.1..6.3.2) (2024-12-10)
+
 ### Changed
 
 - Update @studiometa/webpack-config dependencies ([bfdf115](https://github.com/studiometa/webpack-config/commit/bfdf115), [2df86e0](https://github.com/studiometa/webpack-config/commit/2df86e0))
@@ -16,7 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
-- Fix usage of - Fix usage of a removed Webpack output option ([#183](https://github.com/studiometa/webpack-config/pull/183), [6ee71e5](https://github.com/studiometa/webpack-config/commit/6ee71e5))
+- Fix usage of a removed Webpack output option ([#183](https://github.com/studiometa/webpack-config/pull/183), [6ee71e5](https://github.com/studiometa/webpack-config/commit/6ee71e5))
 
 ## [v6.3.1](https://github.com/studiometa/webpack-config/compare/6.3.0..6.3.1) (2024-11-22)
 
