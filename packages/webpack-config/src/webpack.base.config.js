@@ -50,7 +50,6 @@ export default async function getWebpackBaseConfig(config, { mode = 'production'
       chunkFilename: isDev ? '[name].js' : '[name].[contenthash].js',
       sourceMapFilename: '[file].map',
       clean: true,
-      cssHeadDataCompression: false,
     },
     experiments: {
       css: true,
