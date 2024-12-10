@@ -6,6 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [v6.3.2](https://github.com/studiometa/webpack-config/compare/6.3.1..6.3.2) (2024-12-10)
+
+### Changed
+
+- Update @studiometa/webpack-config dependencies ([bfdf115](https://github.com/studiometa/webpack-config/commit/bfdf115), [2df86e0](https://github.com/studiometa/webpack-config/commit/2df86e0))
+- Update @studiometa/webpack-config-preset-vue-3 dependencies ([628d367](https://github.com/studiometa/webpack-config/commit/628d367))
+- Update @studiometa/webpack-config-preset-tailwindcss-4 dependencies ([dd75b7b](https://github.com/studiometa/webpack-config/commit/dd75b7b))
+- Update demo dependencies ([83e835d](https://github.com/studiometa/webpack-config/commit/83e835d))
+- Update root dependencies ([ef71d3e](https://github.com/studiometa/webpack-config/commit/ef71d3e))
+
+### Fixed
+
+- Fix usage of a removed Webpack output option ([#183](https://github.com/studiometa/webpack-config/pull/183), [6ee71e5](https://github.com/studiometa/webpack-config/commit/6ee71e5))
+
 ## [v6.3.1](https://github.com/studiometa/webpack-config/compare/6.3.0..6.3.1) (2024-11-22)
 
 ### Fixed
