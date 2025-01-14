@@ -1,8 +1,11 @@
-# Webpack Configuration
+# @studiometa/webpack-config
 
-[![NPM Version](https://img.shields.io/npm/v/@studiometa/webpack-config.svg?style=flat-square)](https://www.npmjs.com/package/@studiometa/webpack-config)
+[![NPM Version](https://img.shields.io/npm/v/@studiometa/webpack-config.svg?style=flat&colorB=3e63dd&colorA=414853)](https://www.npmjs.com/package/@studiometa/webpack-config/)
+[![Downloads](https://img.shields.io/npm/dm/@studiometa/webpack-config?style=flat&colorB=3e63dd&colorA=414853)](https://www.npmjs.com/package/@studiometa/webpack-config/)
+[![Size](https://img.shields.io/bundlephobia/minzip/@studiometa/webpack-config?style=flat&colorB=3e63dd&colorA=414853&label=size)](https://bundlephobia.com/package/@studiometa/webpack-config)
+[![Dependency Status](https://img.shields.io/librariesio/release/npm/@studiometa/webpack-config?style=flat&colorB=3e63dd&colorA=414853)](https://david-dm.org/studiometa/webpack-config)
 
-> Run a development server and build your assets with Webpack.
+> Minimal configuration to run a development server and build your assets with Webpack.
 
 ## Installation
 
