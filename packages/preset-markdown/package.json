@@ -1,6 +1,6 @@
 {
   "name": "@studiometa/webpack-config-preset-markdown",
-  "version": "6.3.2",
+  "version": "6.3.3",
   "publishConfig": {
     "access": "public"
   },
