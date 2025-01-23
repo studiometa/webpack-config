@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [v6.3.3](https://github.com/studiometa/webpack-config/compare/6.3.2..6.3.3) (2025-01-23)
+
 ### Changed
 
 - **@studiometa/webpack-config:** upgrade dependencies ([#187](https://github.com/studiometa/webpack-config/pull/187), [5dc51d4](https://github.com/studiometa/webpack-config/commit/5dc51d4))
