@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- **@studiometa/webpack-config:** upgrade dependencies ([#187](https://github.com/studiometa/webpack-config/pull/187), [5dc51d4](https://github.com/studiometa/webpack-config/commit/5dc51d4))
+- **@studiometa/webpack-config-preset-prototyping:** upgrade dependencies ([#187](https://github.com/studiometa/webpack-config/pull/187), [37bbf3d](https://github.com/studiometa/webpack-config/commit/37bbf3d))
+- **@studiometa/webpack-config-preset-tailwindcss-4:** upgrade tailwindcss to ^4.0.0 ([#187](https://github.com/studiometa/webpack-config/pull/187), [72c600c](https://github.com/studiometa/webpack-config/commit/72c600c))
+
+### Removed
+
+- **@studiometa/webpack-config:** delete obsolete tailwind-config-viewer ([#187](https://github.com/studiometa/webpack-config/pull/187), [abff137](https://github.com/studiometa/webpack-config/commit/abff137))
+
 ## [v6.3.2](https://github.com/studiometa/webpack-config/compare/6.3.1..6.3.2) (2024-12-10)
 
 ### Changed
