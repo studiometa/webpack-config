@@ -1,6 +1,6 @@
 {
   "name": "@studiometa/webpack-config-demo",
-  "version": "6.3.2",
+  "version": "6.3.3",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,9 +15,9 @@
     "remark": "15.0.1"
   },
   "dependencies": {
-    "@studiometa/js-toolkit": "^2.12.1",
+    "@studiometa/js-toolkit": "^3.0.0",
     "@studiometa/ui": "^0.2.54",
-    "tailwindcss": "^4.0.0-beta.6",
+    "tailwindcss": "^4.0.0",
     "vue": "^3.5.13"
   },
   "imports": {
