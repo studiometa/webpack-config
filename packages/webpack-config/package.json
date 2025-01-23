@@ -68,7 +68,6 @@
     "resolve-url-loader": "^5.0.0",
     "sass-embedded": "^1.82.0",
     "sass-loader": "^16.0.4",
-    "tailwind-config-viewer": "^2.0.4",
     "terser-webpack-plugin": "^5.3.10",
     "webpack": "^5.97.1",
     "webpack-assets-manifest": "^5.2.1",
