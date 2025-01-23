@@ -1,8 +1,5 @@
 import merge from 'lodash.merge';
-import { findUpSync } from 'find-up';
-import chalk from 'chalk';
 import { createRequire } from 'module';
-import { withTrailingSlash, withoutTrailingSlash, withLeadingSlash } from '../utils/index.js';
 
 const require = createRequire(import.meta.url);
 
@@ -14,7 +11,7 @@ const require = createRequire(import.meta.url);
 export default function tailwindcss(options = {}) {
   return {
     name: 'tailwindcss',
-    async handler(config, { extendWebpack, extendBrowsersync, isDev }) {
+    async handler(config, { extendWebpack, isDev }) {
       const configPath = config.PATH;
 
       const opts = merge(
@@ -24,30 +21,6 @@ export default function tailwindcss(options = {}) {
         },
         options,
       );
-
-      if (isDev) {
-        const { default: createServer } = await import('tailwind-config-viewer/server/index.js');
-        await extendBrowsersync(config, async (bsConfig) => {
-          const tailwindConfigViewerServer = createServer({
-            tailwindConfigProvider: () =>
-              require(findUpSync(['tailwind.config.js', 'tailwind.config.cjs'])),
-          }).asMiddleware();
-
-          bsConfig.middleware = bsConfig.middleware || [];
-          bsConfig.middleware.push({
-            route: withLeadingSlash(withoutTrailingSlash(opts.configViewerPath)),
-            handle: tailwindConfigViewerServer,
-          });
-
-          bsConfig.infos = bsConfig.infos || [];
-          bsConfig.infos.push(
-            (url) =>
-              `Tailwind Viewer runnning at ${chalk.blue(
-                withTrailingSlash(url + opts.configViewerPath),
-              )}`,
-          );
-        });
-      }
 
       await extendWebpack(config, async (webpackConfig) => {
         const tailwind = opts.path
