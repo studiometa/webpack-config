@@ -4,5 +4,4 @@ parameters:
   paths:
     - ./packages/php/src
   ignoreErrors:
-    -
-      identifier: missingType.iterableValue
+    - identifier: missingType.iterableValue

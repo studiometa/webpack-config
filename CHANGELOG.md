@@ -11,7 +11,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 - Replace exceptions by warnings ([#193](https://github.com/studiometa/webpack-config/pull/193), [fe283af](https://github.com/studiometa/webpack-config/commit/fe283af))
-- Update PHPStan config ([#193](https://github.com/studiometa/webpack-config/pull/193), [0beb123](https://github.com/studiometa/webpack-config/commit/0beb123))
 
 ## [v6.3.3](https://github.com/studiometa/webpack-config/compare/6.3.2..6.3.3) (2025-01-23)
 
