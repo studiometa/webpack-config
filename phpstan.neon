@@ -3,4 +3,5 @@ parameters:
   level: max
   paths:
     - ./packages/php/src
-  checkMissingIterableValueType: false
+  ignoreErrors:
+    - identifier: missingType.iterableValue
