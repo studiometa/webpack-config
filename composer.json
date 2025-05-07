@@ -31,9 +31,16 @@
     }
   },
   "scripts": {
-    "phpstan": "phpstan",
-    "phpcs": "phpcs",
-    "phpcbf": "phpcbf",
+    "lint": [
+      "@lint:style",
+      "@lint:static"
+    ],
+    "lint:static": "phpstan",
+    "lint:style": "phpcs",
+    "fix": [
+      "@fix:style"
+    ],
+    "fix:style": "phpcbf",
     "pest": "pest"
   }
 }
