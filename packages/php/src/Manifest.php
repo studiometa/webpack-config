@@ -28,25 +28,22 @@ class Manifest
     public function __construct(string $path, string $publicPath)
     {
         if (!file_exists($path)) {
-            throw new Exception(sprintf('Could not find a manifest in %s', $path));
+            trigger_error(sprintf('Could not find a manifest in %s', $path), E_USER_WARNING);
+            return;
         }
 
-        $content = null;
-
-        try {
-            $content = file_get_contents($path);
-        } catch (Exception $error) {
-            throw new Exception(sprintf('Could not read the manifest in %s', $path));
-        }
+        $content = file_get_contents($path);
 
         if (!$content) {
-            throw new Exception(sprintf('Could not read the manifest in %s', $path));
+            trigger_error(sprintf('Could not read the manifest in %s', $path), E_USER_WARNING);
+            return;
         }
 
         $json = json_decode($content, true);
 
         if (!is_array($json) || !key_exists('entrypoints', $json)) {
-            throw new Exception('Manifest schema is not valid.');
+            trigger_error('Manifest schema is not valid.', E_USER_WARNING);
+            return;
         }
 
         $this->manifest = (new Collection($json))->except('entrypoints');

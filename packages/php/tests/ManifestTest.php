@@ -6,22 +6,43 @@ beforeEach(function() {
     $this->manifest = new Manifest(__DIR__ . '/__stubs__/assets-manifest.json', '/public/');
 });
 
-it('should fail if no manifest file is found', function() {
-    expect(function() {
-        return new Manifest('/path/to/manifest.json', '/');
-    })->toThrow('Could not find a manifest in /path/to/manifest.json');
+it('should trigger warning if no manifest file is found', function() {
+    $error = null;
+    set_error_handler(function($errno, $errstr) use (&$error) {
+        $error = $errstr;
+        return true;
+    });
+    
+    new Manifest('/path/to/manifest.json', '/');
+    
+    restore_error_handler();
+    expect($error)->toBe('Could not find a manifest in /path/to/manifest.json');
 });
 
-it('should fail if the manifest file can not be read', function() {
-    expect(function() {
-        return new Manifest(__DIR__ . '/__stubs__/', '/');
-    })->toThrow(sprintf('Could not read the manifest in %s', __DIR__ . '/__stubs__/'));
+it('should trigger warning if the manifest file can not be read', function() {
+    $error = null;
+    set_error_handler(function($errno, $errstr) use (&$error) {
+        $error = $errstr;
+        return true;
+    });
+    
+    new Manifest(__DIR__ . '/__stubs__/', '/');
+    
+    restore_error_handler();
+    expect($error)->toBe(sprintf('Could not read the manifest in %s', __DIR__ . '/__stubs__/'));
 });
 
-it('should fail if the manifest file does not follow the correct schema', function() {
-    expect(function() {
-        return new Manifest(__DIR__ . '/__stubs__/invalid-manifest.json', '/');
-    })->toThrow('Manifest schema is not valid.');
+it('should trigger warning if the manifest file does not follow the correct schema', function() {
+    $error = null;
+    set_error_handler(function($errno, $errstr) use (&$error) {
+        $error = $errstr;
+        return true;
+    });
+    
+    new Manifest(__DIR__ . '/__stubs__/invalid-manifest.json', '/');
+    
+    restore_error_handler();
+    expect($error)->toBe('Manifest schema is not valid.');
 });
 
 it('should return the real path of an asset or null', function() {
