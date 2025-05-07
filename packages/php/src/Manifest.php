@@ -32,14 +32,7 @@ class Manifest
             return;
         }
 
-        $content = null;
-
-        try {
-            $content = file_get_contents($path);
-        } catch (Exception $error) {
-            trigger_error(sprintf('Could not read the manifest in %s', $path), E_USER_WARNING);
-            return;
-        }
+        $content = file_get_contents($path);
 
         if (!$content) {
             trigger_error(sprintf('Could not read the manifest in %s', $path), E_USER_WARNING);
