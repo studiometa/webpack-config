@@ -52,7 +52,9 @@ export function prototyping(options) {
         options,
       );
 
+      // eslint-disable-next-line prefer-const
       let pages;
+
       opts.twig.data = async (context) => {
         const resourceDir = path.dirname(context.resourcePath);
         const resourceFilename = path.basename(context.resourcePath);
@@ -150,7 +152,12 @@ export function prototyping(options) {
       //   path.resolve(dirname, './layouts'),
       // ].filter(Boolean);
 
-      const extendTwig = typeof opts.twig.extend === 'function' ? opts.twig.extend : () => {};
+      const extendTwig =
+        typeof opts.twig.extend === 'function'
+          ? opts.twig.extend
+          : () => {
+              /* noop. */
+            };
       opts.twig.functions = {
         ...opts?.twig?.functions,
         html_styles(styles) {
@@ -309,7 +316,7 @@ export function prototyping(options) {
         }
 
         const dynamicFilesGlob = file
-          .replace(DYNAMIC_ROUTE_REGEX, '*')
+          .replaceAll(DYNAMIC_ROUTE_REGEX, '*')
           .replace(TWIG_FILE_REGEX, '.{md,js,ts}');
         const dynamicFiles = new Set(
           glob
@@ -322,12 +329,12 @@ export function prototyping(options) {
         );
 
         const fileParamsRegex = new RegExp(
-          file.replace(TWIG_FILE_REGEX, '').replace(DYNAMIC_ROUTE_REGEX, '(?<$1>.*)'),
+          file.replace(TWIG_FILE_REGEX, '').replaceAll(DYNAMIC_ROUTE_REGEX, '(?<$1>.*)'),
         );
 
         // Add dynamic folders
         if (file.endsWith('index.twig')) {
-          const dynamicFoldersGlob = `${path.dirname(file).replace(DYNAMIC_ROUTE_REGEX, '*')}/`;
+          const dynamicFoldersGlob = `${path.dirname(file).replaceAll(DYNAMIC_ROUTE_REGEX, '*')}/`;
           const dynamicFolders = glob.sync(dynamicFoldersGlob, { cwd: pageRoot });
           dynamicFolders.forEach((dynamicFolder) => {
             if (!DYNAMIC_ROUTE_REGEX.test(dynamicFolder)) {
@@ -429,6 +436,13 @@ export function prototyping(options) {
 
       await extendWebpack(config, async (webpackConfig) => {
         webpackConfig.plugins = [...webpackConfig.plugins, ...plugins];
+        webpackConfig.resolve = {
+          ...webpackConfig?.resolve,
+          roots: [
+            ...(webpackConfig?.resolve?.roots ?? []),
+            path.resolve(config.context, './public'),
+          ],
+        };
         if (isDev) {
           webpackConfig.plugins.push(new HtmlWebpackHarddiskPlugin());
         }

@@ -7,7 +7,7 @@ import webpack from 'webpack';
 import BundleAnalyzerPluginImport from 'webpack-bundle-analyzer';
 import TerserPlugin from 'terser-webpack-plugin';
 import commonDir from 'common-dir';
-import WebpackAssetsManifest from 'webpack-assets-manifest';
+import { WebpackAssetsManifest } from 'webpack-assets-manifest';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
 
 const { DefinePlugin, ExternalsPlugin } = webpack;

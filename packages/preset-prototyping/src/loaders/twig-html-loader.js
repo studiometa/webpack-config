@@ -40,7 +40,6 @@ function relativePathsToAbsolutePathsForSourceFn(str, resourcePath) {
   let newSourceFnArg;
   let pattern;
 
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     matches = SOURCE_REGEX.exec(result);
     if (matches === null) {
@@ -50,7 +49,7 @@ function relativePathsToAbsolutePathsForSourceFn(str, resourcePath) {
     [, prevSourceFnArg] = matches;
     newSourceFnArg = `source('${path.resolve(resourceDir, prevSourceFnArg)}')`;
     pattern = `source\\s*\\(\\s*['"]\\s*${prevSourceFnArg}\\s*['"]\\s*\\)`;
-    result = result.replace(new RegExp(pattern, 'g'), newSourceFnArg);
+    result = result.replaceAll(new RegExp(pattern, 'g'), newSourceFnArg);
   }
 
   return result;
@@ -58,8 +57,6 @@ function relativePathsToAbsolutePathsForSourceFn(str, resourcePath) {
 
 /**
  * Twig HTML Loader.
- *
- *
  * @see     {https://github.com/radiocity/twig-html-loader}
  * @param   {string} source
  * @returns {void}
@@ -106,7 +103,6 @@ function loader(source) {
 
     Twig.extend((TwigInstance) => {
       const defaultSave = Object.assign(TwigInstance.Templates.save);
-      // eslint-disable-next-line no-param-reassign
       TwigInstance.Templates.save = function customSave(template) {
         if (template.path) {
           registry.push(path.normalize(template.path));
@@ -127,7 +123,7 @@ function loader(source) {
       Twig.extend((TwigInstance) => {
         TwigInstance.Templates.registry = {};
       });
-      callback(null, `export default ${JSON.stringify(output)}`);
+      callback(null, output);
     };
 
     if (typeof query.data === 'function') {

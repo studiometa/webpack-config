@@ -1,18 +1,19 @@
 {
   "name": "@studiometa/webpack-config-root",
-  "version": "6.3.4",
+  "version": "6.3.5",
   "private": true,
   "type": "module",
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
-    "lint": "eslint packages/webpack-config/src packages/demo/src",
+    "lint": "eslint packages/ --cache",
     "fix": "npm run lint -- --fix",
     "demo:dev": "npm run dev -w @studiometa/webpack-config-demo",
     "demo:watch": "npm run watch -w @studiometa/webpack-config-demo",
     "demo:build": "npm run build -w @studiometa/webpack-config-demo",
-    "postversion": "node scripts/update-composer-version.mjs"
+    "postversion": "npm version -ws $npm_package_version && node scripts/update-composer-version.mjs",
+    "test": "node --test --experimental-test-coverage --test-coverage-include='packages/*/src/**/*.js' --test-coverage-exclude='packages/*/src/**/*.test.js'"
   },
   "devDependencies": {
     "@studiometa/eslint-config": "4.2.0",

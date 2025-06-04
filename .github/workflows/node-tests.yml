@@ -1,0 +1,49 @@
+name: Node Tests
+
+on:
+  pull_request:
+    paths:
+      - packages/**/src/**/*.js
+      - packages/**/package.json
+      - package.json
+      - package-lock.json
+
+jobs:
+  lint:
+    name: lint
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org/
+
+      - run: npm install --no-audit --no-fund --no-progress
+
+      - run: npm run lint
+
+  tests:
+    name: tests
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org/
+
+      - run: npm install --no-audit --no-fund --no-progress
+
+      - run: npm run test -- --test-reporter=spec --test-reporter=lcov --test-reporter-destination=stdout --test-reporter-destination=coverage.txt
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ./coverage.txt
+          flags: unittests
+          fail_ci_if_error: false
+          verbose: true
