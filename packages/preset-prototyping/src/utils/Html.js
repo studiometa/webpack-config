@@ -90,7 +90,6 @@ export default class Html {
 
   /**
    * Render attributes.
-   *
    * @param  {Record<string, any>} attributes
    * @returns {string}
    */
@@ -135,7 +134,6 @@ export default class Html {
 
   /**
    * Merge HTML attributes with sane defaults.
-   *
    * @param   {null|Record<string, any>} [attributes]
    * @param   {null|Record<string, any>} [defaultAttributes]
    * @param   {null|Record<string, any>} [requiredAttributes]
@@ -161,7 +159,6 @@ export default class Html {
 
   /**
    * Convert a map to an object.
-   *
    * @param  {Map} map
    * @returns {Record<string, any>}
    */
@@ -179,7 +176,6 @@ export default class Html {
 
   /**
    * Render a tag.
-   *
    * @param  {string} name
    * @param  {Record<string, any>} attributes
    * @param  {string} content
