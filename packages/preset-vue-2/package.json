@@ -1,6 +1,6 @@
 {
   "name": "@studiometa/webpack-config-preset-vue-2",
-  "version": "6.3.4",
+  "version": "6.3.5",
   "publishConfig": {
     "access": "public"
   },
