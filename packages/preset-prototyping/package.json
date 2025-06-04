@@ -29,7 +29,8 @@
   },
   "homepage": "https://github.com/studiometa/webpack-config#readme",
   "scripts": {
-    "prepublishOnly": "node scripts/update-workspace-dependency.js"
+    "prepublishOnly": "node scripts/update-workspace-dependency.js",
+    "test": "node --test --experimental-test-coverage --test-coverage-include='src/**/*.js' --test-coverage-exclude='src/**/*.test.js'"
   },
   "dependencies": {
     "@studiometa/webpack-config-preset-markdown": "file:../preset-markdown",
