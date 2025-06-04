@@ -131,24 +131,27 @@ export default class Html {
   /**
    * Merge HTML attributes with sane defaults.
    *
-   * @param   {Record<string, any>} [attributes]
-   * @param   {Record<string, any>} defaultAttributes
-   * @param   {Record<string, any>} requiredAttributes
+   * @param   {null|Record<string, any>} [attributes]
+   * @param   {null|Record<string, any>} [defaultAttributes]
+   * @param   {null|Record<string, any>} [requiredAttributes]
    * @returns {Record<string, any>}
    */
   static mergeAttributes(attributes = {}, defaultAttributes = {}, requiredAttributes = {}) {
     // Merge `class` attributes before the others
-    requiredAttributes.class = [
-      attributes.class ?? defaultAttributes.class ?? '',
-      requiredAttributes.class ?? '',
-    ].filter(Boolean);
+    const normalizedRequiredAttributes = {
+      ...requiredAttributes,
+      class: [
+        attributes?.class ?? defaultAttributes?.class ?? '',
+        requiredAttributes?.class ?? '',
+      ].filter(Boolean),
+    };
 
     // Remove the `class` attribute if empty
-    if (requiredAttributes.class.length < 1) {
-      delete requiredAttributes.class;
+    if (normalizedRequiredAttributes?.class.length < 1) {
+      delete normalizedRequiredAttributes.class;
     }
 
-    return { ...defaultAttributes, ...attributes, ...requiredAttributes };
+    return { ...defaultAttributes, ...attributes, ...normalizedRequiredAttributes };
   }
 
   /**
