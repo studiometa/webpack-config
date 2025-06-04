@@ -37,13 +37,13 @@ jobs:
 
       - run: npm install --no-audit --no-fund --no-progress
 
-      - run: npm run test -- --test-reporter=spec --test-reporter=junit --test-reporter-destination=stdout --test-reporter-destination=coverage.xml
+      - run: npm run test -- --test-reporter=spec --test-reporter=lcov --test-reporter-destination=stdout --test-reporter-destination=coverage.txt
 
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage.xml
+          files: ./coverage.txt
           flags: unittests
           fail_ci_if_error: false
           verbose: true
