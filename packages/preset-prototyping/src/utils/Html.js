@@ -75,7 +75,12 @@ export default class Html {
     const renderedStyles = [];
 
     for (const [key, value] of Object.entries(styles)) {
-      if (key === '_keys' || (typeof value === 'boolean' && !value) || value === '') {
+      if (
+        key === '_keys' ||
+        (typeof value === 'boolean' && !value) ||
+        value === null ||
+        value === ''
+      ) {
         continue;
       }
       renderedStyles.push(`${kebabCase(key)}: ${value};`);
