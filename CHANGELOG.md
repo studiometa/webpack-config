@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [v6.3.5](https://github.com/studiometa/webpack-config/compare/6.3.4..6.3.5) (2025-06-04)
+
 ### Fixed
 
 - **@studiometa/webpack-config-preset-prototyping:**
@@ -15,6 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 - **@studiometa/webpack-config-preset-prototyping:** improve Twig template compilation by adding html-loader ([#195](https://github.com/studiometa/webpack-config/pull/195), [19a09aa](https://github.com/studiometa/webpack-config/commit/19a09aa))
+- **@studiometa/webpack-config:** update dependencies ([3c9c35c](https://github.com/studiometa/webpack-config/commit/3c9c35c))
 
 ## [v6.3.4](https://github.com/studiometa/webpack-config/compare/6.3.3..6.3.4) (2025-05-06)
 
