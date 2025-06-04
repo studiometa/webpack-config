@@ -5,7 +5,6 @@ let isUsed = false;
 
 /**
  * Markdown loader preset.
- *
  * @see     https://github.com/webpack-contrib/remark-loader
  * @param   {any} [options]
  * @returns {import('@studiometa/webpack-config').Preset}
@@ -17,7 +16,7 @@ export function markdown(options = {}) {
         plugins: [[RemarkHTML, { sanitize: false }]],
       },
     },
-    options
+    options,
   );
 
   return {
@@ -55,7 +54,7 @@ export function markdown(options = {}) {
                 },
               },
             ],
-          }
+          },
         );
       });
     },

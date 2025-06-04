@@ -6,9 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- **@studiometa/webpack-config-preset-prototyping:**
+  - add support for null style object values ([#196](https://github.com/studiometa/webpack-config/pull/196), [7a49821](https://github.com/studiometa/webpack-config/commit/7a49821))
+  - add support for null parameters ([#196](https://github.com/studiometa/webpack-config/pull/196), [63b36fa](https://github.com/studiometa/webpack-config/commit/63b36fa))
+
 ### Changed
 
-- Improve Twig template compilation by adding html-loader ([#195](https://github.com/studiometa/webpack-config/pull/195), [19a09aa](https://github.com/studiometa/webpack-config/commit/19a09aa))
+- **@studiometa/webpack-config-preset-prototyping:** improve Twig template compilation by adding html-loader ([#195](https://github.com/studiometa/webpack-config/pull/195), [19a09aa](https://github.com/studiometa/webpack-config/commit/19a09aa))
 
 ## [v6.3.4](https://github.com/studiometa/webpack-config/compare/6.3.3..6.3.4) (2025-05-06)
 
