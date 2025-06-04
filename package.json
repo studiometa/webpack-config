@@ -12,7 +12,8 @@
     "demo:dev": "npm run dev -w @studiometa/webpack-config-demo",
     "demo:watch": "npm run watch -w @studiometa/webpack-config-demo",
     "demo:build": "npm run build -w @studiometa/webpack-config-demo",
-    "postversion": "node scripts/update-composer-version.mjs"
+    "postversion": "node scripts/update-composer-version.mjs",
+    "test": "node --test --experimental-test-coverage --test-coverage-include='packages/*/src/**/*.js' --test-coverage-exclude='packages/*/src/**/*.test.js'"
   },
   "devDependencies": {
     "@studiometa/eslint-config": "4.2.0",
