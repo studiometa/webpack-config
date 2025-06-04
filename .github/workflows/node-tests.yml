@@ -9,6 +9,21 @@ on:
       - package-lock.json
 
 jobs:
+  lint:
+    name: lint
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org/
+
+      - run: npm install --no-audit --no-fund --no-progress
+
+      - run: npm run lint
+
   tests:
     name: tests
     runs-on: macos-latest

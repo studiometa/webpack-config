@@ -16,3 +16,4 @@ backup/
 /vendor/
 .phpunit.result.cache
 /coverage.xml
+/.eslintcache

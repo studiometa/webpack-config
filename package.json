@@ -7,7 +7,7 @@
     "packages/*"
   ],
   "scripts": {
-    "lint": "eslint packages/webpack-config/src packages/demo/src",
+    "lint": "eslint packages/ --cache",
     "fix": "npm run lint -- --fix",
     "demo:dev": "npm run dev -w @studiometa/webpack-config-demo",
     "demo:watch": "npm run watch -w @studiometa/webpack-config-demo",
