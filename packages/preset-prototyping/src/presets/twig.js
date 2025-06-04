@@ -18,8 +18,33 @@ export default function twig(options = {}) {
       await extendWebpack(config, async (webpackConfig) => {
         webpackConfig.module.rules.push({
           test: /\.twig$/,
-          type: 'javascript/auto',
           use: [
+            {
+              loader: 'html-loader',
+              options: {
+                sources: {
+                  /**
+                   * Filter URLs to resolve and bundle.
+                   * @see     https://github.com/webpack-contrib/html-loader#sources
+                   * @param   {string}  attribute The HTML attribute.
+                   * @param   {string}  value     The URL.
+                   * @returns {boolean}           Wether to resolve the URL or not.
+                   */
+                  urlFilter(attribute, value) {
+                    if (
+                      value.startsWith('/') ||
+                      value.startsWith('//') ||
+                      value.startsWith('http://') ||
+                      value.startsWith('https://')
+                    ) {
+                      return false;
+                    }
+
+                    return true;
+                  },
+                },
+              },
+            },
             {
               loader,
               options: opts,
