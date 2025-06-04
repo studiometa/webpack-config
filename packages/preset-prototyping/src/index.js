@@ -429,6 +429,13 @@ export function prototyping(options) {
 
       await extendWebpack(config, async (webpackConfig) => {
         webpackConfig.plugins = [...webpackConfig.plugins, ...plugins];
+        webpackConfig.resolve = {
+          ...webpackConfig?.resolve,
+          roots: [
+            ...(webpackConfig?.resolve?.roots ?? []),
+            path.resolve(config.context, './public'),
+          ],
+        };
         if (isDev) {
           webpackConfig.plugins.push(new HtmlWebpackHarddiskPlugin());
         }

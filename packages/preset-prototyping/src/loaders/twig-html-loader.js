@@ -127,7 +127,7 @@ function loader(source) {
       Twig.extend((TwigInstance) => {
         TwigInstance.Templates.registry = {};
       });
-      callback(null, `export default ${JSON.stringify(output)}`);
+      callback(null, output);
     };
 
     if (typeof query.data === 'function') {
