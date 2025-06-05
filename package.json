@@ -1,6 +1,6 @@
 {
   "name": "@studiometa/webpack-config-root",
-  "version": "6.3.5",
+  "version": "6.3.6",
   "private": true,
   "type": "module",
   "workspaces": [

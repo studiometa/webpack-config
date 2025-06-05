@@ -33,6 +33,7 @@ export default function twig(options = {}) {
                   urlFilter(attribute, value) {
                     if (
                       value.startsWith('/') ||
+                      value.startsWith('data:') ||
                       value.startsWith('//') ||
                       value.startsWith('http://') ||
                       value.startsWith('https://')
