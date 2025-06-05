@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- **@studiometa/webpack-config-preset-prototyping:** fix a bug where inline images were considered as resolvable ([#199](https://github.com/studiometa/webpack-config/pull/199), [725b88b](https://github.com/studiometa/webpack-config/commit/725b88b))
+
 ## [v6.3.5](https://github.com/studiometa/webpack-config/compare/6.3.4..6.3.5) (2025-06-04)
 
 ### Fixed
