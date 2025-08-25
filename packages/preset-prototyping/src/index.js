@@ -248,6 +248,7 @@ export function prototyping(options) {
             if (namespace) {
               const [namespaceName, namespacePath] = namespace;
               tpl = tpl.replace(namespacePath, `@${namespaceName}/`);
+              console.log({ namespace });
             } else {
               tpl = path.relative(process.cwd(), tpl);
             }
