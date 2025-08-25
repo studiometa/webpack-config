@@ -15,6 +15,7 @@ import {
 import markdown from '@studiometa/webpack-config-preset-markdown';
 import twigPreset from './presets/twig.js';
 import Html from './utils/Html.js';
+import { pathToFileURL } from 'node:url';
 
 export { twigPreset as twig };
 
@@ -142,7 +143,11 @@ export function prototyping(options) {
         return acc;
       }, opts.twig.namespaces || {});
 
-      opts.twig.namespaces['pkg-layouts'] = path.resolve(dirname, 'layouts');
+      console.log(dirname);
+      opts.twig.namespaces['pkg-layouts'] = pathToFileURL(
+        path.resolve(dirname, 'layouts'),
+      ).pathname;
+      console.log(opts.twig.namespaces['pkg-layouts']);
 
       // @todo wait for support of multiple path by namespace in twig.js
       // opts.twig.namespaces.layouts = [
