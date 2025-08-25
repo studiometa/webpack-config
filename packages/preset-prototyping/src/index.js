@@ -144,8 +144,9 @@ export function prototyping(options) {
       }, opts.twig.namespaces || {});
 
       console.log(dirname);
+      console.log(import.meta.dirname);
       opts.twig.namespaces['pkg-layouts'] = pathToFileURL(
-        path.resolve(dirname, 'layouts'),
+        path.resolve(import.meta.dirname, 'layouts'),
       ).pathname;
       console.log(opts.twig.namespaces['pkg-layouts']);
 
