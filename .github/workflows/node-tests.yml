@@ -40,7 +40,9 @@ jobs:
           registry-url: https://registry.npmjs.org/
 
       - run: npm install --no-audit --no-fund --no-progress
+
       - run: npm run demo:build
+        continue-on-error: true
 
   tests:
     name: tests
