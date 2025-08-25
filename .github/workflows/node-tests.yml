@@ -3,6 +3,7 @@ name: Node Tests
 on:
   pull_request:
     paths:
+      - .github/workflows/*.yml
       - packages/**/src/**/*.js
       - packages/**/package.json
       - package.json
@@ -23,6 +24,23 @@ jobs:
       - run: npm install --no-audit --no-fund --no-progress
 
       - run: npm run lint
+
+  build:
+    name: build
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org/
+
+      - run: npm install --no-audit --no-fund --no-progress
+      - run: npm run demo:build
 
   tests:
     name: tests
