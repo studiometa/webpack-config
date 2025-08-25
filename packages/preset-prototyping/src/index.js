@@ -329,7 +329,10 @@ export function prototyping(options) {
         );
 
         const fileParamsRegex = new RegExp(
-          file.replace(TWIG_FILE_REGEX, '').replaceAll(DYNAMIC_ROUTE_REGEX, '(?<$1>.*)'),
+          file
+            .replace(TWIG_FILE_REGEX, '')
+            .replaceAll(DYNAMIC_ROUTE_REGEX, '(?<$1>.*)')
+            .replaceAll('\\', '\\\\'),
         );
 
         // Add dynamic folders
