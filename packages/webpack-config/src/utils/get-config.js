@@ -1,4 +1,5 @@
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { findUp } from 'find-up';
 import extendBrowsersync from './extend-browsersync-config.js';
 import extendWebpack from './extend-webpack-config.js';
@@ -20,7 +21,7 @@ export default async function getConfig({ analyze = false, mode = 'production' }
     );
   }
 
-  const { default: config } = await import(configPath);
+  const { default: config } = await import(pathToFileURL(configPath).href);
   const isDev = mode !== 'production';
 
   if (analyze) {
