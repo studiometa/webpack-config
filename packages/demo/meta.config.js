@@ -20,5 +20,16 @@ export default defineConfig({
   mergeCSS: /^(?!.*css\/test\.scss).*$/,
   webpack(config) {
     config.cache = false;
+    config.plugins.push({
+      /**
+       * Apply
+       * @param   {import('webpack').Compiler} compiler
+       */
+      apply(compiler) {
+        for (const hook of Object.keys(compiler.hooks)) {
+          compiler.hooks[hook].tap('hello', () => console.log(hook));
+        }
+      },
+    });
   },
 });
