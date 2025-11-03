@@ -40,7 +40,7 @@
   },
   "homepage": "https://github.com/studiometa/webpack-config#readme",
   "devDependencies": {
-    "@types/browser-sync": "2.29.0",
+    "@types/browser-sync": "2.29.1",
     "@types/minimatch": "5.1.2"
   },
   "dependencies": {
