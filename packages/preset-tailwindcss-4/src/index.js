@@ -1,4 +1,6 @@
-import tailwindcssPlugin from '@tailwindcss/postcss';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
 
 /**
  * Tailwind CSS preset.
@@ -14,16 +16,21 @@ export function tailwindcss() {
             continue;
           }
 
-          for (const loader of rule.use) {
-            if (loader.loader === 'postcss-loader') {
-              loader.options.postcssOptions.plugins = [
-                tailwindcssPlugin({
-                  optimize: false,
-                }),
-                ...loader.options.postcssOptions.plugins,
-              ];
-            }
+          const postcssIndex = rule.use.findIndex(
+            (loader) => loader === 'postcss-loader' || loader?.loader === 'postcss-loader',
+          );
+
+          if (postcssIndex === -1) {
+            continue;
           }
+
+          rule.use[postcssIndex] = {
+            loader: require.resolve('@tailwindcss/webpack'),
+            options: {
+              base: config.context,
+              optimize: false,
+            },
+          };
         }
       });
     },
