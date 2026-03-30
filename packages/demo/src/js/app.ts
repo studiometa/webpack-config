@@ -4,7 +4,10 @@ import { createApp as createVueApp } from 'vue';
 import VueComponent from './VueComponent.vue';
 import config from '#js/config.yaml';
 import configRaw from './config.yaml?raw';
+import configRaw2 from './config.txt' with { type: 'text' };
 
+
+console.log({ configRaw2, configRaw });
 /**
  * App class.
  * @license MIT © 2020 Studio Meta

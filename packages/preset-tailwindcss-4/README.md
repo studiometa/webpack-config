@@ -4,13 +4,15 @@
 
 A preset for [@studiometa/webpack-config](https://github.com/studiometa/webpack-config) to add Tailwind CSS v4 support to your project.
 
+Uses the native [`@tailwindcss/webpack`](https://www.npmjs.com/package/@tailwindcss/webpack) loader introduced in Tailwind CSS v4.2.0.
+
 ## Usage
 
-Install the package along with Tailwind CSS v4:
+Install the package along with Tailwind CSS v4.2+:
 
 ```sh
 npm install --save-dev @studiometa/webpack-config-preset-tailwindcss-4
-npm install --save tailwindcss@4
+npm install --save tailwindcss@^4.2.0
 ```
 
 And load the preset in the `meta.config.js` file:
