@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [v6.4.0](https://github.com/studiometa/webpack-config/compare/6.3.6..6.4.0) (2026-04-08)
+
 ### Added
 
 - **@studiometa/webpack-config-preset-polyfills:** add a preset package to inject `core-js` polyfills with `@babel/preset-env` while keeping `esbuild-loader` in the pipeline ([#208](https://github.com/studiometa/webpack-config/pull/208), [007dae1](https://github.com/studiometa/webpack-config/commit/007dae1))
