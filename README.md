@@ -474,4 +474,4 @@ export default defineConfig({
 
 ## Contributing
 
-This project's branches are managed with [Git Flow](https://github.com/petervanderdoes/gitflow-avh), every feature branch must be merged into develop via a pull request.
+This project uses a trunk-based workflow with `main` as the default branch. Open a pull request targeting `main` for feature, fix, and maintenance branches.

@@ -9,6 +9,16 @@ on:
       - phpstan.neon
       - composer.json
       - composer.lock
+  push:
+    branches:
+      - main
+    paths:
+      - packages/php/**/*.php
+      - phpcs.xml
+      - phpunit.xml
+      - phpstan.neon
+      - composer.json
+      - composer.lock
 
 jobs:
   phpcs:
@@ -29,7 +39,7 @@ jobs:
 
       - name: Get composer cache directory
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
 
       - name: Cache composer dependencies
         uses: actions/cache@v4
@@ -62,7 +72,7 @@ jobs:
 
       - name: Get composer cache directory
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
 
       - name: Cache composer dependencies
         uses: actions/cache@v4
@@ -103,7 +113,7 @@ jobs:
 
       - name: Get composer cache directory
         id: composer-cache
-        run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
 
       - name: Cache composer dependencies
         uses: actions/cache@v4
@@ -116,8 +126,8 @@ jobs:
         run: composer install --no-progress --prefer-dist --optimize-autoloader --ignore-platform-reqs
 
       - name: Install Pest v3
+        if: ${{ matrix.php-versions == '8.4' }}
         run: composer require pest/pest:^3.0
-        if: ${{ matrix.php-version == '8.4' }}
 
       - name: Pest
         run: php -v && XDEBUG_MODE=coverage ./vendor/bin/pest --coverage --coverage-clover='coverage.xml'

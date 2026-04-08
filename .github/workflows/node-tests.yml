@@ -7,6 +7,14 @@ on:
       - packages/**/package.json
       - package.json
       - package-lock.json
+  push:
+    branches:
+      - main
+    paths:
+      - packages/**/src/**/*.js
+      - packages/**/package.json
+      - package.json
+      - package-lock.json
 
 jobs:
   lint:

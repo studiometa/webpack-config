@@ -36,7 +36,7 @@ export default defineConfig({
 - `twig` (`Object`): options for the [`twig` preset](https://github.com/studiometa/webpack-config/#twig)
 - `tailwindcss` (`Object`): options for the [`tailwindcss` preset](https://github.com/studiometa/webpack-config/#tailwindcss)
 - `html` (`Object`): options for the [`html-webpack-plugin` plugin](https://github.com/jantimon/html-webpack-plugin#options)
-- `markdown` (`Object`): options for the [`markdown` preset](https://github.com/studiometa/webpack-config/tree/develop/packages/preset-markdown)
+- `markdown` (`Object`): options for the [`markdown` preset](https://github.com/studiometa/webpack-config/tree/main/packages/preset-markdown)
 
 ### Examples
 
