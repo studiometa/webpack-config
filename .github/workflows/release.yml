@@ -6,26 +6,65 @@ on:
       - '*.*.*'
 
 jobs:
-  release:
+  test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: '24'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Test
+        run: npm test
+
+  publish:
+    name: Publish to npm
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'npm'
           registry-url: https://registry.npmjs.org/
 
-      - run: npm i
+      - name: Install dependencies
+        run: npm ci
 
-      - name: 'Publish packages'
+      - name: Determine npm tag and release type
         run: |
-          VERSION=${GITHUB_REF/refs\/tags\//}
-          TAG='latest'
-          if [[ $VERSION =~ 'alpha' || $VERSION =~ 'beta' ]]; then
-            TAG='next'
+          VERSION=${GITHUB_REF_NAME}
+          NPM_TAG='latest'
+          IS_PRERELEASE=false
+
+          if [[ $VERSION =~ (alpha|beta|rc) ]]; then
+            NPM_TAG='next'
+            IS_PRERELEASE=true
           fi
-          npm publish --tag $TAG \
+
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "NPM_TAG=$NPM_TAG" >> $GITHUB_ENV
+          echo "IS_PRERELEASE=$IS_PRERELEASE" >> $GITHUB_ENV
+
+      - name: Publish packages
+        run: |
+          npm publish --provenance --access public --tag ${{ env.NPM_TAG }} \
             --workspace @studiometa/webpack-config \
             --workspace @studiometa/webpack-config-preset-markdown \
             --workspace @studiometa/webpack-config-preset-polyfills \
@@ -34,30 +73,14 @@ jobs:
             --workspace @studiometa/webpack-config-preset-vue-2 \
             --workspace @studiometa/webpack-config-preset-vue-3
         env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      # @see https://github.com/actions/create-release/issues/38#issuecomment-715327220
-      # @see https://docs.github.com/en/free-pro-team@latest/actions/reference/workflow-commands-for-github-actions#environment-files
-      - name: Prepare the changelog from the tag message
-        id: prepare_changelog
-        run: |
-          PRERELEASE=false
-          # Check release type
-          if [[ $GITHUB_REF_NAME =~ 'alpha' || $GITHUB_REF_NAME =~ 'beta' || $GITHUB_REF_NAME =~ 'rc' ]]; then
-            echo "This is a prerelease."
-            PRERELEASE=true
-          fi
-          echo "is_prerelease=$PRERELEASE" >> $GITHUB_ENV
-
-      # @see https://github.com/actions/create-release
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@v1
         with:
-          tag_name: ${{ github.ref }}
-          release_name: v${{ github.ref_name }}
-          body: Please refer to [CHANGELOG.md](https://github.com/studiometa/webpack-config/blob/${{ github.ref_name }}/CHANGELOG.md) for details.
+          tag: ${{ github.ref_name }}
+          name: ${{ github.ref_name }}
+          body: |
+            Please refer to [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/${{ github.ref_name }}/CHANGELOG.md) for details.
           draft: false
-          prerelease: ${{ env.is_prerelease }}
+          prerelease: ${{ env.IS_PRERELEASE }}
