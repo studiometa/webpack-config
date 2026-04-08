@@ -1,0 +1,39 @@
+{
+  "name": "@studiometa/webpack-config-preset-polyfills",
+  "version": "6.3.6",
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/studiometa/webpack-config.git"
+  },
+  "keywords": [
+    "webpack",
+    "configuration",
+    "config",
+    "polyfills",
+    "core-js",
+    "babel",
+    "esbuild"
+  ],
+  "author": "Studio Meta <agence@studiometa.fr> (https://www.studiometa.fr)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/studiometa/webpack-config/issues"
+  },
+  "engines": {
+    "node": ">=20.11.0"
+  },
+  "homepage": "https://github.com/studiometa/webpack-config#readme",
+  "dependencies": {
+    "@babel/core": "^7.28.4",
+    "@babel/plugin-syntax-typescript": "^7.27.1",
+    "babel-loader": "^10.0.0",
+    "babel-plugin-polyfill-corejs3": "^0.14.2",
+    "browserslist": "^4.28.1",
+    "core-js": "^3.49.0"
+  }
+}

@@ -434,6 +434,25 @@ export default defineConfig({
 });
 ```
 
+### `polyfills`
+
+Add runtime polyfills based on actual usage while keeping `esbuild-loader` in the pipeline. This preset is available as a separate package:
+
+```sh
+npm install --save-dev @studiometa/webpack-config-preset-polyfills
+```
+
+#### Example
+
+```js
+import { defineConfig } from '@studiometa/webpack-config';
+import { polyfills } from '@studiometa/webpack-config-preset-polyfills';
+
+export default defineConfig({
+  presets: [polyfills()],
+});
+```
+
 ### `hash`
 
 Add content hash to filenames in production.
