@@ -28,6 +28,7 @@ jobs:
           npm publish --tag $TAG \
             --workspace @studiometa/webpack-config \
             --workspace @studiometa/webpack-config-preset-markdown \
+            --workspace @studiometa/webpack-config-preset-polyfills \
             --workspace @studiometa/webpack-config-preset-prototyping \
             --workspace @studiometa/webpack-config-preset-tailwindcss-4 \
             --workspace @studiometa/webpack-config-preset-vue-2 \

@@ -10,8 +10,10 @@
   },
   "devDependencies": {
     "@studiometa/webpack-config": "*",
+    "@studiometa/webpack-config-preset-polyfills": "*",
     "@studiometa/webpack-config-preset-prototyping": "*",
     "@studiometa/webpack-config-preset-vue-3": "*",
+    "core-js": "3.49.0",
     "remark": "15.0.1"
   },
   "dependencies": {
@@ -23,6 +25,12 @@
   "imports": {
     "#*": "./src/*"
   },
+  "browserslist": [
+    "iOS >= 15",
+    "Safari >= 15",
+    "last 2 Chrome versions",
+    "last 2 Firefox versions"
+  ],
   "engines": {
     "node": ">=20.11.0"
   }
