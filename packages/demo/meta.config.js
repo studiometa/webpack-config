@@ -2,10 +2,12 @@ import { defineConfig, https } from '@studiometa/webpack-config';
 import { prototyping } from '@studiometa/webpack-config-preset-prototyping';
 import { vue } from '@studiometa/webpack-config-preset-vue-3';
 import { tailwindcss } from '@studiometa/webpack-config-preset-tailwindcss-4';
+import { polyfills } from '@studiometa/webpack-config-preset-polyfills';
 
 export default defineConfig({
   presets: [
     prototyping({ ts: true, tailwindcss: () => tailwindcss() }),
+    polyfills({ includePackages: ['@studiometa/js-toolkit'] }),
     vue(),
     (isDev) => (isDev ? https() : null),
     {
