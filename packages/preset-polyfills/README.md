@@ -18,6 +18,8 @@ This is useful for runtime APIs that are not syntax transforms, such as `Array.p
 npm install --save-dev @studiometa/webpack-config-preset-polyfills
 ```
 
+You do not need to install `core-js` separately when using this preset. It resolves injected `core-js` imports from the preset package itself.
+
 ## Usage
 
 ```js

@@ -3,7 +3,9 @@ import { createRequire } from 'node:module';
 import browserslist from 'browserslist';
 
 const require = createRequire(import.meta.url);
-const { version: corejsVersion } = require('core-js/package.json');
+const corejsPackagePath = require.resolve('core-js/package.json');
+const { version: corejsVersion } = require(corejsPackagePath);
+const corejsPath = path.dirname(corejsPackagePath);
 
 /**
  * @typedef {import('webpack').RuleSetRule} RuleSetRule
@@ -73,6 +75,10 @@ export function polyfills(options = {}) {
 
         const targets = resolveTargets(webpackConfig.target, config.context);
         const include = resolveIncludedPaths(config.context, options.includePackages);
+
+        webpackConfig.resolve ??= {};
+        webpackConfig.resolve.alias ??= {};
+        webpackConfig.resolve.alias['core-js'] ??= corejsPath;
 
         webpackConfig.module.rules.unshift({
           test: jsRule.test,
