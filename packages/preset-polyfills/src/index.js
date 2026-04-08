@@ -1,3 +1,4 @@
+import path from 'node:path';
 import { createRequire } from 'node:module';
 import browserslist from 'browserslist';
 
@@ -40,6 +41,21 @@ function findJavaScriptRule(rules = []) {
 }
 
 /**
+ * @param {string} context
+ * @param {string[]} [includePackages]
+ * @returns {(string | RegExp)[]}
+ */
+function resolveIncludedPaths(context, includePackages = []) {
+  return [
+    path.resolve(context, 'src'),
+    ...includePackages.map((packageName) => {
+      const escapedPackageName = packageName.replaceAll('/', '[\\/]');
+      return new RegExp(`[\\/]node_modules[\\/]${escapedPackageName}[\\/]`);
+    }),
+  ];
+}
+
+/**
  * Polyfills preset.
  * @param   {Options} [options]
  * @returns {import('@studiometa/webpack-config').Preset}
@@ -55,34 +71,43 @@ export function polyfills(options = {}) {
           throw new Error('Could not find the default JavaScript rule to extend with polyfills.');
         }
 
-        const jsLoaders = Array.isArray(jsRule.use) ? jsRule.use : [jsRule.use].filter(Boolean);
         const targets = resolveTargets(webpackConfig.target, config.context);
+        const include = resolveIncludedPaths(config.context, options.includePackages);
 
-        jsRule.use = [
-          ...jsLoaders,
-          {
-            loader: 'babel-loader',
-            options: {
-              babelrc: false,
-              configFile: false,
-              sourceType: 'unambiguous',
-              cacheDirectory: true,
-              targets,
-              plugins: [
-                '@babel/plugin-syntax-typescript',
-                [
-                  'babel-plugin-polyfill-corejs3',
-                  {
-                    method: options.method ?? 'usage-global',
-                    version: options.version ?? corejsVersion,
-                    proposals: options.proposals ?? true,
-                    ...options.pluginOptions,
-                  },
+        webpackConfig.module.rules.unshift({
+          test: jsRule.test,
+          type: jsRule.type,
+          include,
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                babelrc: false,
+                configFile: false,
+                sourceType: 'unambiguous',
+                cacheDirectory: true,
+                targets,
+                presets: [
+                  [
+                    '@babel/preset-env',
+                    {
+                      bugfixes: true,
+                      modules: false,
+                      useBuiltIns: 'usage',
+                      corejs: options.version ?? {
+                        version: corejsVersion,
+                        proposals: options.proposals ?? false,
+                      },
+                      targets,
+                      ...options.presetEnv,
+                    },
+                  ],
+                  '@babel/preset-typescript',
                 ],
-              ],
+              },
             },
-          },
-        ];
+          ],
+        });
       });
     },
   };

@@ -6,7 +6,8 @@ A preset for [@studiometa/webpack-config](https://github.com/studiometa/webpack-
 
 It uses:
 
-- [`babel-plugin-polyfill-corejs3`](https://github.com/babel/babel-polyfills)
+- [`@babel/preset-env`](https://babel.dev/docs/babel-preset-env)
+- [`@babel/preset-typescript`](https://babel.dev/docs/babel-preset-typescript)
 - [`core-js`](https://github.com/zloirock/core-js)
 
 This is useful for runtime APIs that are not syntax transforms, such as `Array.prototype.toReversed()`, `toSorted()`, `toSpliced()` and other modern built-ins that need polyfills on older browsers.
@@ -28,14 +29,30 @@ export default defineConfig({
 });
 ```
 
-The preset adds a Babel analysis step before `esbuild-loader` to detect used built-ins and inject matching `core-js` imports automatically.
+To also polyfill selected npm packages, allowlist them explicitly:
+
+```js
+export default defineConfig({
+  presets: [
+    polyfills({
+      includePackages: ['@studiometa/js-toolkit'],
+    }),
+  ],
+});
+```
+
+The preset adds a Babel step before `esbuild-loader` using `@babel/preset-env` with `useBuiltIns: 'usage'` to inject matching `core-js` imports automatically.
+
+By default, only standard `core-js` polyfills are injected. You can opt into proposal polyfills with `polyfills({ proposals: true })` when needed.
+
+Polyfill injection is limited to project source files under `src` by default. Use `includePackages` to opt specific dependencies into the Babel polyfill pass.
 
 ## Options
 
-- `method` (`'usage-global' | 'usage-pure' | 'entry-global'`, default: `'usage-global'`)
-- `proposals` (`boolean`, default: `true`)
-- `version` (`string`, default: installed `core-js` version)
-- `pluginOptions` (`Object`, optional): extra options passed to `babel-plugin-polyfill-corejs3`
+- `proposals` (`boolean`, default: `false`)
+- `version` (`number | { version: number | string; proposals?: boolean }`, default: installed `core-js` version)
+- `includePackages` (`string[]`, default: `[]`): npm packages inside `node_modules` to include in polyfill injection in addition to project `src` files
+- `presetEnv` (`Object`, optional): extra options passed to `@babel/preset-env`
 
 ## Browser targets
 

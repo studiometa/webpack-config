@@ -30,9 +30,9 @@
   "homepage": "https://github.com/studiometa/webpack-config#readme",
   "dependencies": {
     "@babel/core": "^7.28.4",
-    "@babel/plugin-syntax-typescript": "^7.27.1",
+    "@babel/preset-env": "^7.29.2",
+    "@babel/preset-typescript": "^7.28.5",
     "babel-loader": "^10.0.0",
-    "babel-plugin-polyfill-corejs3": "^0.14.2",
     "browserslist": "^4.28.1",
     "core-js": "^3.49.0"
   }
