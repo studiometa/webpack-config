@@ -62,7 +62,7 @@
     "hot-accept-webpack-plugin": "^4.0.2",
     "js-yaml-loader": "^1.2.2",
     "lodash.merge": "^4.6.2",
-    "postcss": "^8.5.4",
+    "postcss": "^8.5.10",
     "postcss-loader": "^8.1.1",
     "postcss-preset-env": "^10.2.0",
     "resolve-url-loader": "^5.0.0",
