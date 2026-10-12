@@ -25,10 +25,10 @@ jobs:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '24'
           cache: 'npm'
@@ -53,13 +53,13 @@ jobs:
       version: ${{ steps.version.outputs.version }}
       body: ${{ steps.changelog.outputs.body }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           # The changelog action reads the commit that added each fragment.
           fetch-depth: 0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '24'
           cache: 'npm'
@@ -79,7 +79,7 @@ jobs:
 
       - name: Fold changelog fragments
         id: changelog
-        uses: weareikko/changelog@600f4225cfd2778967eaffa693e86666c5a2d4bd # 1.0.2
+        uses: weareikko/changelog@c25888e03ad7c8bbaee897b84e778ebce9e9301c # 1.0.3
         with:
           command: release
           version: v${{ steps.version.outputs.version }}
@@ -111,12 +111,12 @@ jobs:
       contents: write
       id-token: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           ref: ${{ needs.release.outputs.version }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '24'
           cache: 'npm'
@@ -153,7 +153,7 @@ jobs:
             --workspace @studiometa/webpack-config-preset-vue-3
 
       - name: Create GitHub Release
-        uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         with:
           tag: ${{ needs.release.outputs.version }}
           name: ${{ needs.release.outputs.version }}
