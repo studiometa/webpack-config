@@ -494,3 +494,24 @@ export default defineConfig({
 ## Contributing
 
 This project uses a trunk-based workflow with `main` as the default branch. Open a pull request targeting `main` for feature, fix, and maintenance branches.
+
+### Changelog
+
+Do not edit `CHANGELOG.md`. Each pull request adds a fragment in `.changelog/<slug>.md`, where the slug is the branch name without its prefix (`feature/foo` → `foo.md`). A fragment only contains `### Added|Changed|Deprecated|Removed|Fixed|Security|Dependencies` headings, each followed by its entries:
+
+```markdown
+### Added
+
+- **@studiometa/webpack-config-preset-polyfills:** Add a preset to inject `core-js` polyfills
+```
+
+Do not write the pull request number: the release adds it. The `Changelog` check fails when a pull request changes a published package (`packages/webpack-config`, `packages/preset-*`, `packages/php`) without a fragment; set the `no-changelog` label for changes users do not see (tests, refactors, tooling). See [`weareikko/changelog`](https://github.com/weareikko/changelog) for the format.
+
+### Release
+
+Maintainers release with the `Release` workflow. It runs the tests, bumps the version of all packages and `composer.json`, folds the fragments into `CHANGELOG.md`, commits `Release <version>`, tags it (no `v` prefix), publishes the packages to npm and creates the GitHub release:
+
+```sh
+gh workflow run release.yml -R studiometa/webpack-config -f bump=patch   # or minor / major
+gh workflow run release.yml -R studiometa/webpack-config -f bump=prerelease -f preid=beta   # prereleases go to the `next` npm tag
+```
