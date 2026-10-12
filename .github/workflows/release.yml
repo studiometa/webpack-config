@@ -229,3 +229,5 @@ jobs:
           body: ${{ needs.release.outputs.body }}
           prerelease: ${{ needs.release.outputs.prerelease }}
           makeLatest: ${{ needs.release.outputs.prerelease != 'true' }}
+          # A replay updates the release when a previous run created it.
+          allowUpdates: true
