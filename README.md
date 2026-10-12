@@ -513,5 +513,11 @@ Maintainers release with the `Release` workflow. It runs the tests, bumps the ve
 
 ```sh
 gh workflow run release.yml -R studiometa/webpack-config -f bump=patch   # or minor / major
-gh workflow run release.yml -R studiometa/webpack-config -f bump=prerelease -f preid=beta   # prereleases go to the `next` npm tag
+gh workflow run release.yml -R studiometa/webpack-config -f bump=prerelease -f preid=beta   # or prepatch / preminor / premajor, with preid alpha / beta / rc
 ```
+
+A version with a prerelease part (`6.5.0-beta.0`) is published on the `next` npm tag and marked as a prerelease on GitHub; any other version is published on the `latest` npm tag and becomes the latest GitHub release. To install a prerelease: `npm install @studiometa/webpack-config@next`.
+
+Prereleases fold the fragments like any release. To promote a prerelease, release the stable version with `bump=patch` (`6.5.0-rc.1` → `6.5.0`, `7.0.0-rc.0` → `7.0.0`): when no fragment was added since the prerelease, the changelog gets no new section and the GitHub release says `Stable release of 6.5.0-rc.1.`. Without a previous prerelease, a release without fragment fails.
+
+The packages are published with npm trusted publishing (OIDC): there is no npm token, and the publish job must stay in `release.yml`. Each package has its own publish step, and each step skips a version that npm already has. When the publish job fails (for example on a network error), use "Re-run failed jobs" on the workflow run: it publishes only the packages that are missing.

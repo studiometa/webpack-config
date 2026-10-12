@@ -51,7 +51,10 @@ jobs:
       pull-requests: read
     outputs:
       version: ${{ steps.version.outputs.version }}
-      body: ${{ steps.changelog.outputs.body }}
+      npm-tag: ${{ steps.type.outputs.npm-tag }}
+      prerelease: ${{ steps.type.outputs.prerelease }}
+      # A promotion without fragment has no changelog section.
+      body: ${{ steps.changelog.outputs.changed == 'true' && steps.changelog.outputs.body || format('Stable release of {0}.', steps.version.outputs.previous) }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
@@ -74,8 +77,31 @@ jobs:
           BUMP: ${{ inputs.bump }}
           PREID: ${{ inputs.preid }}
         run: |
+          echo "previous=$(node -p 'require("./package.json").version')" >> "$GITHUB_OUTPUT"
           npm version "$BUMP" --preid "$PREID" --no-git-tag-version
           echo "version=$(node -p 'require("./package.json").version')" >> "$GITHUB_OUTPUT"
+
+      # A version with a prerelease part (1.2.0-beta.0) publishes on the `next`
+      # npm tag, any other version on `latest`. A stable version released right
+      # after a prerelease promotes it and needs no new fragment.
+      - name: Determine npm tag and release type
+        id: type
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          PREVIOUS: ${{ steps.version.outputs.previous }}
+        run: |
+          if [[ $VERSION == *-* ]]; then
+            echo "npm-tag=next" >> "$GITHUB_OUTPUT"
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "npm-tag=latest" >> "$GITHUB_OUTPUT"
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
+          if [[ $PREVIOUS == *-* && $VERSION != *-* ]]; then
+            echo "promotion=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "promotion=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Fold changelog fragments
         id: changelog
@@ -85,7 +111,7 @@ jobs:
           version: v${{ steps.version.outputs.version }}
 
       - name: Fail when there is nothing to release
-        if: steps.changelog.outputs.changed != 'true'
+        if: steps.changelog.outputs.changed != 'true' && steps.type.outputs.promotion != 'true'
         run: |
           echo "::error::No fragment in .changelog/: nothing to release."
           exit 1
@@ -103,6 +129,14 @@ jobs:
 
   # A tag pushed with GITHUB_TOKEN does not start other workflows, so the
   # release publishes in the same run.
+  #
+  # npm trusted publishing (OIDC, no npm token) is configured for this file
+  # name: keep the publish job in release.yml, and do not call it from another
+  # workflow.
+  #
+  # Each package has its own step, and each step skips a version that npm
+  # already has, so "Re-run failed jobs" publishes only the packages that are
+  # missing.
   publish:
     name: Publish to npm
     needs: release
@@ -120,42 +154,78 @@ jobs:
         with:
           node-version: '24'
           cache: 'npm'
-          registry-url: https://registry.npmjs.org/
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Determine npm tag and release type
-        id: type
-        env:
-          VERSION: ${{ needs.release.outputs.version }}
-        run: |
-          if [[ $VERSION =~ (alpha|beta|rc) ]]; then
-            echo "npm-tag=next" >> "$GITHUB_OUTPUT"
-            echo "prerelease=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "npm-tag=latest" >> "$GITHUB_OUTPUT"
-            echo "prerelease=false" >> "$GITHUB_OUTPUT"
-          fi
+      # The publish steps run `npm publish --ignore-scripts`: run the
+      # `prepublishOnly` scripts here, they change the published package.json
+      # files (preset-prototyping, preset-vue-2).
+      - name: Prepare package manifests
+        run: npm run prepublishOnly --workspaces --if-present
 
-      - name: Publish packages
-        env:
-          NPM_TAG: ${{ steps.type.outputs.npm-tag }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: |
-          npm publish --provenance --access public --tag "$NPM_TAG" \
-            --workspace @studiometa/webpack-config \
-            --workspace @studiometa/webpack-config-preset-markdown \
-            --workspace @studiometa/webpack-config-preset-polyfills \
-            --workspace @studiometa/webpack-config-preset-prototyping \
-            --workspace @studiometa/webpack-config-preset-tailwindcss-4 \
-            --workspace @studiometa/webpack-config-preset-vue-2 \
-            --workspace @studiometa/webpack-config-preset-vue-3
+      - name: Publish @studiometa/webpack-config
+        uses: JS-DevTools/npm-publish@0fd2f4369c5d6bcfcde6091a7c527d810b9b5c3f # v4.1.5
+        with:
+          package: packages/webpack-config
+          access: public
+          provenance: true
+          tag: ${{ needs.release.outputs.npm-tag }}
 
+      - name: Publish @studiometa/webpack-config-preset-markdown
+        uses: JS-DevTools/npm-publish@0fd2f4369c5d6bcfcde6091a7c527d810b9b5c3f # v4.1.5
+        with:
+          package: packages/preset-markdown
+          access: public
+          provenance: true
+          tag: ${{ needs.release.outputs.npm-tag }}
+
+      - name: Publish @studiometa/webpack-config-preset-polyfills
+        uses: JS-DevTools/npm-publish@0fd2f4369c5d6bcfcde6091a7c527d810b9b5c3f # v4.1.5
+        with:
+          package: packages/preset-polyfills
+          access: public
+          provenance: true
+          tag: ${{ needs.release.outputs.npm-tag }}
+
+      - name: Publish @studiometa/webpack-config-preset-prototyping
+        uses: JS-DevTools/npm-publish@0fd2f4369c5d6bcfcde6091a7c527d810b9b5c3f # v4.1.5
+        with:
+          package: packages/preset-prototyping
+          access: public
+          provenance: true
+          tag: ${{ needs.release.outputs.npm-tag }}
+
+      - name: Publish @studiometa/webpack-config-preset-tailwindcss-4
+        uses: JS-DevTools/npm-publish@0fd2f4369c5d6bcfcde6091a7c527d810b9b5c3f # v4.1.5
+        with:
+          package: packages/preset-tailwindcss-4
+          access: public
+          provenance: true
+          tag: ${{ needs.release.outputs.npm-tag }}
+
+      - name: Publish @studiometa/webpack-config-preset-vue-2
+        uses: JS-DevTools/npm-publish@0fd2f4369c5d6bcfcde6091a7c527d810b9b5c3f # v4.1.5
+        with:
+          package: packages/preset-vue-2
+          access: public
+          provenance: true
+          tag: ${{ needs.release.outputs.npm-tag }}
+
+      - name: Publish @studiometa/webpack-config-preset-vue-3
+        uses: JS-DevTools/npm-publish@0fd2f4369c5d6bcfcde6091a7c527d810b9b5c3f # v4.1.5
+        with:
+          package: packages/preset-vue-3
+          access: public
+          provenance: true
+          tag: ${{ needs.release.outputs.npm-tag }}
+
+      # `latest` on GitHub follows `latest` on npm.
       - name: Create GitHub Release
         uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         with:
           tag: ${{ needs.release.outputs.version }}
           name: ${{ needs.release.outputs.version }}
           body: ${{ needs.release.outputs.body }}
-          prerelease: ${{ steps.type.outputs.prerelease }}
+          prerelease: ${{ needs.release.outputs.prerelease }}
+          makeLatest: ${{ needs.release.outputs.prerelease != 'true' }}
