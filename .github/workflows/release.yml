@@ -1,20 +1,24 @@
 name: Release
 
+# Each merge into main releases what its fragments describe. A manual run
+# (`gh workflow run release.yml -f version=major`) forces a bump.
+# npm trusted publishing is bound to this file name: keep the publish job here.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
-      bump:
-        description: 'Version bump (pre* and prerelease publish on the `next` npm tag)'
+      version:
+        description: 'Version: `auto` follows the fragments; `patch`, `minor` or `major` forces that bump'
         type: choice
-        options: [patch, minor, major, prepatch, preminor, premajor, prerelease]
-        default: patch
-      preid:
-        description: 'Prerelease identifier, used by pre* and prerelease bumps'
-        type: choice
-        options: [alpha, beta, rc]
-        default: alpha
+        options: [auto, patch, minor, major]
+        default: auto
 
-concurrency: release
+# One release at a time. GitHub keeps only the newest pending run: it
+# releases everything that main has at that point.
+concurrency:
+  group: release
+  cancel-in-progress: false
 
 permissions:
   contents: read
@@ -23,7 +27,6 @@ jobs:
   test:
     name: Test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
@@ -42,112 +45,48 @@ jobs:
       - name: Test
         run: npm test
 
+  # Folds the fragments, bumps all package.json files (the `version` script
+  # also sets composer.json for Packagist), commits `Release <version>`, tags,
+  # pushes and creates the GitHub release.
   release:
-    name: Bump version and changelog
+    name: Release
     needs: test
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     permissions:
       contents: write
       pull-requests: read
     outputs:
-      version: ${{ steps.version.outputs.version }}
-      npm-tag: ${{ steps.type.outputs.npm-tag }}
-      prerelease: ${{ steps.type.outputs.prerelease }}
-      # A promotion without fragment has no changelog section.
-      body: ${{ steps.changelog.outputs.changed == 'true' && steps.changelog.outputs.body || format('Stable release of {0}.', steps.version.outputs.previous) }}
+      version: ${{ steps.release.outputs.version }}
+      dist-tag: ${{ steps.release.outputs.dist-tag }}
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
-        with:
-          # The changelog action reads the commit that added each fragment.
-          fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
-        with:
-          node-version: '24'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      # The `postversion` script bumps the workspaces and composer.json.
-      - name: Bump version
-        id: version
-        env:
-          BUMP: ${{ inputs.bump }}
-          PREID: ${{ inputs.preid }}
-        run: |
-          echo "previous=$(node -p 'require("./package.json").version')" >> "$GITHUB_OUTPUT"
-          npm version "$BUMP" --preid "$PREID" --no-git-tag-version
-          echo "version=$(node -p 'require("./package.json").version')" >> "$GITHUB_OUTPUT"
-
-      # A version with a prerelease part (1.2.0-beta.0) publishes on the `next`
-      # npm tag, any other version on `latest`. A stable version released right
-      # after a prerelease promotes it and needs no new fragment.
-      - name: Determine npm tag and release type
-        id: type
-        env:
-          VERSION: ${{ steps.version.outputs.version }}
-          PREVIOUS: ${{ steps.version.outputs.previous }}
-        run: |
-          if [[ $VERSION == *-* ]]; then
-            echo "npm-tag=next" >> "$GITHUB_OUTPUT"
-            echo "prerelease=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "npm-tag=latest" >> "$GITHUB_OUTPUT"
-            echo "prerelease=false" >> "$GITHUB_OUTPUT"
-          fi
-          if [[ $PREVIOUS == *-* && $VERSION != *-* ]]; then
-            echo "promotion=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "promotion=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Fold changelog fragments
-        id: changelog
-        uses: weareikko/changelog@c25888e03ad7c8bbaee897b84e778ebce9e9301c # 1.0.3
+      - name: Release
+        id: release
+        uses: weareikko/changelog@9d93346df9858eaa29007bd8530aad8f4c5b539a # 0.1.0
         with:
           command: release
-          version: v${{ steps.version.outputs.version }}
+          version: ${{ inputs.version || 'auto' }}
+          skip-authors: |
+            renovate[bot]
+            dependabot[bot]
 
-      - name: Fail when there is nothing to release
-        if: steps.changelog.outputs.changed != 'true' && steps.type.outputs.promotion != 'true'
-        run: |
-          echo "::error::No fragment in .changelog/: nothing to release."
-          exit 1
-
-      - name: Commit, tag and push
-        env:
-          VERSION: ${{ steps.version.outputs.version }}
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add CHANGELOG.md .changelog package.json package-lock.json packages/*/package.json composer.json
-          git commit -m "Release $VERSION"
-          git tag "$VERSION"
-          git push origin HEAD:main "$VERSION"
-
-  # A tag pushed with GITHUB_TOKEN does not start other workflows, so the
-  # release publishes in the same run.
-  #
-  # npm trusted publishing (OIDC, no npm token) is configured for this file
-  # name: keep the publish job in release.yml, and do not call it from another
-  # workflow.
-  #
-  # Each package has its own step, and each step skips a version that npm
-  # already has, so "Re-run failed jobs" publishes only the packages that are
-  # missing.
+  # "Re-run failed jobs" on this job publishes what a failed run left: each
+  # package has its own step, and each step skips a version that npm already
+  # has.
   publish:
     name: Publish to npm
     needs: release
+    if: needs.release.outputs.version != ''
     runs-on: ubuntu-latest
     permissions:
-      contents: write
+      contents: read
       id-token: write
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
-          ref: ${{ needs.release.outputs.version }}
+          ref: refs/tags/${{ needs.release.outputs.version }}
 
       - name: Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -164,13 +103,14 @@ jobs:
       - name: Prepare package manifests
         run: npm run prepublishOnly --workspaces --if-present
 
+      # Trusted publishing (OIDC): no npm token. A prerelease goes to `next`.
       - name: Publish @studiometa/webpack-config
         uses: JS-DevTools/npm-publish@0fd2f4369c5d6bcfcde6091a7c527d810b9b5c3f # v4.1.5
         with:
           package: packages/webpack-config
           access: public
           provenance: true
-          tag: ${{ needs.release.outputs.npm-tag }}
+          tag: ${{ needs.release.outputs.dist-tag }}
 
       - name: Publish @studiometa/webpack-config-preset-markdown
         uses: JS-DevTools/npm-publish@0fd2f4369c5d6bcfcde6091a7c527d810b9b5c3f # v4.1.5
@@ -178,7 +118,7 @@ jobs:
           package: packages/preset-markdown
           access: public
           provenance: true
-          tag: ${{ needs.release.outputs.npm-tag }}
+          tag: ${{ needs.release.outputs.dist-tag }}
 
       - name: Publish @studiometa/webpack-config-preset-polyfills
         uses: JS-DevTools/npm-publish@0fd2f4369c5d6bcfcde6091a7c527d810b9b5c3f # v4.1.5
@@ -186,7 +126,7 @@ jobs:
           package: packages/preset-polyfills
           access: public
           provenance: true
-          tag: ${{ needs.release.outputs.npm-tag }}
+          tag: ${{ needs.release.outputs.dist-tag }}
 
       - name: Publish @studiometa/webpack-config-preset-prototyping
         uses: JS-DevTools/npm-publish@0fd2f4369c5d6bcfcde6091a7c527d810b9b5c3f # v4.1.5
@@ -194,7 +134,7 @@ jobs:
           package: packages/preset-prototyping
           access: public
           provenance: true
-          tag: ${{ needs.release.outputs.npm-tag }}
+          tag: ${{ needs.release.outputs.dist-tag }}
 
       - name: Publish @studiometa/webpack-config-preset-tailwindcss-4
         uses: JS-DevTools/npm-publish@0fd2f4369c5d6bcfcde6091a7c527d810b9b5c3f # v4.1.5
@@ -202,7 +142,7 @@ jobs:
           package: packages/preset-tailwindcss-4
           access: public
           provenance: true
-          tag: ${{ needs.release.outputs.npm-tag }}
+          tag: ${{ needs.release.outputs.dist-tag }}
 
       - name: Publish @studiometa/webpack-config-preset-vue-2
         uses: JS-DevTools/npm-publish@0fd2f4369c5d6bcfcde6091a7c527d810b9b5c3f # v4.1.5
@@ -210,7 +150,7 @@ jobs:
           package: packages/preset-vue-2
           access: public
           provenance: true
-          tag: ${{ needs.release.outputs.npm-tag }}
+          tag: ${{ needs.release.outputs.dist-tag }}
 
       - name: Publish @studiometa/webpack-config-preset-vue-3
         uses: JS-DevTools/npm-publish@0fd2f4369c5d6bcfcde6091a7c527d810b9b5c3f # v4.1.5
@@ -218,16 +158,4 @@ jobs:
           package: packages/preset-vue-3
           access: public
           provenance: true
-          tag: ${{ needs.release.outputs.npm-tag }}
-
-      # `latest` on GitHub follows `latest` on npm.
-      - name: Create GitHub Release
-        uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
-        with:
-          tag: ${{ needs.release.outputs.version }}
-          name: ${{ needs.release.outputs.version }}
-          body: ${{ needs.release.outputs.body }}
-          prerelease: ${{ needs.release.outputs.prerelease }}
-          makeLatest: ${{ needs.release.outputs.prerelease != 'true' }}
-          # A replay updates the release when a previous run created it.
-          allowUpdates: true
+          tag: ${{ needs.release.outputs.dist-tag }}
