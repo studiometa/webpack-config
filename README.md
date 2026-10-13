@@ -509,9 +509,14 @@ Do not write the pull request number: the release adds it. The `Changelog` check
 
 ### Release
 
-Maintainers release with the `Release` workflow. It runs the tests, bumps the version of all packages and `composer.json`, folds the fragments into `CHANGELOG.md`, commits `Release <version>`, tags it (no `v` prefix), publishes the packages to npm and creates the GitHub release:
+Each merge into `main` releases what its fragments describe. The `Release` workflow (`release.yml`) runs the tests, then the [`weareikko/changelog`](https://github.com/weareikko/changelog#release-1) action computes the next version from the fragments, folds them into `CHANGELOG.md`, bumps the version of all packages (the `version` script also sets it in `composer.json` for Packagist), commits `Release <version>`, tags it (no `v` prefix) and creates the GitHub release. The workflow then publishes the packages to npm. A merge without fragment releases nothing. Pull requests from `renovate[bot]` and `dependabot[bot]` need no fragment: the release lists them under `Dependencies`.
+
+To force a bump, run the workflow by hand:
 
 ```sh
-gh workflow run release.yml -R studiometa/webpack-config -f bump=patch   # or minor / major
-gh workflow run release.yml -R studiometa/webpack-config -f bump=prerelease -f preid=beta   # prereleases go to the `next` npm tag
+gh workflow run release.yml -R studiometa/webpack-config -f version=major   # or minor / patch
 ```
+
+To release prereleases, add a `.changelog/prerelease` file with one identifier (`alpha`, `beta` or `rc`): each merge with fragments then releases the next prerelease (`6.5.0-rc.0`, `6.5.0-rc.1`…). A prerelease is published on the `next` npm tag and marked as a prerelease on GitHub; any other version is published on the `latest` npm tag. To install a prerelease: `npm install @studiometa/webpack-config@next`. To release the stable version, delete `.changelog/prerelease`: its merge releases it. See [Prereleases](https://github.com/weareikko/changelog#prereleases).
+
+The packages are published with npm trusted publishing (OIDC): there is no npm token, and the publish job must stay in `release.yml`. Each package has its own publish step, and each step skips a version that npm already has. When the publish job fails (for example on a network error), use "Re-run failed jobs" on the workflow run: it publishes only the packages that are missing.
