@@ -27,7 +27,7 @@
   },
   "homepage": "https://github.com/studiometa/webpack-config#readme",
   "peerDependencies": {
-    "vue": "^3.2.37"
+    "vue": "^3.5.44"
   },
   "dependencies": {
     "@vue/compiler-sfc": "^3.5.13",
