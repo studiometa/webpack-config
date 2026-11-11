@@ -58,7 +58,7 @@
     "esbuild-loader": "^4.3.0",
     "find-up": "^7.0.0",
     "get-port": "^7.1.0",
-    "glob": "^11.0.2",
+    "glob": "^14.0.0",
     "hot-accept-webpack-plugin": "^4.0.2",
     "js-yaml-loader": "^1.2.2",
     "lodash.merge": "^4.6.2",
